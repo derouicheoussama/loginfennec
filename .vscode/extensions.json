@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"bmewburn.vscode-intelephense-client",
+		"wongjn.php-sniffer",
+		"valeryanm.vscode-phpsab",
+		"editorconfig.editorconfig",
+		"johnbillion.vscode-wordpress-hooks"
+	]
+}

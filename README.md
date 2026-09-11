@@ -1,25 +1,26 @@
-# LoginFennec Pro – Login Customizer & Security
+# LoginFennec Pro – Personnalisation page login et Security
 
-Plugin WordPress : personnalisation complète de la page de connexion avec aperçu en direct et protection contre les tentatives de mot de passe.
+Plugin WordPress : personnalisation complète de la page de connexion avec aperçu en direct, protection anti force brute et achat intégré (CCP/BaridiMob, PayPal, carte).
 
-> Version 1.0.0 · Auteur : Derouiche Oussama · Licence GPL v2 ou ultérieure
+> Version 2.3.1 · Auteur : Derouiche Oussama · Licence GPL v2 ou ultérieure · Mascotte : fennec 🦊
 
 ## Fonctionnalités
 
 | Catégorie | Détails |
 |---|---|
-| **Logo** | Image personnalisée, largeur/hauteur, lien cliquable, masquage complet |
-| **Arrière-plan** | Couleur unie, dégradé (angle 0-360°), image (cover/contain/motif) |
-| **Flou & opacité** | Flou de l'image de fond, voile coloré réglable, effet verre du formulaire (backdrop-filter) |
-| **Styles modernes** | 6 presets en 1 clic : Effet verre, Minimal, Sombre, Coucher de soleil, Océan, Forêt |
-| **Formulaire** | Opacité, flou, arrondis, largeur, padding, ombre, couleurs (textes, champs, bouton, liens) |
-| **Liens** | Texte/cible de « Retour au site », masquage de « Mot de passe perdu ? », « S'enregistrer », « Retour au site » |
-| **Réseaux sociaux** | Facebook, X, Instagram, LinkedIn, YouTube, e-mail — cercle/arrondi/carré, taille et couleurs |
-| **Copyright** | Ligne personnalisée avec variables `{year}` et `{sitename}` |
-| **Sécurité** | Blocage des tentatives (IP + identifiant), durée configurable, messages personnalisables, erreurs génériques, sélecteur de langue, en-têtes HTTP |
-| **Dashboard** | Onglets modernes, aperçu en direct (bureau/tablette/mobile), presets, médiathèque |
-| **À propos** | Page dédiée : développeur, fonctionnalités, bouton **Faire un don**, état du système |
-| **Mises à jour** | Updater GitHub intégré + GitHub Action de release |
+| **Logo** | Image **ou texte**, largeur/hauteur, lien cliquable, masquage complet |
+| **Arrière-plan** | Couleur, dégradé (angle), image (cover/contain/motif) avec position, flou, luminosité, saturation, voile coloré |
+| **Styles & thèmes** | **10 styles** en 1 clic (Effet verre → Royal) + **7 thèmes d'interface** du formulaire |
+| **Formulaire** | Opacité, flou, arrondis, largeur, hauteur des champs, placeholders et libellés personnalisés |
+| **Redirection** | Page de destination après connexion |
+| **Liens** | Texte/cible de « Retour au site », masquage des liens (mot de passe perdu, enregistrement) |
+| **Réseaux sociaux** | Facebook, X, Instagram, LinkedIn, YouTube, e-mail — **couleurs officielles des marques** |
+| **Copyright + extras** | Mention `{year}`/`{sitename}`, message d'accueil, 4 polices, animations d'entrée, **CSS + JS personnalisés** |
+| **Sécurité** | Blocage des tentatives **avec escalade ×2 par récidive**, honeypot, anti-énumération, XML-RPC, mots de passe d'application, liste blanche IP, erreurs génériques |
+| **Journal & stats** | 50 derniers événements (export CSV), score de sécurité /5, statistiques dashboard |
+| **Licence & achat** | Achat intégré : **BaridiMob/CCP, PayPal, carte** — détails et statut de licence en direct |
+| **Dashboard** | Onglets modernes, aperçu en direct plein écran, installateur guidé en 4 étapes |
+| **Mises à jour** | Updater GitHub intégré (bascule auto vers WordPress.org) + GitHub Action de release |
 
 ## Installation
 
@@ -123,3 +124,19 @@ Dès que la version existe sur WordPress.org, l'updater intégré s'efface autom
 - Les données stockées : une option de réglages, le journal des tentatives (purge auto à 24 h), un transient de cache GitHub (6 h). Tout est supprimé à la désinstallation.
 - La sécurité utilise `REMOTE_ADDR` ; derrière un reverse proxy, configurez votre serveur pour exposer la vraie IP.
 - Aucune dépendance externe, aucune requête de télémétrie.
+
+## Développement dans VS Code
+
+Le projet est du PHP/JS/CSS standard : ouvrez le dossier dans **VS Code** (Fichier → Ouvrir le dossier) et tout fonctionne.
+
+1. Installez les extensions recommandées (VS Code les proposera automatiquement via `.vscode/extensions.json`) :
+   - **Intelephense** — autocomplétion et analyse PHP ;
+   - **PHP Sniffer** (+ PHP SAB) — applique les standards WordPress via `phpcs.xml.dist` ;
+   - **EditorConfig** — respecte `.editorconfig` (tabs, fins de ligne).
+2. Un **PHP portable 8.3** est inclus dans `_php/php/php.exe` (référencé dans `.vscode/settings.json`) — rien à installer.
+3. Commandes utiles :
+   - `node tools/generate-assets.mjs` / `node tools/generate-logo.mjs` / `node tools/generate-brand-pro.mjs` — régénère les visuels ;
+   - `_php/php/php.exe -l <fichier>` — vérifie la syntaxe ;
+   - `composer install && composer lint:standards` — PHPCS complet (si Composer installé).
+
+## Outils de développement (VS Code)

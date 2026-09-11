@@ -1,0 +1,40 @@
+{
+	"php.validate.executablePath": "_php/php/php.exe",
+	"php.suggest.basic": false,
+	"intelephense.stubs": [
+		"apache",
+		"bcmath",
+		"calendar",
+		"core",
+		"ctype",
+		"curl",
+		"date",
+		"fileinfo",
+		"filter",
+		"gd",
+		"hash",
+		"iconv",
+		"json",
+		"mbstring",
+		"mysql",
+		"mysqli",
+		"openssl",
+		"pcre",
+		"PDO",
+		"session",
+		"simplexml",
+		"standard",
+		"tokenizer",
+		"xml",
+		"zip",
+		"zlib",
+		"wordpress"
+	],
+	"[php]": {
+		"editor.defaultFormatter": "valeryanm.vscode-phpsab",
+		"editor.formatOnSave": false
+	},
+	"files.exclude": {
+		"**/_php": true
+	}
+}
