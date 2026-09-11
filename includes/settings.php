@@ -26,6 +26,7 @@ function infcl_get_defaults() {
 		'bg_gradient_angle'  => 135,
 		'bg_image'           => '',
 		'bg_size'            => 'cover', // cover | contain | repeat.
+		'bg_position'        => 'center', // center | top | bottom | left | right | top-left | …
 		'bg_blur'            => 0,
 		'bg_overlay_color'   => '#000000',
 		'bg_overlay_opacity' => 10,
@@ -123,7 +124,7 @@ function infcl_get_option( $key ) {
  */
 function infcl_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'bg_type', 'bg_size', 'social_style' ),
+		'key'    => array( 'preset', 'bg_type', 'bg_size', 'bg_position', 'social_style' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'copyright_enable', 'sec_enable',
@@ -182,6 +183,7 @@ function infcl_sanitize_settings( $input, $base = null ) {
 			'preset'       => array( 'glass', 'minimal', 'dark', 'sunset', 'ocean', 'forest', 'custom' ),
 			'bg_type'      => array( 'color', 'gradient', 'image' ),
 			'bg_size'      => array( 'cover', 'contain', 'repeat' ),
+			'bg_position'  => array( 'center', 'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ),
 			'social_style' => array( 'circle', 'rounded', 'square' ),
 		);
 		$field_allowed = isset( $allowed[ $key ] ) ? $allowed[ $key ] : array();

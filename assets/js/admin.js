@@ -170,6 +170,9 @@
 	}
 
 	function updatePreview() {
+		if (!$frame.length) {
+			return; // Page installateur : pas d'aperçu.
+		}
 		$.post(cfg.ajaxUrl, collect())
 			.done(function (res) {
 				if (res && res.success && res.data && res.data.css) {
@@ -351,6 +354,87 @@
 	$(document).on('click', '.infcl-refresh', function () {
 		$frame[0].src = $frame[0].src;
 	});
+
+	/* Aperçu plein écran */
+	function exitFullscreenPreview() {
+		$('.infcl-preview').removeClass('is-fullscreen');
+		$('.infcl-expand').removeClass('is-active');
+		$('body').removeClass('infcl-preview-lock');
+	}
+
+	$(document).on('click', '.infcl-expand', function () {
+		var $preview = $('.infcl-preview');
+		var fullscreen = $preview.toggleClass('is-fullscreen').hasClass('is-fullscreen');
+		$(this).toggleClass('is-active', fullscreen);
+		$('body').toggleClass('infcl-preview-lock', fullscreen);
+	});
+
+	$(document).on('keydown', function (e) {
+		if (e.key === 'Escape') {
+			exitFullscreenPreview();
+		}
+	});
+
+	/* Vérifier les mises à jour */
+	$(document).on('click', '.infcl-check-updates', function () {
+		var $btn = $(this);
+		if ($btn.prop('disabled')) {
+			return;
+		}
+		var $out = $btn.closest('.infcl-card, .infcl-about-card, .infcl-installer').find('.infcl-update-status').first();
+		$btn.prop('disabled', true).addClass('is-loading');
+		$out.html('<span class="infcl-update-msg">…</span>');
+
+		$.post(cfg.ajaxUrl, { action: 'infcl_check_updates', nonce: cfg.nonce })
+			.always(function () {
+				$btn.prop('disabled', false).removeClass('is-loading');
+			})
+			.done(function (res) {
+				if (!res || !res.success) {
+					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
+					$out.html('<span class="infcl-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
+					return;
+				}
+				if (res.data.status === 'up_to_date') {
+					$out.html('<span class="infcl-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
+				} else {
+					$out.html('<span class="infcl-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="infcl-update-link" href="' + res.data.url + '">Mettre à jour</a>');
+				}
+			})
+			.fail(function () {
+				$out.html('<span class="infcl-update-msg is-err">Erreur réseau</span>');
+			});
+	});
+
+	/* Installateur : navigation entre les étapes */
+	var wizardStep = 1;
+	var wizardTotal = $('.infcl-wstep').length || 3;
+
+	function wizardShow(n) {
+		wizardStep = Math.max(1, Math.min(wizardTotal, n));
+		$('.infcl-wstep').removeClass('is-active');
+		$('.infcl-wstep[data-step="' + wizardStep + '"]').addClass('is-active');
+		$('.infcl-inst-steps li').removeClass('is-active is-done');
+		$('.infcl-inst-steps li').each(function () {
+			var dot = parseInt($(this).data('step-dot'), 10);
+			if (dot < wizardStep) $(this).addClass('is-done');
+			if (dot === wizardStep) $(this).addClass('is-active');
+		});
+		$('.infcl-step-prev').toggle(wizardStep > 1);
+		$('.infcl-step-next').toggle(wizardStep < wizardTotal);
+		$('.infcl-step-finish').toggle(wizardStep === wizardTotal);
+	}
+
+	$(document).on('click', '.infcl-step-next', function () {
+		wizardShow(wizardStep + 1);
+	});
+	$(document).on('click', '.infcl-step-prev', function () {
+		wizardShow(wizardStep - 1);
+	});
+
+	if ($('.infcl-installer').length) {
+		wizardShow(1);
+	}
 
 	/* Réinitialisation : confirmation */
 	$(document).on('click', '#infcl-reset', function (e) {

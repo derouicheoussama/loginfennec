@@ -33,15 +33,20 @@ function infcl_build_login_css( $s ) {
 		if ( 'contain' === $s['bg_size'] || 'repeat' === $s['bg_size'] ) {
 			$size = $s['bg_size'];
 		}
-		$repeat = ( 'repeat' === $s['bg_size'] ) ? 'repeat' : 'no-repeat';
+		$repeat   = ( 'repeat' === $s['bg_size'] ) ? 'repeat' : 'no-repeat';
+		$position = str_replace( '-', ' ', (string) $s['bg_position'] );
+		if ( ! preg_match( '/^(top|bottom|left|right|center)?( (top|bottom|left|right|center))?$/', $position ) ) {
+			$position = 'center';
+		}
 
 		$css .= 'body.login{background:#101517;}';
 		$css .= sprintf(
-			'body.login::before{content:"";position:fixed;inset:0;z-index:0;background:url(%1$s) center center / %2$s %3$s;filter:blur(%4$dpx);transform:scale(1.08);pointer-events:none;}',
+			'body.login::before{content:"";position:fixed;inset:0;z-index:0;background:url(%1$s) %5$s / %2$s %3$s;filter:blur(%4$dpx);transform:scale(1.08);pointer-events:none;}',
 			wp_json_encode( esc_url_raw( $s['bg_image'] ) ),
 			$size,
 			$repeat,
-			(int) $s['bg_blur']
+			(int) $s['bg_blur'],
+			$position
 		);
 	} elseif ( 'gradient' === $s['bg_type'] ) {
 		$css .= sprintf(

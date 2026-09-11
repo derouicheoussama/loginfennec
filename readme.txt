@@ -4,7 +4,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,15 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.1.0 =
+* New: custom onboarding wizard (welcome, style choice, security) shown on activation and after major updates
+* New: "Check for updates" button — queries GitHub instantly and links to the one-click update
+* New: live preview now fills the screen, with a fullscreen mode (Esc to close)
+* New: background image position control (center, corners, edges)
+* New: "Go Pro" page — advanced security levels (2FA, reCAPTCHA, custom login URL, email alerts, audit log, geo-blocking)
+* New: developer social profiles on the About page
+* Improved: wider layout, the preview uses all available horizontal space
 
 = 1.0.0 =
 * Initial release: login page customizer (logo, background, blur, opacity, styles, links, social icons, copyright), live preview dashboard, GitHub updater and login-attempts protection.

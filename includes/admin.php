@@ -15,15 +15,18 @@ class Infcl_Admin {
 	 */
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
+		add_action( 'admin_init', array( __CLASS__, 'maybe_installer_redirect' ), 1 );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
 		add_action( 'admin_post_infcl_save', array( __CLASS__, 'save' ) );
+		add_action( 'admin_post_infcl_wizard', array( __CLASS__, 'wizard_save' ) );
 		add_action( 'admin_post_infcl_reset', array( __CLASS__, 'reset' ) );
 		add_action( 'wp_ajax_infcl_preview_css', array( __CLASS__, 'ajax_preview_css' ) );
+		add_action( 'wp_ajax_infcl_check_updates', array( __CLASS__, 'ajax_check_updates' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 	}
 
 	/**
-	 * Enregistre les pages du menu.
+	 * Menu : personnalisation, page Pro et installateur (page cachée).
 	 */
 	public static function menu() {
 		add_menu_page(
@@ -45,12 +48,50 @@ class Infcl_Admin {
 		);
 		add_submenu_page(
 			'infinity-customizer',
+			__( 'Passer en Pro', 'infinity-customizer' ),
+			__( 'Passer en Pro ✦', 'infinity-customizer' ),
+			'manage_options',
+			'infinity-customizer-pro',
+			array( __CLASS__, 'render_pro' )
+		);
+		add_submenu_page(
+			'infinity-customizer',
 			__( 'À propos d’Infinity Customizer', 'infinity-customizer' ),
 			__( 'À propos', 'infinity-customizer' ),
 			'manage_options',
 			'infinity-customizer-about',
 			array( __CLASS__, 'render_about' )
 		);
+		add_submenu_page(
+			null,
+			__( 'Bienvenue — Infinity Customizer', 'infinity-customizer' ),
+			__( 'Installateur', 'infinity-customizer' ),
+			'manage_options',
+			'infinity-customizer-installer',
+			array( __CLASS__, 'render_installer' )
+		);
+	}
+
+	/**
+	 * À l'activation (ou après une mise à jour majeure) : ouvre
+	 * l'installateur personnalisé une seule fois.
+	 */
+	public static function maybe_installer_redirect() {
+		if ( ! get_option( 'infcl_pending_installer' ) ) {
+			return;
+		}
+		if ( wp_doing_ajax() || wp_doing_cron() || wp_is_json_request() || defined( 'IFRAME_REQUEST' ) || defined( 'WP_CLI' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		if ( isset( $_GET['activate-multi'] ) ) { // Activation en masse : pas de redirection.
+			return;
+		}
+		delete_option( 'infcl_pending_installer' );
+		wp_safe_redirect( admin_url( 'admin.php?page=infinity-customizer-installer' ) );
+		exit;
 	}
 
 	/**
@@ -151,11 +192,84 @@ class Infcl_Admin {
 	}
 
 	/**
+	 * Enregistre les choix de l'installateur (assistant de bienvenue).
+	 */
+	public static function wizard_save() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-customizer' ) );
+		}
+		check_admin_referer( 'infcl_wizard', 'infcl_wizard_nonce' );
+
+		$base   = infcl_settings();
+		$input  = isset( $_POST['infcl'] ) && is_array( $_POST['infcl'] ) ? wp_unslash( $_POST['infcl'] ) : array();
+		update_option( INFINITY_CUSTOMIZER_OPTION, infcl_sanitize_settings( $input, $base ), 'yes' );
+		delete_option( 'infcl_pending_installer' );
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'          => 'infinity-customizer',
+					'infcl-welcome' => 1,
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
+	}
+
+	/**
+	 * Vérifie les mises à jour à la demande (interroge GitHub immédiatement).
+	 */
+	public static function ajax_check_updates() {
+		check_ajax_referer( 'infcl_admin', 'nonce' );
+		if ( ! current_user_can( 'update_plugins' ) && ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
+
+		$release = Infcl_GitHub_Updater::fetch_latest_release( true );
+		if ( ! $release || empty( $release['version'] ) || '' === $release['download'] ) {
+			wp_send_json_error(
+				array( 'message' => __( 'Impossible de joindre GitHub pour le moment. Réessayez plus tard.', 'infinity-customizer' ) )
+			);
+		}
+
+		if ( version_compare( INFINITY_CUSTOMIZER_VERSION, $release['version'], '>=' ) ) {
+			wp_send_json_success(
+				array(
+					'status'  => 'up_to_date',
+					'version' => INFINITY_CUSTOMIZER_VERSION,
+				)
+			);
+		}
+
+		// Force la reconstruction du transient puis prépare le lien de mise à jour.
+		if ( function_exists( 'wp_update_plugins' ) ) {
+			wp_update_plugins();
+		}
+		$basename   = plugin_basename( INFINITY_CUSTOMIZER_FILE );
+		$update_url = wp_nonce_url(
+			self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $basename ) ),
+			'upgrade-plugin_' . $basename
+		);
+
+		wp_send_json_success(
+			array(
+				'status'  => 'available',
+				'version' => $release['version'],
+				'url'     => $update_url,
+			)
+		);
+	}
+
+	/**
 	 * Notices de confirmation.
 	 */
 	public static function notices() {
 		if ( ! isset( $_GET['page'] ) ) {
 			return;
+		}
+		if ( 'infinity-customizer' === $_GET['page'] && isset( $_GET['infcl-welcome'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>🎉 ' . esc_html__( 'Bienvenue dans Infinity Customizer !', 'infinity-customizer' ) . '</strong> ' . esc_html__( 'Votre page de connexion est prête — explorez les onglets pour la personnaliser.', 'infinity-customizer' ) . '</p></div>';
 		}
 		if ( 'infinity-customizer' === $_GET['page'] && isset( $_GET['infcl-saved'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages enregistrés.', 'infinity-customizer' ) . '</strong> ' . esc_html__( 'Votre page de connexion est à jour.', 'infinity-customizer' ) . '</p></div>';
@@ -404,6 +518,7 @@ class Infcl_Admin {
 								<button type="button" class="infcl-device" data-width="375" title="<?php esc_attr_e( 'Mobile', 'infinity-customizer' ); ?>"><span class="dashicons dashicons-smartphone"></span></button>
 							</span>
 							<span class="infcl-preview-actions">
+								<button type="button" class="infcl-expand" title="<?php esc_attr_e( 'Aperçu plein écran', 'infinity-customizer' ); ?>"><span class="dashicons dashicons-fullscreen-exit-alt"></span></button>
 								<button type="button" class="infcl-refresh" title="<?php esc_attr_e( 'Recharger l’aperçu', 'infinity-customizer' ); ?>"><span class="dashicons dashicons-update"></span></button>
 								<a class="infcl-open" href="<?php echo esc_url( wp_login_url() ); ?>" target="_blank" rel="noopener" title="<?php esc_attr_e( 'Ouvrir dans un onglet', 'infinity-customizer' ); ?>"><span class="dashicons dashicons-external"></span></a>
 							</span>
@@ -517,13 +632,22 @@ class Infcl_Admin {
 				'title'  => __( 'Mises à jour', 'infinity-customizer' ),
 				'state'  => sprintf(
 					/* translators: %s : dépôt GitHub. */
-					__( 'GitHub : %s', 'infinity-customizer' ),
-					INFINITY_CUSTOMIZER_GITHUB_REPO
-				),
+					__( 'Version %s — GitHub : ', 'infinity-customizer' ),
+					INFINITY_CUSTOMIZER_VERSION
+				) . INFINITY_CUSTOMIZER_GITHUB_REPO,
 				'ok'     => true,
 				'goto'   => '',
-				'link'   => admin_url( 'plugins.php' ),
 				'button' => __( 'Vérifier les mises à jour', 'infinity-customizer' ),
+				'check'  => true,
+			),
+			array(
+				'icon'   => 'dashicons-superhero-alt',
+				'title'  => __( 'Infinity Customizer Pro', 'infinity-customizer' ),
+				'state'  => __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'infinity-customizer' ),
+				'ok'     => false,
+				'goto'   => '',
+				'link'   => admin_url( 'admin.php?page=infinity-customizer-pro' ),
+				'button' => __( 'Passer en Pro ✦', 'infinity-customizer' ),
 			),
 		);
 
@@ -532,9 +656,12 @@ class Infcl_Admin {
 			echo '<div class="infcl-card">';
 			echo '<span class="infcl-card-icon"><span class="dashicons ' . esc_attr( $card['icon'] ) . '"></span></span>';
 			echo '<div class="infcl-card-body"><h3>' . esc_html( $card['title'] ) . '</h3>';
-			echo '<p><span class="infcl-chip ' . ( $card['ok'] ? 'is-on' : 'is-off' ) . '">' . esc_html( $card['state'] ) . '</span></p>';
-			if ( ! empty( $card['link'] ) ) {
-				echo '<a class="infcl-card-link" href="' . esc_url( $card['link'] ) . '" target="_blank" rel="noopener">' . esc_html( $card['button'] ) . ' <span class="dashicons dashicons-external"></span></a>';
+			echo '<p><span class="infcl-chip ' . ( $card['ok'] ? 'is-on' : 'is-off' ) . '">' . wp_kses_post( $card['state'] ) . '</span></p>';
+			if ( ! empty( $card['check'] ) ) {
+				echo '<span class="infcl-card-link infcl-check-updates" tabindex="0"><span class="dashicons dashicons-update-alt"></span> ' . esc_html( $card['button'] ) . '</span>';
+				echo '<span class="infcl-update-status" aria-live="polite"></span>';
+			} elseif ( ! empty( $card['link'] ) ) {
+				echo '<a class="infcl-card-link" href="' . esc_url( $card['link'] ) . '">' . esc_html( $card['button'] ) . ' <span class="dashicons dashicons-external"></span></a>';
 			} else {
 				echo '<button type="button" class="infcl-card-link" data-goto="' . esc_attr( $card['goto'] ) . '">' . esc_html( $card['button'] ) . '</button>';
 			}
@@ -619,6 +746,24 @@ class Infcl_Admin {
 				'cover'   => __( 'Couvrir (cover)', 'infinity-customizer' ),
 				'contain' => __( 'Contenir (contain)', 'infinity-customizer' ),
 				'repeat'  => __( 'Répéter (motif)', 'infinity-customizer' ),
+			),
+			'',
+			array( 'bg_type' => 'image' )
+		);
+		self::field_select(
+			$s,
+			'bg_position',
+			__( 'Position de l’image', 'infinity-customizer' ),
+			array(
+				'center'       => __( 'Centrée', 'infinity-customizer' ),
+				'top'          => __( 'En haut', 'infinity-customizer' ),
+				'bottom'       => __( 'En bas', 'infinity-customizer' ),
+				'left'         => __( 'À gauche', 'infinity-customizer' ),
+				'right'        => __( 'À droite', 'infinity-customizer' ),
+				'top-left'     => __( 'Haut gauche', 'infinity-customizer' ),
+				'top-right'    => __( 'Haut droit', 'infinity-customizer' ),
+				'bottom-left'  => __( 'Bas gauche', 'infinity-customizer' ),
+				'bottom-right' => __( 'Bas droit', 'infinity-customizer' ),
 			),
 			'',
 			array( 'bg_type' => 'image' )
@@ -746,6 +891,13 @@ class Infcl_Admin {
 		self::field_toggle( $s, 'sec_generic_error', __( 'Masquer le détail des erreurs', 'infinity-customizer' ), __( 'Affiche un message générique au lieu de « mot de passe incorrect ».', 'infinity-customizer' ) );
 		self::field_toggle( $s, 'sec_hide_language_switcher', __( 'Masquer le sélecteur de langue', 'infinity-customizer' ) );
 
+		echo '<div class="infcl-pro-teaser">';
+		echo '<div class="infcl-pro-teaser-text"><h4>✦ ' . esc_html__( 'Niveaux de sécurité avancés — Infinity Customizer Pro', 'infinity-customizer' ) . '</h4><p>'
+			. esc_html__( 'Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique.', 'infinity-customizer' )
+			. '</p></div>';
+		echo '<a class="infcl-btn infcl-btn-pro" href="' . esc_url( admin_url( 'admin.php?page=infinity-customizer-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'infinity-customizer' ) . '</a>';
+		echo '</div>';
+
 		self::panel_close();
 	}
 
@@ -790,6 +942,13 @@ class Infcl_Admin {
 					<h2><span class="dashicons dashicons-admin-users"></span> <?php esc_html_e( 'Développeur', 'infinity-customizer' ); ?></h2>
 					<p class="infcl-about-dev"><strong><?php esc_html_e( 'Derouiche Oussama', 'infinity-customizer' ); ?></strong></p>
 					<p><?php esc_html_e( 'Créateur du plugin, passionné par WordPress et les interfaces modernes.', 'infinity-customizer' ); ?></p>
+					<div class="infcl-dev-social" aria-label="<?php esc_attr_e( 'Réseaux du développeur', 'infinity-customizer' ); ?>">
+						<?php foreach ( self::dev_socials() as $network ) : ?>
+							<a class="infcl-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>">
+								<span class="dashicons <?php echo esc_attr( $network['icon'] ); ?>"></span>
+							</a>
+						<?php endforeach; ?>
+					</div>
 					<p class="infcl-about-links">
 						<a href="https://github.com/derouiche-oussama" target="_blank" rel="noopener">GitHub</a> ·
 						<a href="https://profiles.wordpress.org/" target="_blank" rel="noopener">WordPress.org</a>
@@ -823,7 +982,11 @@ class Infcl_Admin {
 						echo ' <code>' . esc_html( INFINITY_CUSTOMIZER_GITHUB_REPO ) . '</code>';
 						?>
 					</p>
-					<p><?php esc_html_e( 'Publiez un tag v1.0.1 : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'infinity-customizer' ); ?></p>
+					<p><?php esc_html_e( 'Publiez un tag v1.1.0 : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'infinity-customizer' ); ?></p>
+					<div class="infcl-about-actions">
+						<button type="button" class="infcl-btn infcl-btn-ghost infcl-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'infinity-customizer' ); ?></button>
+						<span class="infcl-update-status" aria-live="polite"></span>
+					</div>
 				</section>
 
 				<section class="infcl-about-card">
@@ -849,6 +1012,201 @@ class Infcl_Admin {
 					</a>
 				</div>
 			</section>
+		</div>
+		<?php
+	}
+
+	/* ---------------------------------------------------------------------
+	 * Installateur personnalisé (assistant de bienvenue)
+	 * ------------------------------------------------------------------- */
+
+	/**
+	 * Réseaux sociaux du développeur (personnalisables via le filtre).
+	 *
+	 * @return array
+	 */
+	protected static function dev_socials() {
+		return apply_filters(
+			'infinity_customizer_dev_socials',
+			array(
+				array(
+					'label' => 'GitHub',
+					'icon'  => 'dashicons-github',
+					'url'   => 'https://github.com/derouiche-oussama',
+				),
+				array(
+					'label' => 'LinkedIn',
+					'icon'  => 'dashicons-linkedin',
+					'url'   => 'https://www.linkedin.com/',
+				),
+				array(
+					'label' => 'X (Twitter)',
+					'icon'  => 'dashicons-twitter',
+					'url'   => 'https://x.com/',
+				),
+				array(
+					'label' => 'Facebook',
+					'icon'  => 'dashicons-facebook-alt',
+					'url'   => 'https://www.facebook.com/',
+				),
+				array(
+					'label' => __( 'Site web', 'infinity-customizer' ),
+					'icon'  => 'dashicons-admin-links',
+					'url'   => home_url( '/' ),
+				),
+				array(
+					'label' => __( 'E-mail', 'infinity-customizer' ),
+					'icon'  => 'dashicons-email-alt',
+					'url'   => 'mailto:contact@example.com',
+				),
+			)
+		);
+	}
+
+	/**
+	 * URL du bouton « Passer en Pro ».
+	 *
+	 * @return string
+	 */
+	protected static function pro_url() {
+		return apply_filters( 'infinity_customizer_pro_url', '#' );
+	}
+
+	/**
+	 * Installateur : assistant de bienvenue en 3 étapes.
+	 */
+	public static function render_installer() {
+		$s = infcl_settings();
+		?>
+		<div class="wrap infcl-installer">
+			<header class="infcl-inst-hero">
+				<span class="infcl-inst-mark" aria-hidden="true">&#8734;</span>
+				<h1><?php esc_html_e( 'Bienvenue dans Infinity Customizer', 'infinity-customizer' ); ?></h1>
+				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style moderne, activez la protection anti force brute, et c’est parti.', 'infinity-customizer' ); ?></p>
+				<ol class="infcl-inst-steps" aria-hidden="true">
+					<li class="is-active" data-step-dot="1"><?php esc_html_e( 'Bienvenue', 'infinity-customizer' ); ?></li>
+					<li data-step-dot="2"><?php esc_html_e( 'Style', 'infinity-customizer' ); ?></li>
+					<li data-step-dot="3"><?php esc_html_e( 'Sécurité', 'infinity-customizer' ); ?></li>
+				</ol>
+			</header>
+
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="infcl_wizard">
+				<input type="hidden" name="infcl[preset]" value="<?php echo esc_attr( $s['preset'] ); ?>">
+				<?php wp_nonce_field( 'infcl_wizard', 'infcl_wizard_nonce' ); ?>
+
+				<section class="infcl-wstep is-active" data-step="1">
+					<div class="infcl-inst-grid">
+						<div class="infcl-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'infinity-customizer' ); ?></h3><p><?php esc_html_e( 'Votre logo, votre image de fond, flou et voile réglables.', 'infinity-customizer' ); ?></p></div>
+						<div class="infcl-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '6 styles modernes', 'infinity-customizer' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, coucher de soleil… un clic, tout est prêt.', 'infinity-customizer' ); ?></p></div>
+						<div class="infcl-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'infinity-customizer' ); ?></h3><p><?php esc_html_e( 'Blocage automatique des tentatives de mot de passe.', 'infinity-customizer' ); ?></p></div>
+						<div class="infcl-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'infinity-customizer' ); ?></h3><p><?php esc_html_e( 'Icônes de réseaux sociaux et votre mention de copyright.', 'infinity-customizer' ); ?></p></div>
+					</div>
+				</section>
+
+				<section class="infcl-wstep" data-step="2">
+					<h2><?php esc_html_e( 'Choisissez votre style', 'infinity-customizer' ); ?></h2>
+					<p class="infcl-inst-desc"><?php esc_html_e( 'Vous pourrez tout affiner plus tard (couleurs, flou, opacité…).', 'infinity-customizer' ); ?></p>
+					<div class="infcl-presets">
+						<?php
+						$presets = array(
+							'glass'   => array( __( 'Effet verre', 'infinity-customizer' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
+							'minimal' => array( __( 'Minimal', 'infinity-customizer' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
+							'dark'    => array( __( 'Sombre', 'infinity-customizer' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
+							'sunset'  => array( __( 'Coucher de soleil', 'infinity-customizer' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
+							'ocean'   => array( __( 'Océan', 'infinity-customizer' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
+							'forest'  => array( __( 'Forêt', 'infinity-customizer' ), 'linear-gradient(135deg,#059669,#065f46)' ),
+						);
+						foreach ( $presets as $key => $preset ) {
+							printf(
+								'<button type="button" class="infcl-preset%3$s" data-preset="%1$s"><span class="infcl-preset-preview" style="background:%2$s"></span><span class="infcl-preset-name">%4$s</span></button>',
+								esc_attr( $key ),
+								esc_attr( $preset[1] ),
+								$s['preset'] === $key ? ' is-active' : '',
+								esc_html( $preset[0] )
+							);
+						}
+						?>
+					</div>
+				</section>
+
+				<section class="infcl-wstep" data-step="3">
+					<h2><?php esc_html_e( 'Protégez votre page de connexion', 'infinity-customizer' ); ?></h2>
+					<p class="infcl-inst-desc"><?php esc_html_e( 'Recommandé : bloquez les attaques par force brute dès maintenant.', 'infinity-customizer' ); ?></p>
+					<div class="infcl-inst-security">
+						<label class="infcl-switch"><input type="checkbox" name="infcl[sec_enable]" value="1" <?php checked( ! empty( $s['sec_enable'] ) ); ?>><span class="infcl-switch-ui"></span></label>
+						<div>
+							<strong><?php esc_html_e( 'Limiter les tentatives de connexion', 'infinity-customizer' ); ?></strong>
+							<p class="infcl-inst-desc"><?php esc_html_e( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'infinity-customizer' ); ?></p>
+						</div>
+						<div class="infcl-inst-attempts">
+							<label for="infcl-wizard-attempts"><?php esc_html_e( 'Tentatives autorisées', 'infinity-customizer' ); ?></label>
+							<input type="number" id="infcl-wizard-attempts" class="infcl-input" name="infcl[sec_max_attempts]" min="1" max="20" value="<?php echo esc_attr( $s['sec_max_attempts'] ); ?>">
+						</div>
+					</div>
+					<p class="infcl-inst-pro-note">✦ <a href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-customizer-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'infinity-customizer' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'infinity-customizer' ); ?></p>
+				</section>
+
+				<footer class="infcl-inst-footer">
+					<button type="button" class="infcl-btn infcl-btn-ghost infcl-step-prev"><?php esc_html_e( 'Retour', 'infinity-customizer' ); ?></button>
+					<button type="button" class="infcl-btn infcl-btn-primary infcl-step-next"><?php esc_html_e( 'Continuer', 'infinity-customizer' ); ?></button>
+					<button type="submit" class="infcl-btn infcl-btn-primary infcl-step-finish"><?php esc_html_e( 'Terminer et ouvrir le dashboard', 'infinity-customizer' ); ?></button>
+				</footer>
+			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Page « Passer en Pro » : niveaux de sécurité avancés.
+	 */
+	public static function render_pro() {
+		$rows = array(
+			array( __( 'Limitation des tentatives + blocage IP', 'infinity-customizer' ), true, true ),
+			array( __( 'Messages de sécurité personnalisés', 'infinity-customizer' ), true, true ),
+			array( __( 'Journal des tentatives (audit complet)', 'infinity-customizer' ), false, true ),
+			array( __( 'Alertes e-mail après chaque blocage', 'infinity-customizer' ), false, true ),
+			array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'infinity-customizer' ), false, true ),
+			array( __( 'Double authentification (2FA)', 'infinity-customizer' ), false, true ),
+			array( __( 'URL de connexion personnalisée', 'infinity-customizer' ), false, true ),
+			array( __( 'Blocage géographique (pays)', 'infinity-customizer' ), false, true ),
+			array( __( 'Durcissement XML-RPC & REST', 'infinity-customizer' ), false, true ),
+			array( __( 'Sessions & appareils de confiance', 'infinity-customizer' ), false, true ),
+		);
+		?>
+		<div class="wrap infcl-wrap infcl-pro">
+			<div class="infcl-hero infcl-pro-hero">
+				<span class="infcl-hero-mark" aria-hidden="true">&#10022;</span>
+				<h1><?php esc_html_e( 'Infinity Customizer Pro', 'infinity-customizer' ); ?></h1>
+				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance et contrôle total.', 'infinity-customizer' ); ?></p>
+				<div class="infcl-hero-actions">
+					<a class="infcl-btn infcl-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
+						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'infinity-customizer' ); ?>
+					</a>
+					<a class="infcl-btn infcl-btn-ghost is-light" href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-customizer' ) ); ?>">
+						<?php esc_html_e( 'Revenir au dashboard', 'infinity-customizer' ); ?>
+					</a>
+				</div>
+			</div>
+
+			<div class="infcl-about-card infcl-pro-table-card">
+				<h2><span class="dashicons dashicons-shield-alt"></span> <?php esc_html_e( 'Niveaux de sécurité : Gratuit vs Pro', 'infinity-customizer' ); ?></h2>
+				<table class="infcl-pro-table">
+					<thead>
+						<tr><th><?php esc_html_e( 'Fonctionnalité', 'infinity-customizer' ); ?></th><th><?php esc_html_e( 'Gratuit', 'infinity-customizer' ); ?></th><th>Pro ✦</th></tr>
+					</thead>
+					<tbody>
+						<?php foreach ( $rows as $row ) : ?>
+							<tr>
+								<td><?php echo esc_html( $row[0] ); ?></td>
+								<td><?php echo $row[1] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-no-alt is-no"></span>'; ?></td>
+								<td><span class="dashicons dashicons-yes-alt is-yes"></span></td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<p class="infcl-pro-note"><?php esc_html_e( 'Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_customizer_pro_url).', 'infinity-customizer' ); ?></p>
+			</div>
 		</div>
 		<?php
 	}

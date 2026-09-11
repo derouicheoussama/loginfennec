@@ -2,12 +2,21 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity Customizer 1.0.0\n"
+"Project-Id-Version: Infinity Customizer 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-customizer\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: infinity-customizer\n"
+
+msgid "2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail."
+msgstr ""
+
+msgid "2FA, reCAPTCHA, URL de connexion personnalisée…"
+msgstr ""
+
+msgid "6 styles modernes"
+msgstr ""
 
 msgid "6 styles modernes (effet verre, sombre…)"
 msgstr ""
@@ -36,7 +45,13 @@ msgstr ""
 msgid "Affiché"
 msgstr ""
 
+msgid "Alertes e-mail après chaque blocage"
+msgstr ""
+
 msgid "Angle du dégradé"
+msgstr ""
+
+msgid "Anti force brute"
 msgstr ""
 
 msgid "Aperçu de la page de connexion"
@@ -46,6 +61,9 @@ msgid "Aperçu en direct"
 msgstr ""
 
 msgid "Aperçu en direct 100 % responsive"
+msgstr ""
+
+msgid "Aperçu plein écran"
 msgstr ""
 
 msgid "Appliquez un style en un clic, puis affinez-le dans les onglets suivants."
@@ -72,7 +90,31 @@ msgstr ""
 msgid "Aucun réseau configuré"
 msgstr ""
 
+msgid "Bas droit"
+msgstr ""
+
+msgid "Bas gauche"
+msgstr ""
+
+msgid "Bienvenue"
+msgstr ""
+
+msgid "Bienvenue dans Infinity Customizer"
+msgstr ""
+
+msgid "Bienvenue dans Infinity Customizer !"
+msgstr ""
+
+msgid "Bienvenue — Infinity Customizer"
+msgstr ""
+
+msgid "Blocage automatique des tentatives de mot de passe."
+msgstr ""
+
 msgid "Blocage des tentatives de mot de passe"
+msgstr ""
+
+msgid "Blocage géographique (pays)"
 msgstr ""
 
 msgid "Bloquez les attaques par force brute sur la page de connexion."
@@ -93,10 +135,16 @@ msgstr ""
 msgid "Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :"
 msgstr ""
 
+msgid "Centrée"
+msgstr ""
+
 msgid "Cercle"
 msgstr ""
 
 msgid "Changer de style"
+msgstr ""
+
+msgid "Choisissez votre style"
 msgstr ""
 
 msgid "Cible du lien « Retour au site »"
@@ -109,6 +157,9 @@ msgid "Conteneur"
 msgstr ""
 
 msgid "Contenir (contain)"
+msgstr ""
+
+msgid "Continuer"
 msgstr ""
 
 msgid "Contrôle du flou (backdrop)."
@@ -156,6 +207,15 @@ msgstr ""
 msgid "Derouiche Oussama"
 msgstr ""
 
+msgid "Double authentification (2FA)"
+msgstr ""
+
+msgid "Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique."
+msgstr ""
+
+msgid "Durcissement XML-RPC & REST"
+msgstr ""
+
 msgid "Durée du blocage"
 msgstr ""
 
@@ -178,6 +238,15 @@ msgid "Effet verre"
 msgstr ""
 
 msgid "Effet verre, couleurs des champs, bouton et liens."
+msgstr ""
+
+msgid "Effet verre, sombre, coucher de soleil… un clic, tout est prêt."
+msgstr ""
+
+msgid "En bas"
+msgstr ""
+
+msgid "En haut"
 msgstr ""
 
 msgid "Enregistrer"
@@ -204,6 +273,9 @@ msgstr ""
 msgid "Flou de l’image"
 msgstr ""
 
+msgid "Fonctionnalité"
+msgstr ""
+
 msgid "Fonctionnalités"
 msgstr ""
 
@@ -228,13 +300,22 @@ msgstr ""
 msgid "Forêt"
 msgstr ""
 
-msgid "GitHub : %s"
+msgid "Gratuit"
+msgstr ""
+
+msgid "Haut droit"
+msgstr ""
+
+msgid "Haut gauche"
 msgstr ""
 
 msgid "Hauteur"
 msgstr ""
 
 msgid "Icônes de réseaux sociaux"
+msgstr ""
+
+msgid "Icônes de réseaux sociaux et votre mention de copyright."
 msgstr ""
 
 msgid "Identifiants incorrects. Veuillez réessayer."
@@ -252,13 +333,25 @@ msgstr ""
 msgid "Image personnalisée"
 msgstr ""
 
+msgid "Impossible de joindre GitHub pour le moment. Réessayez plus tard."
+msgstr ""
+
 msgid "Infinity Customizer"
+msgstr ""
+
+msgid "Infinity Customizer Pro"
 msgstr ""
 
 msgid "Infinity Customizer est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
 msgstr ""
 
 msgid "Instagram"
+msgstr ""
+
+msgid "Installateur"
+msgstr ""
+
+msgid "Journal des tentatives (audit complet)"
 msgstr ""
 
 msgid "La page de connexion de WordPress, enfin à votre image."
@@ -271,6 +364,9 @@ msgid "Largeur"
 msgstr ""
 
 msgid "Largeur du formulaire"
+msgstr ""
+
+msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_customizer_pro_url)."
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
@@ -297,6 +393,9 @@ msgstr ""
 msgid "Liens personnalisés"
 msgstr ""
 
+msgid "Limitation des tentatives + blocage IP"
+msgstr ""
+
 msgid "Limiter les tentatives de connexion"
 msgstr ""
 
@@ -304,6 +403,9 @@ msgid "LinkedIn"
 msgstr ""
 
 msgid "Logo"
+msgstr ""
+
+msgid "Logo & arrière-plan"
 msgstr ""
 
 msgid "Logo WordPress par défaut"
@@ -339,6 +441,9 @@ msgstr ""
 msgid "Message de blocage"
 msgstr ""
 
+msgid "Messages de sécurité personnalisés"
+msgstr ""
+
 msgid "Minimal"
 msgstr ""
 
@@ -355,6 +460,12 @@ msgid "Modifiez la cible et le texte des liens, ou masquez-les."
 msgstr ""
 
 msgid "Médiathèque"
+msgstr ""
+
+msgid "Niveaux de sécurité : Gratuit vs Pro"
+msgstr ""
+
+msgid "Niveaux de sécurité avancés — Infinity Customizer Pro"
 msgstr ""
 
 msgid "Océan"
@@ -375,6 +486,12 @@ msgstr ""
 msgid "Ouvrir dans un onglet"
 msgstr ""
 
+msgid "Passer en Pro"
+msgstr ""
+
+msgid "Passer en Pro ✦"
+msgstr ""
+
 msgid "Personnalisation"
 msgstr ""
 
@@ -390,10 +507,22 @@ msgstr ""
 msgid "Personnalisé"
 msgstr ""
 
-msgid "Publiez un tag v1.0.1 : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
+msgid "Position de l’image"
+msgstr ""
+
+msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance et contrôle total."
+msgstr ""
+
+msgid "Protégez votre page de connexion"
+msgstr ""
+
+msgid "Publiez un tag v1.1.0 : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
 msgstr ""
 
 msgid "Recharger l’aperçu"
+msgstr ""
+
+msgid "Recommandé : bloquez les attaques par force brute dès maintenant."
 msgstr ""
 
 msgid "Remplacez le logo WordPress par le vôtre."
@@ -403,6 +532,12 @@ msgid "Renseignez une URL pour afficher l’icône — laissez vide pour la masq
 msgstr ""
 
 msgid "Retirer"
+msgstr ""
+
+msgid "Retour"
+msgstr ""
+
+msgid "Revenir au dashboard"
 msgstr ""
 
 msgid "Réglages enregistrés."
@@ -420,6 +555,9 @@ msgstr ""
 msgid "Réseaux"
 msgstr ""
 
+msgid "Réseaux du développeur"
+msgstr ""
+
 msgid "Réseaux sociaux"
 msgstr ""
 
@@ -429,13 +567,25 @@ msgstr ""
 msgid "Sections de personnalisation"
 msgstr ""
 
+msgid "Sessions & appareils de confiance"
+msgstr ""
+
 msgid "Site"
+msgstr ""
+
+msgid "Site web"
+msgstr ""
+
+msgid "Social & copyright"
 msgstr ""
 
 msgid "Sombre"
 msgstr ""
 
 msgid "Soutenir le projet"
+msgstr ""
+
+msgid "Style"
 msgstr ""
 
 msgid "Style actif"
@@ -465,6 +615,9 @@ msgstr ""
 msgid "Tentatives autorisées"
 msgstr ""
 
+msgid "Terminer et ouvrir le dashboard"
+msgstr ""
+
 msgid "Texte des champs"
 msgstr ""
 
@@ -483,13 +636,22 @@ msgstr ""
 msgid "Textes et champs"
 msgstr ""
 
+msgid "Transformez votre page de connexion en 3 étapes : choisissez un style moderne, activez la protection anti force brute, et c’est parti."
+msgstr ""
+
 msgid "Type de fond"
+msgstr ""
+
+msgid "URL de connexion personnalisée"
 msgstr ""
 
 msgid "Utilisez %%d pour la durée restante en minutes."
 msgstr ""
 
 msgid "Variables disponibles : %1$s (année) et %2$s (nom du site)."
+msgstr ""
+
+msgid "Version %s — GitHub : "
 msgstr ""
 
 msgid "Version de PHP"
@@ -510,7 +672,16 @@ msgstr ""
 msgid "Voir sur GitHub"
 msgstr ""
 
+msgid "Votre logo, votre image de fond, flou et voile réglables."
+msgstr ""
+
+msgid "Votre page de connexion est prête — explorez les onglets pour la personnaliser."
+msgstr ""
+
 msgid "Votre page de connexion est à jour."
+msgstr ""
+
+msgid "Vous pourrez tout affiner plus tard (couleurs, flou, opacité…)."
 msgstr ""
 
 msgid "Vue d’ensemble de votre page de connexion."
@@ -529,6 +700,15 @@ msgid "ex. : Créer un compte client"
 msgstr ""
 
 msgid "ex. : Retour à la boutique"
+msgstr ""
+
+msgid "reCAPTCHA v3 / hCaptcha sur la connexion"
+msgstr ""
+
+msgid "À droite"
+msgstr ""
+
+msgid "À gauche"
 msgstr ""
 
 msgid "À propos"

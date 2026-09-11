@@ -3,7 +3,7 @@
  * Plugin Name:       Infinity Customizer – Login Customizer & Security
  * Plugin URI:        https://github.com/derouiche-oussama/infinity-customizer
  * Description:       Personnalisez votre page de connexion : logo, arrière-plan (flou, opacité, dégradés), 6 styles modernes, liens, icônes sociales, copyright — et bloquez les tentatives de mot de passe. Interface d'administration moderne avec aperçu en direct.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Derouiche Oussama
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'INFINITY_CUSTOMIZER_VERSION', '1.0.0' );
+define( 'INFINITY_CUSTOMIZER_VERSION', '1.1.0' );
 define( 'INFINITY_CUSTOMIZER_FILE', __FILE__ );
 define( 'INFINITY_CUSTOMIZER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'INFINITY_CUSTOMIZER_URL', plugin_dir_url( __FILE__ ) );
@@ -57,12 +57,30 @@ function infcl_load_textdomain() {
 add_action( 'init', 'infcl_load_textdomain' );
 
 /**
- * À l'activation : enregistre les réglages par défaut.
+ * À l'activation : enregistre les réglages par défaut et programme
+ * l'ouverture de l'installateur personnalisé.
  */
 function infcl_activate() {
 	add_option( 'infinity_customizer_settings', infcl_get_defaults(), '', 'yes' );
+	update_option( 'infcl_pending_installer', 1, false );
 }
 register_activation_hook( __FILE__, 'infcl_activate' );
+
+/**
+ * Après une mise à jour : déclenche l'installateur (nouvelles fonctionnalités)
+ * et mémorise la version installée.
+ */
+function infcl_maybe_upgrade() {
+	$stored = get_option( 'infcl_stored_version', '0' );
+	if ( version_compare( $stored, INFINITY_CUSTOMIZER_VERSION, '>=' ) ) {
+		return;
+	}
+	if ( version_compare( $stored, '1.1.0', '<' ) ) {
+		update_option( 'infcl_pending_installer', 1, false );
+	}
+	update_option( 'infcl_stored_version', INFINITY_CUSTOMIZER_VERSION );
+}
+add_action( 'plugins_loaded', 'infcl_maybe_upgrade', 20 );
 
 /**
  * Initialise les modules.
