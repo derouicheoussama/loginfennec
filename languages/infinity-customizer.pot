@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity Customizer 1.1.0\n"
+"Project-Id-Version: Infinity Customizer 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-customizer\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,9 @@ msgstr ""
 msgid "Afficher les icônes sociales"
 msgstr ""
 
+msgid "Afficher un message d’accueil"
+msgstr ""
+
 msgid "Affichez votre mention de copyright sous le formulaire."
 msgstr ""
 
@@ -49,6 +52,9 @@ msgid "Alertes e-mail après chaque blocage"
 msgstr ""
 
 msgid "Angle du dégradé"
+msgstr ""
+
+msgid "Animation d’entrée"
 msgstr ""
 
 msgid "Anti force brute"
@@ -87,7 +93,13 @@ msgstr ""
 msgid "Arrondi du bouton"
 msgstr ""
 
+msgid "Arrondie"
+msgstr ""
+
 msgid "Aucun réseau configuré"
+msgstr ""
+
+msgid "Aucune"
 msgstr ""
 
 msgid "Bas droit"
@@ -144,6 +156,9 @@ msgstr ""
 msgid "Changer de style"
 msgstr ""
 
+msgid "Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge."
+msgstr ""
+
 msgid "Choisissez votre style"
 msgstr ""
 
@@ -198,6 +213,9 @@ msgstr ""
 msgid "Couleur, dégradé ou image, avec flou et voile coloré."
 msgstr ""
 
+msgid "Couleurs officielles des marques"
+msgstr ""
+
 msgid "Couvrir (cover)"
 msgstr ""
 
@@ -228,6 +246,9 @@ msgstr ""
 msgid "Désactivé"
 msgstr ""
 
+msgid "Désactivée automatiquement si l’utilisateur demande moins d’animations."
+msgstr ""
+
 msgid "Développeur"
 msgstr ""
 
@@ -243,6 +264,9 @@ msgstr ""
 msgid "Effet verre, sombre, coucher de soleil… un clic, tout est prêt."
 msgstr ""
 
+msgid "Effet à l’ouverture de la page"
+msgstr ""
+
 msgid "En bas"
 msgstr ""
 
@@ -256,6 +280,9 @@ msgid "Erreur"
 msgstr ""
 
 msgid "Espacement intérieur"
+msgstr ""
+
+msgid "Extras"
 msgstr ""
 
 msgid "Facebook"
@@ -288,6 +315,9 @@ msgstr ""
 msgid "Fond du formulaire"
 msgstr ""
 
+msgid "Fondu"
+msgstr ""
+
 msgid "Forme des icônes"
 msgstr ""
 
@@ -298,6 +328,9 @@ msgid "Forum d’entraide"
 msgstr ""
 
 msgid "Forêt"
+msgstr ""
+
+msgid "Glissement vers le haut"
 msgstr ""
 
 msgid "Gratuit"
@@ -414,6 +447,9 @@ msgstr ""
 msgid "Logo personnalisé + lien du logo"
 msgstr ""
 
+msgid "Luminosité de l’image"
+msgstr ""
+
 msgid "Masquer complètement le logo"
 msgstr ""
 
@@ -438,7 +474,13 @@ msgstr ""
 msgid "Mention de copyright"
 msgstr ""
 
+msgid "Message de bienvenue"
+msgstr ""
+
 msgid "Message de blocage"
+msgstr ""
+
+msgid "Message d’accueil, typographie et animation d’entrée de la page de connexion."
 msgstr ""
 
 msgid "Messages de sécurité personnalisés"
@@ -457,6 +499,9 @@ msgid "Mobile"
 msgstr ""
 
 msgid "Modifiez la cible et le texte des liens, ou masquez-les."
+msgstr ""
+
+msgid "Monospace"
 msgstr ""
 
 msgid "Médiathèque"
@@ -507,6 +552,9 @@ msgstr ""
 msgid "Personnalisé"
 msgstr ""
 
+msgid "Police"
+msgstr ""
+
 msgid "Position de l’image"
 msgstr ""
 
@@ -516,7 +564,7 @@ msgstr ""
 msgid "Protégez votre page de connexion"
 msgstr ""
 
-msgid "Publiez un tag v1.1.0 : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
+msgid "Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
 msgstr ""
 
 msgid "Recharger l’aperçu"
@@ -564,7 +612,13 @@ msgstr ""
 msgid "SVG ou PNG transparent recommandé."
 msgstr ""
 
+msgid "Saturation de l’image"
+msgstr ""
+
 msgid "Sections de personnalisation"
+msgstr ""
+
+msgid "Serif élégante"
 msgstr ""
 
 msgid "Sessions & appareils de confiance"
@@ -582,6 +636,9 @@ msgstr ""
 msgid "Sombre"
 msgstr ""
 
+msgid "Sous-titre"
+msgstr ""
+
 msgid "Soutenir le projet"
 msgstr ""
 
@@ -597,6 +654,9 @@ msgstr ""
 msgid "Styles modernes"
 msgstr ""
 
+msgid "Système (moderne)"
+msgstr ""
+
 msgid "Sécurité"
 msgstr ""
 
@@ -610,6 +670,9 @@ msgid "Tablette"
 msgstr ""
 
 msgid "Taille des icônes"
+msgstr ""
+
+msgid "Taille du texte"
 msgstr ""
 
 msgid "Tentatives autorisées"
@@ -636,10 +699,19 @@ msgstr ""
 msgid "Textes et champs"
 msgstr ""
 
+msgid "Titre"
+msgstr ""
+
+msgid "Titre et sous-titre affichés au-dessus du formulaire."
+msgstr ""
+
 msgid "Transformez votre page de connexion en 3 étapes : choisissez un style moderne, activez la protection anti force brute, et c’est parti."
 msgstr ""
 
 msgid "Type de fond"
+msgstr ""
+
+msgid "Typographie"
 msgstr ""
 
 msgid "URL de connexion personnalisée"
@@ -694,6 +766,15 @@ msgid "X (Twitter)"
 msgstr ""
 
 msgid "YouTube"
+msgstr ""
+
+msgid "Zoom"
+msgstr ""
+
+msgid "ex. : Bon retour parmi nous ✨"
+msgstr ""
+
+msgid "ex. : Connectez-vous pour gérer votre boutique."
 msgstr ""
 
 msgid "ex. : Créer un compte client"

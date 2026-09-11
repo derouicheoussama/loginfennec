@@ -28,6 +28,8 @@ function infcl_get_defaults() {
 		'bg_size'            => 'cover', // cover | contain | repeat.
 		'bg_position'        => 'center', // center | top | bottom | left | right | top-left | …
 		'bg_blur'            => 0,
+		'bg_brightness'      => 100,
+		'bg_saturation'      => 100,
 		'bg_overlay_color'   => '#000000',
 		'bg_overlay_opacity' => 10,
 
@@ -71,6 +73,7 @@ function infcl_get_defaults() {
 		'social_icon_color'    => '#ffffff',
 		'social_icon_bg'       => '#ffffff',
 		'social_icon_bg_opacity' => 18,
+		'social_brand'         => true,
 		'social_facebook'      => '',
 		'social_twitter'       => '',
 		'social_instagram'     => '',
@@ -81,6 +84,14 @@ function infcl_get_defaults() {
 		// Copyright.
 		'copyright_enable' => false,
 		'copyright_text'   => '© {year} {sitename} — Tous droits réservés.',
+
+		// Extras.
+		'welcome_enable'   => false,
+		'welcome_title'    => 'Bienvenue ✨',
+		'welcome_subtitle' => 'Connectez-vous pour accéder à votre espace.',
+		'font_family'      => 'system', // system | serif | rounded | mono.
+		'font_size'        => 13,
+		'anim'             => 'none', // none | fade | slide | zoom.
 
 		// Sécurité.
 		'sec_enable'               => true,
@@ -124,18 +135,18 @@ function infcl_get_option( $key ) {
  */
 function infcl_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'bg_type', 'bg_size', 'bg_position', 'social_style' ),
+		'key'    => array( 'preset', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
-			'hide_register', 'social_enable', 'copyright_enable', 'sec_enable',
-			'sec_generic_error', 'sec_hide_language_switcher',
+			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
+			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
 			'social_facebook', 'social_twitter', 'social_instagram',
 			'social_linkedin', 'social_youtube',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -145,7 +156,10 @@ function infcl_field_spec() {
 		'int'    => array(
 			'bg_gradient_angle'    => array( 0, 360 ),
 			'bg_blur'              => array( 0, 50 ),
+			'bg_brightness'        => array( 30, 150 ),
+			'bg_saturation'        => array( 0, 200 ),
 			'bg_overlay_opacity'   => array( 0, 100 ),
+			'font_size'            => array( 12, 18 ),
 			'logo_width'           => array( 40, 500 ),
 			'logo_height'          => array( 24, 400 ),
 			'form_opacity'         => array( 0, 100 ),
@@ -185,6 +199,8 @@ function infcl_sanitize_settings( $input, $base = null ) {
 			'bg_size'      => array( 'cover', 'contain', 'repeat' ),
 			'bg_position'  => array( 'center', 'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ),
 			'social_style' => array( 'circle', 'rounded', 'square' ),
+			'font_family'  => array( 'system', 'serif', 'rounded', 'mono' ),
+			'anim'         => array( 'none', 'fade', 'slide', 'zoom' ),
 		);
 		$field_allowed = isset( $allowed[ $key ] ) ? $allowed[ $key ] : array();
 		$value         = isset( $input[ $key ] ) ? sanitize_key( $input[ $key ] ) : '';

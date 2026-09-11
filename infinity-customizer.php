@@ -3,7 +3,7 @@
  * Plugin Name:       Infinity Customizer – Login Customizer & Security
  * Plugin URI:        https://github.com/derouiche-oussama/infinity-customizer
  * Description:       Personnalisez votre page de connexion : logo, arrière-plan (flou, opacité, dégradés), 6 styles modernes, liens, icônes sociales, copyright — et bloquez les tentatives de mot de passe. Interface d'administration moderne avec aperçu en direct.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Derouiche Oussama
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'INFINITY_CUSTOMIZER_VERSION', '1.1.0' );
+define( 'INFINITY_CUSTOMIZER_VERSION', '1.2.0' );
 define( 'INFINITY_CUSTOMIZER_FILE', __FILE__ );
 define( 'INFINITY_CUSTOMIZER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'INFINITY_CUSTOMIZER_URL', plugin_dir_url( __FILE__ ) );

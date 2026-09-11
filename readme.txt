@@ -4,7 +4,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,12 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.2.0 =
+* New: official brand colors for social icons (Facebook blue, X black, Instagram gradient, LinkedIn blue, YouTube red, Gmail red) — toggle on/off
+* New: "Extras" tab — welcome message (title + subtitle) above the form, typography (4 font families + text size), entry animation (fade, slide, zoom) with reduced-motion support
+* New: background image brightness and saturation controls
+* Fixed: live preview iframe could collapse to a short height, cutting off the login page
 
 = 1.1.0 =
 * New: custom onboarding wizard (welcome, style choice, security) shown on activation and after major updates

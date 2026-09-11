@@ -588,8 +588,8 @@
 	top: 190px;
 	display: flex;
 	flex-direction: column;
-	max-height: calc(100vh - 205px);
-	min-height: 560px;
+	height: calc(100vh - 205px);
+	min-height: 540px;
 	background: var(--infcl-panel);
 	border: 1px solid var(--infcl-line);
 	border-radius: var(--infcl-radius);
@@ -703,7 +703,7 @@
 		width: 100%;
 		flex: 1 1 auto;
 		min-width: 0;
-		max-height: none;
+		height: auto;
 	}
 
 	#infcl-frame {
@@ -897,7 +897,7 @@
 	flex: none;
 	width: auto;
 	min-width: 0;
-	max-height: none;
+	height: auto;
 	min-height: 0;
 	box-shadow: 0 30px 90px -20px rgba(0, 0, 0, .55);
 }

@@ -450,6 +450,7 @@ class Infcl_Admin {
 			'links'     => array( __( 'Liens', 'infinity-customizer' ), 'dashicons-editor-unlink' ),
 			'social'    => array( __( 'Réseaux sociaux', 'infinity-customizer' ), 'dashicons-share' ),
 			'copyright' => array( __( 'Copyright', 'infinity-customizer' ), 'dashicons-text' ),
+			'extras'    => array( __( 'Extras', 'infinity-customizer' ), 'dashicons-star-filled' ),
 			'security'  => array( __( 'Sécurité', 'infinity-customizer' ), 'dashicons-shield-alt' ),
 		);
 	}
@@ -506,6 +507,7 @@ class Infcl_Admin {
 						<?php self::panel_links( $s ); ?>
 						<?php self::panel_social( $s ); ?>
 						<?php self::panel_copyright( $s ); ?>
+						<?php self::panel_extras( $s ); ?>
 						<?php self::panel_security( $s ); ?>
 					</div>
 
@@ -769,6 +771,8 @@ class Infcl_Admin {
 			array( 'bg_type' => 'image' )
 		);
 		self::field_range( $s, 'bg_blur', __( 'Flou de l’image', 'infinity-customizer' ), 0, 30, 'px', __( 'Contrôle du flou (backdrop).', 'infinity-customizer' ), array( 'bg_type' => 'image' ) );
+		self::field_range( $s, 'bg_brightness', __( 'Luminosité de l’image', 'infinity-customizer' ), 30, 150, '%', '', array( 'bg_type' => 'image' ) );
+		self::field_range( $s, 'bg_saturation', __( 'Saturation de l’image', 'infinity-customizer' ), 0, 200, '%', '', array( 'bg_type' => 'image' ) );
 		self::field_color( $s, 'bg_overlay_color', __( 'Voile coloré', 'infinity-customizer' ), __( 'Couche de couleur superposée au fond.', 'infinity-customizer' ) );
 		self::field_range( $s, 'bg_overlay_opacity', __( 'Opacité du voile', 'infinity-customizer' ), 0, 100, '%' );
 
@@ -831,6 +835,7 @@ class Infcl_Admin {
 		self::panel_open( 'social', __( 'Icônes de réseaux sociaux', 'infinity-customizer' ), __( 'Renseignez une URL pour afficher l’icône — laissez vide pour la masquer.', 'infinity-customizer' ) );
 
 		self::field_toggle( $s, 'social_enable', __( 'Afficher les icônes sociales', 'infinity-customizer' ) );
+		self::field_toggle( $s, 'social_brand', __( 'Couleurs officielles des marques', 'infinity-customizer' ), __( 'Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge.', 'infinity-customizer' ) );
 		self::field_select(
 			$s,
 			'social_style',
@@ -873,6 +878,48 @@ class Infcl_Admin {
 			/* translators: les balises <code> sont des variables. */
 			sprintf( __( 'Variables disponibles : %1$s (année) et %2$s (nom du site).', 'infinity-customizer' ), '<code>{year}</code>', '<code>{sitename}</code>' ),
 			array( 'copyright_enable' => 1 )
+		);
+
+		self::panel_close();
+	}
+
+	/**
+	 * Panneau : extras (message d'accueil, typographie, animation).
+	 */
+	protected static function panel_extras( $s ) {
+		self::panel_open( 'extras', __( 'Extras', 'infinity-customizer' ), __( 'Message d’accueil, typographie et animation d’entrée de la page de connexion.', 'infinity-customizer' ) );
+
+		echo '<h3 class="infcl-group-title">' . esc_html__( 'Message de bienvenue', 'infinity-customizer' ) . '</h3>';
+		self::field_toggle( $s, 'welcome_enable', __( 'Afficher un message d’accueil', 'infinity-customizer' ), __( 'Titre et sous-titre affichés au-dessus du formulaire.', 'infinity-customizer' ) );
+		self::field_text( $s, 'welcome_title', __( 'Titre', 'infinity-customizer' ), 'text', __( 'ex. : Bon retour parmi nous ✨', 'infinity-customizer' ), '', array( 'welcome_enable' => 1 ) );
+		self::field_text( $s, 'welcome_subtitle', __( 'Sous-titre', 'infinity-customizer' ), 'text', __( 'ex. : Connectez-vous pour gérer votre boutique.', 'infinity-customizer' ), '', array( 'welcome_enable' => 1 ) );
+
+		echo '<h3 class="infcl-group-title">' . esc_html__( 'Typographie', 'infinity-customizer' ) . '</h3>';
+		self::field_select(
+			$s,
+			'font_family',
+			__( 'Police', 'infinity-customizer' ),
+			array(
+				'system'  => __( 'Système (moderne)', 'infinity-customizer' ),
+				'serif'   => __( 'Serif élégante', 'infinity-customizer' ),
+				'rounded' => __( 'Arrondie', 'infinity-customizer' ),
+				'mono'    => __( 'Monospace', 'infinity-customizer' ),
+			)
+		);
+		self::field_range( $s, 'font_size', __( 'Taille du texte', 'infinity-customizer' ), 12, 18, 'px' );
+
+		echo '<h3 class="infcl-group-title">' . esc_html__( 'Animation d’entrée', 'infinity-customizer' ) . '</h3>';
+		self::field_select(
+			$s,
+			'anim',
+			__( 'Effet à l’ouverture de la page', 'infinity-customizer' ),
+			array(
+				'none'  => __( 'Aucune', 'infinity-customizer' ),
+				'fade'  => __( 'Fondu', 'infinity-customizer' ),
+				'slide' => __( 'Glissement vers le haut', 'infinity-customizer' ),
+				'zoom'  => __( 'Zoom', 'infinity-customizer' ),
+			),
+			__( 'Désactivée automatiquement si l’utilisateur demande moins d’animations.', 'infinity-customizer' )
 		);
 
 		self::panel_close();
@@ -982,7 +1029,7 @@ class Infcl_Admin {
 						echo ' <code>' . esc_html( INFINITY_CUSTOMIZER_GITHUB_REPO ) . '</code>';
 						?>
 					</p>
-					<p><?php esc_html_e( 'Publiez un tag v1.1.0 : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'infinity-customizer' ); ?></p>
+					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'infinity-customizer' ); ?></p>
 					<div class="infcl-about-actions">
 						<button type="button" class="infcl-btn infcl-btn-ghost infcl-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'infinity-customizer' ); ?></button>
 						<span class="infcl-update-status" aria-live="polite"></span>
