@@ -180,10 +180,11 @@ class Lnf_Admin {
 				'sitename'       => get_bloginfo( 'name' ),
 				'siteUrl'        => home_url( '/' ),
 				'checkoutUrl'    => lnf_checkout_url(),
-				'paypalMe'       => lnf_paypal_me(),
+				'paypalEmail'    => lnf_paypal_email(),
 				'paypalCurrency' => lnf_paypal_currency(),
 				'paypalRate'     => lnf_paypal_rate(),
 				'ccpRip'         => lnf_ccp_rip(),
+				'baridimob'      => lnf_baridimob(),
 				'ccpName'        => lnf_ccp_name(),
 				'contactEmail'   => lnf_contact_email(),
 				'prices'         => array(
@@ -2172,8 +2173,9 @@ class Lnf_Admin {
 					<div class="lnf-pay-panel" data-panel="ccp" hidden>
 						<h4><?php esc_html_e( 'Payer par BaridiMob ou virement CCP', 'loginfennec' ); ?></h4>
 						<div class="lnf-ccp-box">
-							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Compte CCP', 'loginfennec' ); ?></span><code id="lnf-ccp-rip"></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-rip"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
-							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Titulaire', 'loginfennec' ); ?></span><strong id="lnf-ccp-name"></strong></div>
+							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Compte CCP', 'loginfennec' ); ?></span><code id="lnf-ccp-rip"><?php echo esc_html( lnf_ccp_rip() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-rip"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+							<div class="lnf-ccp-row"><span>BaridiMob</span><code id="lnf-ccp-baridimob"><?php echo esc_html( lnf_baridimob() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-baridimob"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Titulaire', 'loginfennec' ); ?></span><strong><?php echo esc_html( lnf_ccp_name() ); ?></strong></div>
 							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Montant exact', 'loginfennec' ); ?></span><strong id="lnf-ccp-amount"></strong><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-amount"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
 						</div>
 						<ol class="lnf-ccp-steps">

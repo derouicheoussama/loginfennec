@@ -494,8 +494,15 @@
 		$('#lnf-ccp-amount').text(fmtDA(amount) + ' DA');
 		var usd = Math.round(amount * (parseFloat(cfg.paypalRate) || 0) * 100) / 100;
 		$('#lnf-paypal-amount').text(usd + ' ' + cfg.paypalCurrency);
-		if (cfg.paypalMe) {
-			$('#lnf-paypal-link').attr('href', 'https://www.paypal.me/' + cfg.paypalMe + '/' + usd + cfg.paypalCurrency);
+		if (cfg.paypalEmail) {
+			var payUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick'
+				+ '&business=' + encodeURIComponent(cfg.paypalEmail)
+				+ '&item_name=' + encodeURIComponent('LoginFennec Pro — ' + payLabel() + ' (' + payBillingLabel() + ')')
+				+ '&amount=' + usd
+				+ '&currency_code=' + cfg.paypalCurrency
+				+ '&no_shipping=1'
+				+ '&custom=' + encodeURIComponent(cfg.siteUrl || '');
+			$('#lnf-paypal-link').attr('href', payUrl);
 		}
 		var cardUrl = cfg.checkoutUrl + (cfg.checkoutUrl.indexOf('?') > -1 ? '&' : '?') + 'pack=' + selectedPack + '&billing=' + currentBilling + '&site=' + encodeURIComponent(cfg.siteUrl || '');
 		$('#lnf-card-open').attr('data-checkout', cardUrl);

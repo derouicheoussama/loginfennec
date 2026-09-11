@@ -66,17 +66,27 @@ if ( ! defined( 'LOGINFENNEC_PAYPAL_CURRENCY' ) ) {
 
 /** Taux de conversion DA → devise PayPal (ex. 0.0075 pour ≈135 DA/USD). */
 if ( ! defined( 'LOGINFENNEC_PAYPAL_RATE' ) ) {
-	define( 'LOGINFENNEC_PAYPAL_RATE', '0.008' );
+	define( 'LOGINFENNEC_PAYPAL_RATE', '0.0075' );
 }
 
-/** Compte CCP complet avec clé — ex. '0021456789 clé 45'. Vide = CCP masqué. */
+/** E-mail Business PayPal (paiement direct _xclick vers cette adresse). */
+if ( ! defined( 'LOGINFENNEC_PAYPAL_EMAIL' ) ) {
+	define( 'LOGINFENNEC_PAYPAL_EMAIL', 'payment@derouiche.dev' );
+}
+
+/** Compte CCP avec clé — affiché sur la page Pro. */
 if ( ! defined( 'LOGINFENNEC_CCP_RIP' ) ) {
-	define( 'LOGINFENNEC_CCP_RIP', '' );
+	define( 'LOGINFENNEC_CCP_RIP', '0014480375 clé 46' );
+}
+
+/** Numéro BaridiMob complet (pour le virement depuis l'application). */
+if ( ! defined( 'LOGINFENNEC_BARIDIMOB' ) ) {
+	define( 'LOGINFENNEC_BARIDIMOB', '00799999001448037546' );
 }
 
 /** Nom du titulaire du compte CCP. */
 if ( ! defined( 'LOGINFENNEC_CCP_NAME' ) ) {
-	define( 'LOGINFENNEC_CCP_NAME', '' );
+	define( 'LOGINFENNEC_CCP_NAME', 'Derouiche Oussama' );
 }
 
 /** E-mail de contact pour les preuves de paiement (vide = e-mail admin du site). */
@@ -109,6 +119,24 @@ function lnf_dmca_badge() {
  */
 function lnf_paypal_me() {
 	return apply_filters( 'loginfennec_paypal_me', LOGINFENNEC_PAYPAL_ME );
+}
+
+/**
+ * E-mail Business PayPal pour le paiement direct _xclick (filtrable).
+ *
+ * @return string
+ */
+function lnf_paypal_email() {
+	return apply_filters( 'loginfennec_paypal_email', LOGINFENNEC_PAYPAL_EMAIL );
+}
+
+/**
+ * Numéro BaridiMob complet (filtrable).
+ *
+ * @return string
+ */
+function lnf_baridimob() {
+	return apply_filters( 'loginfennec_baridimob', LOGINFENNEC_BARIDIMOB );
 }
 
 /**
