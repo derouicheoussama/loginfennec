@@ -1,0 +1,43 @@
+name: Release
+
+# Publie un zip nommé infinity-customizer.zip à chaque tag v* :
+# c'est ce zip que le module de mise à jour intégré téléchargera.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Construire le zip
+        run: |
+          mkdir -p build/infinity-customizer
+          rsync -a --delete \
+            --exclude '.github' \
+            --exclude '.git' \
+            --exclude 'node_modules' \
+            --exclude 'build' \
+            --exclude 'README.md' \
+            --exclude '*.pot' \
+            ./ build/infinity-customizer/
+          cd build
+          zip -r ../infinity-customizer.zip infinity-customizer
+
+      - name: Vérifier la syntaxe PHP
+        run: |
+          find . -name '*.php' -not -path './node_modules/*' -print0 | xargs -0 -n1 php -l || true
+
+      - name: Créer la release GitHub
+        uses: softprops/action-gh-release@v2
+        with:
+          files: infinity-customizer.zip
+          generate_release_notes: true

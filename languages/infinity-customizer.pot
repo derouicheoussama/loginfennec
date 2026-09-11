@@ -1,0 +1,547 @@
+# Copyright (C) 2026 Derouiche Oussama
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Infinity Customizer 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-customizer\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: infinity-customizer\n"
+
+msgid "6 styles modernes (effet verre, sombre…)"
+msgstr ""
+
+msgid "Accès refusé."
+msgstr ""
+
+msgid "Activé — %1$d tentatives, blocage %2$d min"
+msgstr ""
+
+msgid "Affichage de l’image"
+msgstr ""
+
+msgid "Affiche un message générique au lieu de « mot de passe incorrect »."
+msgstr ""
+
+msgid "Afficher le copyright"
+msgstr ""
+
+msgid "Afficher les icônes sociales"
+msgstr ""
+
+msgid "Affichez votre mention de copyright sous le formulaire."
+msgstr ""
+
+msgid "Affiché"
+msgstr ""
+
+msgid "Angle du dégradé"
+msgstr ""
+
+msgid "Aperçu de la page de connexion"
+msgstr ""
+
+msgid "Aperçu en direct"
+msgstr ""
+
+msgid "Aperçu en direct 100 % responsive"
+msgstr ""
+
+msgid "Appliquez un style en un clic, puis affinez-le dans les onglets suivants."
+msgstr ""
+
+msgid "Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement."
+msgstr ""
+
+msgid "Arrière-plan"
+msgstr ""
+
+msgid "Arrière-plan : couleur, dégradé ou image"
+msgstr ""
+
+msgid "Arrondi"
+msgstr ""
+
+msgid "Arrondi des coins"
+msgstr ""
+
+msgid "Arrondi du bouton"
+msgstr ""
+
+msgid "Aucun réseau configuré"
+msgstr ""
+
+msgid "Blocage des tentatives de mot de passe"
+msgstr ""
+
+msgid "Bloquez les attaques par force brute sur la page de connexion."
+msgstr ""
+
+msgid "Bordure des champs"
+msgstr ""
+
+msgid "Bouton « Se connecter »"
+msgstr ""
+
+msgid "Bureau"
+msgstr ""
+
+msgid "Carré"
+msgstr ""
+
+msgid "Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :"
+msgstr ""
+
+msgid "Cercle"
+msgstr ""
+
+msgid "Changer de style"
+msgstr ""
+
+msgid "Cible du lien « Retour au site »"
+msgstr ""
+
+msgid "Configurer"
+msgstr ""
+
+msgid "Conteneur"
+msgstr ""
+
+msgid "Contenir (contain)"
+msgstr ""
+
+msgid "Contrôle du flou (backdrop)."
+msgstr ""
+
+msgid "Contrôles de flou et d’opacité"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "Couche de couleur superposée au fond."
+msgstr ""
+
+msgid "Coucher de soleil"
+msgstr ""
+
+msgid "Couleur au survol"
+msgstr ""
+
+msgid "Couleur de fond / dégradé 1"
+msgstr ""
+
+msgid "Couleur de l’icône"
+msgstr ""
+
+msgid "Couleur des liens"
+msgstr ""
+
+msgid "Couleur du bouton"
+msgstr ""
+
+msgid "Couleur unie"
+msgstr ""
+
+msgid "Couleur, dégradé ou image, avec flou et voile coloré."
+msgstr ""
+
+msgid "Couvrir (cover)"
+msgstr ""
+
+msgid "Créateur du plugin, passionné par WordPress et les interfaces modernes."
+msgstr ""
+
+msgid "Derouiche Oussama"
+msgstr ""
+
+msgid "Durée du blocage"
+msgstr ""
+
+msgid "Dégradé"
+msgstr ""
+
+msgid "Dégradé — couleur 2"
+msgstr ""
+
+msgid "Désactivé"
+msgstr ""
+
+msgid "Développeur"
+msgstr ""
+
+msgid "E-mail"
+msgstr ""
+
+msgid "Effet verre"
+msgstr ""
+
+msgid "Effet verre, couleurs des champs, bouton et liens."
+msgstr ""
+
+msgid "Enregistrer"
+msgstr ""
+
+msgid "Erreur"
+msgstr ""
+
+msgid "Espacement intérieur"
+msgstr ""
+
+msgid "Facebook"
+msgstr ""
+
+msgid "Faire un don"
+msgstr ""
+
+msgid "Faire un don via PayPal"
+msgstr ""
+
+msgid "Flou (effet verre)"
+msgstr ""
+
+msgid "Flou de l’image"
+msgstr ""
+
+msgid "Fonctionnalités"
+msgstr ""
+
+msgid "Fond de l’icône"
+msgstr ""
+
+msgid "Fond des champs"
+msgstr ""
+
+msgid "Fond du formulaire"
+msgstr ""
+
+msgid "Forme des icônes"
+msgstr ""
+
+msgid "Formulaire"
+msgstr ""
+
+msgid "Forum d’entraide"
+msgstr ""
+
+msgid "Forêt"
+msgstr ""
+
+msgid "GitHub : %s"
+msgstr ""
+
+msgid "Hauteur"
+msgstr ""
+
+msgid "Icônes de réseaux sociaux"
+msgstr ""
+
+msgid "Identifiants incorrects. Veuillez réessayer."
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid "Image de fond"
+msgstr ""
+
+msgid "Image du logo"
+msgstr ""
+
+msgid "Image personnalisée"
+msgstr ""
+
+msgid "Infinity Customizer"
+msgstr ""
+
+msgid "Infinity Customizer est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgstr ""
+
+msgid "Instagram"
+msgstr ""
+
+msgid "La page de connexion de WordPress, enfin à votre image."
+msgstr ""
+
+msgid "Laisser vide pour pointer vers l’accueil du site."
+msgstr ""
+
+msgid "Largeur"
+msgstr ""
+
+msgid "Largeur du formulaire"
+msgstr ""
+
+msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
+msgstr ""
+
+msgid "Libellés"
+msgstr ""
+
+msgid "Lien du logo"
+msgstr ""
+
+msgid "Liens"
+msgstr ""
+
+msgid "Liens : personnalisation ou masquage"
+msgstr ""
+
+msgid "Liens de la page de connexion"
+msgstr ""
+
+msgid "Liens par défaut"
+msgstr ""
+
+msgid "Liens personnalisés"
+msgstr ""
+
+msgid "Limiter les tentatives de connexion"
+msgstr ""
+
+msgid "LinkedIn"
+msgstr ""
+
+msgid "Logo"
+msgstr ""
+
+msgid "Logo WordPress par défaut"
+msgstr ""
+
+msgid "Logo personnalisé + lien du logo"
+msgstr ""
+
+msgid "Masquer complètement le logo"
+msgstr ""
+
+msgid "Masquer le détail des erreurs"
+msgstr ""
+
+msgid "Masquer le lien « S’enregistrer »"
+msgstr ""
+
+msgid "Masquer le sélecteur de langue"
+msgstr ""
+
+msgid "Masquer « Mot de passe perdu ? »"
+msgstr ""
+
+msgid "Masquer « Retour au site »"
+msgstr ""
+
+msgid "Masqué"
+msgstr ""
+
+msgid "Mention de copyright"
+msgstr ""
+
+msgid "Message de blocage"
+msgstr ""
+
+msgid "Minimal"
+msgstr ""
+
+msgid "Mises à jour"
+msgstr ""
+
+msgid "Mises à jour automatiques via GitHub"
+msgstr ""
+
+msgid "Mobile"
+msgstr ""
+
+msgid "Modifiez la cible et le texte des liens, ou masquez-les."
+msgstr ""
+
+msgid "Médiathèque"
+msgstr ""
+
+msgid "Océan"
+msgstr ""
+
+msgid "Ombre portée"
+msgstr ""
+
+msgid "Opacité du fond"
+msgstr ""
+
+msgid "Opacité du fond d’icône"
+msgstr ""
+
+msgid "Opacité du voile"
+msgstr ""
+
+msgid "Ouvrir dans un onglet"
+msgstr ""
+
+msgid "Personnalisation"
+msgstr ""
+
+msgid "Personnalisation de la connexion"
+msgstr ""
+
+msgid "Personnaliser"
+msgstr ""
+
+msgid "Personnalisez votre page de connexion (logo, arrière-plan, flou, opacité, styles modernes, liens, réseaux sociaux, copyright) et protégez-la contre les tentatives de mot de passe. Mises à jour via le dépôt GitHub %s."
+msgstr ""
+
+msgid "Personnalisé"
+msgstr ""
+
+msgid "Publiez un tag v1.0.1 : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
+msgstr ""
+
+msgid "Recharger l’aperçu"
+msgstr ""
+
+msgid "Remplacez le logo WordPress par le vôtre."
+msgstr ""
+
+msgid "Renseignez une URL pour afficher l’icône — laissez vide pour la masquer."
+msgstr ""
+
+msgid "Retirer"
+msgstr ""
+
+msgid "Réglages enregistrés."
+msgstr ""
+
+msgid "Réglages réinitialisés aux valeurs par défaut."
+msgstr ""
+
+msgid "Réinitialiser"
+msgstr ""
+
+msgid "Répéter (motif)"
+msgstr ""
+
+msgid "Réseaux"
+msgstr ""
+
+msgid "Réseaux sociaux"
+msgstr ""
+
+msgid "SVG ou PNG transparent recommandé."
+msgstr ""
+
+msgid "Sections de personnalisation"
+msgstr ""
+
+msgid "Site"
+msgstr ""
+
+msgid "Sombre"
+msgstr ""
+
+msgid "Soutenir le projet"
+msgstr ""
+
+msgid "Style actif"
+msgstr ""
+
+msgid "Styles"
+msgstr ""
+
+msgid "Styles modernes"
+msgstr ""
+
+msgid "Sécurité"
+msgstr ""
+
+msgid "Sécurité de la connexion"
+msgstr ""
+
+msgid "Tableau de bord"
+msgstr ""
+
+msgid "Tablette"
+msgstr ""
+
+msgid "Taille des icônes"
+msgstr ""
+
+msgid "Tentatives autorisées"
+msgstr ""
+
+msgid "Texte des champs"
+msgstr ""
+
+msgid "Texte du copyright"
+msgstr ""
+
+msgid "Texte du formulaire"
+msgstr ""
+
+msgid "Texte du lien « Retour au site »"
+msgstr ""
+
+msgid "Texte du lien « S’enregistrer »"
+msgstr ""
+
+msgid "Textes et champs"
+msgstr ""
+
+msgid "Type de fond"
+msgstr ""
+
+msgid "Utilisez %%d pour la durée restante en minutes."
+msgstr ""
+
+msgid "Variables disponibles : %1$s (année) et %2$s (nom du site)."
+msgstr ""
+
+msgid "Version de PHP"
+msgstr ""
+
+msgid "Version de WordPress"
+msgstr ""
+
+msgid "Version du plugin"
+msgstr ""
+
+msgid "Voile coloré"
+msgstr ""
+
+msgid "Voir les notes de version sur GitHub"
+msgstr ""
+
+msgid "Voir sur GitHub"
+msgstr ""
+
+msgid "Votre page de connexion est à jour."
+msgstr ""
+
+msgid "Vue d’ensemble de votre page de connexion."
+msgstr ""
+
+msgid "Vérifier les mises à jour"
+msgstr ""
+
+msgid "X (Twitter)"
+msgstr ""
+
+msgid "YouTube"
+msgstr ""
+
+msgid "ex. : Créer un compte client"
+msgstr ""
+
+msgid "ex. : Retour à la boutique"
+msgstr ""
+
+msgid "À propos"
+msgstr ""
+
+msgid "À propos d’Infinity Customizer"
+msgstr ""
+
+msgid "État du système"
+msgstr ""
+
+msgid "Attention : il vous reste %d tentative avant le blocage temporaire."
+msgid_plural "Attention : il vous reste %d tentatives avant le blocage temporaire."
+msgstr[0] ""
+msgstr[1] ""
+
