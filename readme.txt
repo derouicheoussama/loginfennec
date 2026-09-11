@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,10 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.9.2 =
+* Improved: developer social icons now use the original brand logos (Facebook, X, Instagram, LinkedIn, YouTube, TikTok, GitHub) with their official colors
+* Improved: About page design centered for a cleaner layout
 
 = 1.9.1 =
 * Improved: onboarding wizard — centered pro layout, all 10 styles + 7 form themes, full security step (lockout duration, honeypot, author blocking, XML-RPC)

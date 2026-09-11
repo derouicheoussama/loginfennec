@@ -989,6 +989,33 @@ body.inls-preview-lock {
 .inls-dev-icon svg {
 	display: block;
 	margin: 0 auto;
+	width: 20px;
+	height: 20px;
+}
+
+/* ---------- Page À propos : centrage ---------- */
+
+.inls-about {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.inls-about .inls-hero {
+	text-align: center;
+}
+
+.inls-about .inls-hero p {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.inls-about .inls-hero-actions,
+.inls-pro .inls-hero-actions {
+	justify-content: center;
+}
+
+.inls-about .inls-quality {
+	justify-content: center;
 }
 
 .inls-about-actions {
