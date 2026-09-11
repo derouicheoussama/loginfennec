@@ -383,10 +383,14 @@ function inls_login_honeypot() {
 add_action( 'login_form', 'inls_login_honeypot' );
 
 /**
- * Charge Dashicons (icônes sociales) sur la page de connexion.
+ * Charge Dashicons (icônes sociales) sur la page de connexion,
+ * uniquement lorsque les icônes sont activées (performance).
  */
 function inls_login_enqueue() {
-	wp_enqueue_style( 'dashicons' );
+	$s = inls_settings();
+	if ( ! empty( $s['social_enable'] ) ) {
+		wp_enqueue_style( 'dashicons' );
+	}
 }
 add_action( 'login_enqueue_scripts', 'inls_login_enqueue' );
 

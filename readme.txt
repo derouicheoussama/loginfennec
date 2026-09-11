@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,11 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.5.1 =
+* Fixed: Sakura, Neon, Monochrome and Royal styles now apply correctly with one click
+* Fixed: developer social icons no longer shift on hover — perfectly aligned and stable
+* Perf: the Dashicons stylesheet only loads on the login page when social icons are enabled
 
 = 1.5.0 =
 * New: dashboard with live security statistics (logins, blocks, failures, active locks)

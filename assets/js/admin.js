@@ -81,6 +81,50 @@
 			input_bg: '#ffffff', input_color: '#14532d', input_border: '#ffffff',
 			button_bg: '#10b981', button_hover: '#059669', button_radius: 12,
 			link_color: '#ffffff'
+		},
+		neon: {
+			bg_type: 'gradient', bg_color1: '#0f0c29', bg_color2: '#302b63',
+			bg_gradient_angle: 135, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#14101f', form_opacity: 78, form_blur: 12, form_radius: 16,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#e2e8f0', label_color: '#a5b4fc',
+			input_bg: '#1e1b33', input_color: '#e2e8f0', input_border: '#4c1d95',
+			button_bg: '#d946ef', button_hover: '#c026d3', button_radius: 10,
+			link_color: '#a5b4fc'
+		},
+		sakura: {
+			bg_type: 'gradient', bg_color1: '#ee9ca7', bg_color2: '#ffdde1',
+			bg_gradient_angle: 120, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#ffffff', form_opacity: 88, form_blur: 6, form_radius: 20,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#6b3a4b', label_color: '#8d5b6e',
+			input_bg: '#ffffff', input_color: '#4a2c3a', input_border: '#e5b8c6',
+			button_bg: '#d6587f', button_hover: '#bd4068', button_radius: 14,
+			link_color: '#8d5b6e'
+		},
+		mono: {
+			bg_type: 'gradient', bg_color1: '#9ca3af', bg_color2: '#374151',
+			bg_gradient_angle: 160, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#ffffff', form_opacity: 96, form_blur: 0, form_radius: 8,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#111827', label_color: '#374151',
+			input_bg: '#f9fafb', input_color: '#111827', input_border: '#9ca3af',
+			button_bg: '#111827', button_hover: '#000000', button_radius: 6,
+			link_color: '#4b5563'
+		},
+		royal: {
+			bg_type: 'gradient', bg_color1: '#141e30', bg_color2: '#243b55',
+			bg_gradient_angle: 150, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#ffffff', form_opacity: 10, form_blur: 18, form_radius: 16,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#cbd5e1',
+			input_bg: '#ffffff', input_color: '#1e293b', input_border: '#cbd5e1',
+			button_bg: '#f59e0b', button_hover: '#d97706', button_radius: 10,
+			link_color: '#e2e8f0'
 		}
 	};
 
@@ -179,6 +223,9 @@
 					applyCss(res.data.css);
 					applyDomTweaks();
 				}
+			})
+			.fail(function () {
+				// Requête d'aperçu manquée (réseau/timeout) : silencieux, la suivante repartira.
 			});
 	}
 
@@ -277,6 +324,11 @@
 		var key = $(this).data('preset');
 		var values = PRESETS[key];
 		if (!values) {
+			// Style inconnu du navigateur : on active la carte sans écraser les couleurs.
+			$('.inls-preset').removeClass('is-active');
+			$(this).addClass('is-active');
+			$('[name="inls[preset]"]').val(key);
+			updatePreview();
 			return;
 		}
 		applyingPreset = true;

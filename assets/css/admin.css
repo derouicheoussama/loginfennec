@@ -962,12 +962,13 @@ body.inls-preview-lock {
 	color: #fff;
 	background: var(--inls-grad);
 	text-decoration: none;
-	transition: transform .15s ease, box-shadow .15s ease;
+	line-height: 1;
+	transition: filter .15s ease, box-shadow .15s ease;
 }
 
 .inls-dev-icon:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 10px 22px -8px var(--inls-accent);
+	filter: brightness(1.12);
+	box-shadow: 0 8px 20px -8px var(--inls-accent);
 	color: #fff;
 }
 
@@ -975,6 +976,12 @@ body.inls-preview-lock {
 	font-size: 18px;
 	width: 18px;
 	height: 18px;
+	line-height: 1;
+}
+
+.inls-dev-icon svg {
+	display: block;
+	margin: 0 auto;
 }
 
 .inls-about-actions {
