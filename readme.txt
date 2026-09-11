@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.1.6
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,14 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.2.0 =
+* New: full licensing system — packs for 1 site and 5 sites, yearly or lifetime, priced in DA
+* New: pricing page with Annuelle / À vie switch, advantages and lifetime updates
+* New: license details panel — status, masked key, pack, type, expiry date, sites, last check
+* New: daily license check (remote revocation + yearly expiry) and "verify now" button
+* New: first Pro feature unlocked by license — email alerts on IP lockout
+* New: activation form with pack and billing selection; local test mode without license server
 
 = 2.1.6 =
 * Improved: Pro page and all Pro elements now use a blue color scheme (hero, button, badges, table column)
