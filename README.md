@@ -50,7 +50,7 @@ infinity-loginshield/
 
 ## Avant de publier sur GitHub — 3 endroits à adapter
 
-Le dépôt est préconfiguré sur `derouiche-oussama/infinity-loginshield`. Si vous publiez sous un autre compte, remplacez-le dans :
+Le dépôt est préconfiguré sur `derouicheoussama/infinity-loginshield`. Si vous publiez sous un autre compte, remplacez-le dans :
 
 1. `infinity-loginshield.php` — en-têtes `Plugin URI`, `Author URI`, `Update URI` et la constante `INFINITY_LOGINSHIELD_GITHUB_REPO`.
 2. `includes/github-updater.php` — profil GitHub dans `plugin_info()`.

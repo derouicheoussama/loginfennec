@@ -1071,7 +1071,7 @@ class Inls_Admin {
 					<a class="inls-btn inls-btn-donate" href="<?php echo esc_url( self::donate_url() ); ?>" target="_blank" rel="noopener">
 						<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don', 'infinity-loginshield' ); ?>
 					</a>
-					<a class="inls-btn inls-btn-ghost is-light" href="https://github.com/derouiche-oussama/infinity-loginshield" target="_blank" rel="noopener">
+					<a class="inls-btn inls-btn-ghost is-light" href="https://github.com/derouicheoussama/infinity-loginshield" target="_blank" rel="noopener">
 						<span class="dashicons dashicons-github"></span> <?php esc_html_e( 'Voir sur GitHub', 'infinity-loginshield' ); ?>
 					</a>
 				</div>
@@ -1085,12 +1085,17 @@ class Inls_Admin {
 					<div class="inls-dev-social" aria-label="<?php esc_attr_e( 'Réseaux du développeur', 'infinity-loginshield' ); ?>">
 						<?php foreach ( self::dev_socials() as $network ) : ?>
 							<a class="inls-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>">
-								<span class="dashicons <?php echo esc_attr( $network['icon'] ); ?>"></span>
+								<?php if ( ! empty( $network['svg'] ) ) : ?>
+									<?php echo $network['svg']; // SVG interne statique du plugin. ?>
+								<?php else : ?>
+									<span class="dashicons <?php echo esc_attr( $network['icon'] ); ?>"></span>
+								<?php endif; ?>
 							</a>
 						<?php endforeach; ?>
 					</div>
 					<p class="inls-about-links">
-						<a href="https://github.com/derouiche-oussama" target="_blank" rel="noopener">GitHub</a> ·
+						<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'infinity-loginshield' ); ?></a> ·
+						<a href="https://github.com/derouicheoussama" target="_blank" rel="noopener">GitHub</a> ·
 						<a href="https://profiles.wordpress.org/derouicheoussama/" target="_blank" rel="noopener">WordPress.org</a>
 					</p>
 				</section>
@@ -1170,9 +1175,14 @@ class Inls_Admin {
 			'infinity_loginshield_dev_socials',
 			array(
 				array(
+					'label' => __( 'Site web', 'infinity-loginshield' ),
+					'icon'  => 'dashicons-admin-links',
+					'url'   => 'https://www.derouicheoussama.com',
+				),
+				array(
 					'label' => 'GitHub',
 					'icon'  => 'dashicons-github',
-					'url'   => 'https://github.com/derouiche-oussama',
+					'url'   => 'https://github.com/derouicheoussama',
 				),
 				array(
 					'label' => 'WordPress.org',
@@ -1180,29 +1190,21 @@ class Inls_Admin {
 					'url'   => 'https://profiles.wordpress.org/derouicheoussama/',
 				),
 				array(
-					'label' => 'LinkedIn',
-					'icon'  => 'dashicons-linkedin',
-					'url'   => 'https://www.linkedin.com/',
-				),
-				array(
-					'label' => 'X (Twitter)',
-					'icon'  => 'dashicons-twitter',
-					'url'   => 'https://x.com/',
+					'label' => 'Instagram',
+					'icon'  => 'dashicons-instagram',
+					'url'   => 'https://www.instagram.com/derouiche.oussama/',
 				),
 				array(
 					'label' => 'Facebook',
 					'icon'  => 'dashicons-facebook-alt',
-					'url'   => 'https://www.facebook.com/',
+					'url'   => 'https://www.facebook.com/derouiche.oussama',
 				),
 				array(
-					'label' => __( 'Site web', 'infinity-loginshield' ),
-					'icon'  => 'dashicons-admin-links',
-					'url'   => home_url( '/' ),
-				),
-				array(
-					'label' => __( 'E-mail', 'infinity-loginshield' ),
-					'icon'  => 'dashicons-email-alt',
-					'url'   => 'mailto:contact@example.com',
+					'label' => 'TikTok',
+					'icon'  => '',
+					// Note musicale (pas de dashicon TikTok officielle).
+					'svg'   => '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>',
+					'url'   => 'https://www.tiktok.com/@derouiche.oussama',
 				),
 			)
 		);

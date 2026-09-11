@@ -233,7 +233,7 @@ class Inls_GitHub_Updater {
 		$info->name       = 'Infinity LoginShield – Login Customizer & Security';
 		$info->slug       = 'infinity-loginshield';
 		$info->version    = $release['version'];
-		$info->author     = '<a href="https://github.com/derouiche-oussama" target="_blank" rel="noopener">Derouiche Oussama</a>';
+		$info->author     = '<a href="https://github.com/derouicheoussama" target="_blank" rel="noopener">Derouiche Oussama</a>';
 		$info->homepage   = $release['url'] ? $release['url'] : 'https://github.com/' . self::$repo;
 		$info->download_link = $release['download'];
 		$info->requires   = '5.2';

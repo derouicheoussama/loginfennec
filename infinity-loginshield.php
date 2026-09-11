@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name:       Infinity LoginShield – Login Customizer & Security
- * Plugin URI:        https://github.com/derouiche-oussama/infinity-loginshield
+ * Plugin URI:        https://github.com/derouicheoussama/infinity-loginshield
  * Description:       Personnalisez votre page de connexion : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS personnalisé — et bloquez les tentatives de mot de passe avec journal de sécurité. Interface moderne avec aperçu en direct.
  * Version:           1.3.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
  * Author:            Derouiche Oussama
- * Author URI:        https://github.com/derouiche-oussama
+ * Author URI:        https://github.com/derouicheoussama
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       infinity-loginshield
@@ -35,7 +35,7 @@ define( 'INFINITY_LOGINSHIELD_URL', plugin_dir_url( __FILE__ ) );
  * add_filter( 'infinity_loginshield_update_source', function () { return 'github'; } );
  */
 if ( ! defined( 'INFINITY_LOGINSHIELD_GITHUB_REPO' ) ) {
-	define( 'INFINITY_LOGINSHIELD_GITHUB_REPO', 'derouiche-oussama/infinity-loginshield' );
+	define( 'INFINITY_LOGINSHIELD_GITHUB_REPO', 'derouicheoussama/infinity-loginshield' );
 }
 
 require_once INFINITY_LOGINSHIELD_DIR . 'includes/settings.php';
