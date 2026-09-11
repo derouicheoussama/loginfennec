@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const INFINITY_CUSTOMIZER_OPTION = 'infinity_customizer_settings';
+const INFINITY_LOGINSHIELD_OPTION = 'infinity_loginshield_settings';
 
 // Disponible nativement depuis WP 5.4 ; fallback pour la compatibilité 5.2+.
 if ( ! function_exists( 'sanitize_hex_color' ) ) {
@@ -33,10 +33,13 @@ if ( ! function_exists( 'sanitize_hex_color' ) ) {
  *
  * @return array
  */
-function infcl_get_defaults() {
+function inls_get_defaults() {
 	return array(
 		// Style actif (informatif, appliqué par le dashboard).
 		'preset' => 'glass',
+
+		// Thème d'interface du formulaire.
+		'form_theme' => 'glass', // glass | classic | outline | pill | elevated | accent | minimal.
 
 		// Arrière-plan.
 		'bg_type'            => 'gradient', // color | gradient | image.
@@ -111,6 +114,7 @@ function infcl_get_defaults() {
 		'font_family'      => 'system', // system | serif | rounded | mono.
 		'font_size'        => 13,
 		'anim'             => 'none', // none | fade | slide | zoom.
+		'custom_css'       => '',
 
 		// Sécurité.
 		'sec_enable'               => true,
@@ -119,6 +123,7 @@ function infcl_get_defaults() {
 		'sec_lock_message'         => 'Trop de tentatives de connexion. Réessayez dans %d minutes.',
 		'sec_generic_error'        => false,
 		'sec_hide_language_switcher' => false,
+		'sec_disable_xmlrpc'       => false,
 	);
 }
 
@@ -127,11 +132,11 @@ function infcl_get_defaults() {
  *
  * @return array
  */
-function infcl_settings() {
+function inls_settings() {
 	static $cache = null;
 	if ( null === $cache ) {
-		$saved = get_option( INFINITY_CUSTOMIZER_OPTION, array() );
-		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), infcl_get_defaults() );
+		$saved = get_option( INFINITY_LOGINSHIELD_OPTION, array() );
+		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), inls_get_defaults() );
 	}
 	return $cache;
 }
@@ -142,8 +147,8 @@ function infcl_settings() {
  * @param string $key Clé.
  * @return mixed
  */
-function infcl_get_option( $key ) {
-	$s = infcl_settings();
+function inls_get_option( $key ) {
+	$s = inls_settings();
 	return isset( $s[ $key ] ) ? $s[ $key ] : null;
 }
 
@@ -152,20 +157,21 @@ function infcl_get_option( $key ) {
  *
  * @return array type => array( champ, champ... ) — bornes éventuelles [min, max].
  */
-function infcl_field_spec() {
+function inls_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
 			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
+			'sec_disable_xmlrpc',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
 			'social_facebook', 'social_twitter', 'social_instagram',
 			'social_linkedin', 'social_youtube',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -198,22 +204,23 @@ function infcl_field_spec() {
 /**
  * Assainit un tableau d'options entrant.
  *
- * @param array     $input    Données brutes (souvent $_POST['infcl']).
+ * @param array     $input    Données brutes (souvent $_POST['inls']).
  * @param array|null $base    Base de fusion ; null = enregistrement complet.
  * @return array Réglages assainis.
  */
-function infcl_sanitize_settings( $input, $base = null ) {
-	$defaults = infcl_get_defaults();
+function inls_sanitize_settings( $input, $base = null ) {
+	$defaults = inls_get_defaults();
 	$out      = ( null === $base ) ? $defaults : $base;
 	$input    = is_array( $input ) ? $input : array();
-	$spec     = infcl_field_spec();
+	$spec     = inls_field_spec();
 
 	foreach ( $spec['key'] as $key ) {
 		if ( null !== $base && ! array_key_exists( $key, $input ) ) {
 			continue;
 		}
 		$allowed = array(
-			'preset'       => array( 'glass', 'minimal', 'dark', 'sunset', 'ocean', 'forest', 'custom' ),
+			'preset'       => array( 'glass', 'minimal', 'dark', 'sunset', 'ocean', 'forest', 'neon', 'sakura', 'mono', 'royal', 'custom' ),
+			'form_theme'   => array( 'glass', 'classic', 'outline', 'pill', 'elevated', 'accent', 'minimal' ),
 			'bg_type'      => array( 'color', 'gradient', 'image' ),
 			'bg_size'      => array( 'cover', 'contain', 'repeat' ),
 			'bg_position'  => array( 'center', 'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ),
@@ -273,7 +280,7 @@ function infcl_sanitize_settings( $input, $base = null ) {
  * @param int    $opacity Opacité en pourcentage (0-100).
  * @return string
  */
-function infcl_hex_to_rgba( $hex, $opacity = 100 ) {
+function inls_hex_to_rgba( $hex, $opacity = 100 ) {
 	$hex = ltrim( (string) $hex, '#' );
 	if ( 3 === strlen( $hex ) ) {
 		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
@@ -294,7 +301,7 @@ function infcl_hex_to_rgba( $hex, $opacity = 100 ) {
  * @param string $text Texte brut.
  * @return string
  */
-function infcl_expand_copyright( $text ) {
+function inls_expand_copyright( $text ) {
 	$replacements = array(
 		'{year}'     => gmdate( 'Y' ),
 		'{sitename}' => get_bloginfo( 'name' ),

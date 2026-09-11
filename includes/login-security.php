@@ -10,9 +10,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class Infcl_Login_Security {
+class Inls_Login_Security {
 
-	const OPT = 'infcl_login_attempts';
+	const OPT = 'inls_login_attempts';
+
+	const LOG_OPT = 'inls_security_log';
+	const LOG_CAP = 50;
 
 	/**
 	 * Vrai si une demande a été bloquée lors de la requête courante
@@ -38,6 +41,61 @@ class Infcl_Login_Security {
 		add_action( 'wp_login_failed', array( __CLASS__, 'register_failure' ) );
 		add_action( 'wp_login', array( __CLASS__, 'clear_for' ), 10, 2 );
 		add_filter( 'login_message', array( __CLASS__, 'remaining_message' ) );
+		add_filter( 'xmlrpc_enabled', array( __CLASS__, 'maybe_disable_xmlrpc' ) );
+	}
+
+	/**
+	 * Désactive XML-RPC si l'option de durcissement est active.
+	 *
+	 * @param bool $enabled État courant.
+	 * @return bool
+	 */
+	public static function maybe_disable_xmlrpc( $enabled ) {
+		$s = inls_settings();
+		return empty( $s['sec_disable_xmlrpc'] ) ? $enabled : false;
+	}
+
+	/**
+	 * Ajoute une entrée au journal de sécurité (50 dernières).
+	 *
+	 * @param string $action   fail | blocked | login.
+	 * @param string $username Identifiant concerné.
+	 */
+	public static function log_event( $action, $username = '' ) {
+		$log = get_option( self::LOG_OPT, array() );
+		if ( ! is_array( $log ) ) {
+			$log = array();
+		}
+		array_unshift(
+			$log,
+			array(
+				't' => time(),
+				'ip' => self::client_ip(),
+				'u'  => sanitize_user( (string) $username, true ),
+				'a'  => sanitize_key( $action ),
+			)
+		);
+		if ( count( $log ) > self::LOG_CAP ) {
+			$log = array_slice( $log, 0, self::LOG_CAP );
+		}
+		update_option( self::LOG_OPT, $log, false );
+	}
+
+	/**
+	 * Journal de sécurité (du plus récent au plus ancien).
+	 *
+	 * @return array
+	 */
+	public static function get_log() {
+		$log = get_option( self::LOG_OPT, array() );
+		return is_array( $log ) ? $log : array();
+	}
+
+	/**
+	 * Vide le journal de sécurité.
+	 */
+	public static function purge_log() {
+		delete_option( self::LOG_OPT );
 	}
 
 	/**
@@ -140,7 +198,7 @@ class Infcl_Login_Security {
 		if ( empty( $username ) ) {
 			return $user;
 		}
-		$s = infcl_settings();
+		$s = inls_settings();
 		if ( empty( $s['sec_enable'] ) ) {
 			return $user;
 		}
@@ -150,7 +208,7 @@ class Infcl_Login_Security {
 			if ( $remaining > 0 ) {
 				self::$lock_triggered = true;
 				$message = sprintf( esc_html( $s['sec_lock_message'] ), max( 1, $remaining ) );
-				return new WP_Error( 'infcl_locked', $message );
+				return new WP_Error( 'inls_locked', $message );
 			}
 		}
 		return $user;
@@ -162,13 +220,15 @@ class Infcl_Login_Security {
 	 * @param string $username Identifiant tenté.
 	 */
 	public static function register_failure( $username ) {
-		$s = infcl_settings();
+		$s = inls_settings();
 		if ( empty( $s['sec_enable'] ) ) {
 			return;
 		}
 
 		$data = self::get_data();
 		$now  = time();
+
+		self::log_event( 'failed', $username );
 
 		foreach ( self::keys_for( $username ) as $key ) {
 			// Un verrouillage en cours n'est pas prolongé.
@@ -182,6 +242,7 @@ class Infcl_Login_Security {
 			if ( $data[ $key ]['c'] >= (int) $s['sec_max_attempts'] ) {
 				$data[ $key ]['u'] = $now + ( (int) $s['sec_lockout_minutes'] * MINUTE_IN_SECONDS );
 				$data[ $key ]['c'] = 0;
+				self::log_event( 'blocked', $username );
 			}
 			self::$last_fail_count = max( self::$last_fail_count, (int) $data[ $key ]['c'] );
 		}
@@ -195,6 +256,7 @@ class Infcl_Login_Security {
 	 * @param string $username Identifiant.
 	 */
 	public static function clear_for( $username ) {
+		self::log_event( 'login', $username );
 		$data = self::get_data();
 		foreach ( self::keys_for( $username ) as $key ) {
 			unset( $data[ $key ] );
@@ -209,13 +271,13 @@ class Infcl_Login_Security {
 	 * @return string
 	 */
 	public static function remaining_message( $message ) {
-		$s = infcl_settings();
+		$s = inls_settings();
 		if ( empty( $s['sec_enable'] ) || self::$lock_triggered || self::$last_fail_count < 1 ) {
 			return $message;
 		}
 		$remaining = max( 1, (int) $s['sec_max_attempts'] - self::$last_fail_count );
 		$message  .= sprintf(
-			'<div class="message infcl-attempts" style="margin-top:10px">%s</div>',
+			'<div class="message inls-attempts" style="margin-top:10px">%s</div>',
 			esc_html(
 				sprintf(
 					/* translators: %d : nombre de tentatives restantes. */
@@ -223,7 +285,7 @@ class Infcl_Login_Security {
 						'Attention : il vous reste %d tentative avant le blocage temporaire.',
 						'Attention : il vous reste %d tentatives avant le blocage temporaire.',
 						$remaining,
-						'infinity-customizer'
+						'infinity-loginshield'
 					),
 					$remaining
 				)

@@ -1,14 +1,14 @@
 /**
- * Infinity Customizer — dashboard.
+ * Infinity LoginShield — dashboard.
  * Onglets, aperçu en direct (CSS injecté dans l'iframe), presets,
  * médiathèque, interrupteurs et curseurs.
  */
 (function ($) {
 	'use strict';
 
-	var cfg = window.INFCL_ADMIN || {};
-	var $form = $('#infcl-form');
-	var $frame = $('#infcl-frame');
+	var cfg = window.INLS_ADMIN || {};
+	var $form = $('#inls-form');
+	var $frame = $('#inls-frame');
 	var debounceTimer = null;
 	var applyingPreset = false;
 
@@ -100,7 +100,7 @@
 		var data = { action: cfg.previewAction, nonce: cfg.nonce };
 		$form.find('input, select, textarea').each(function () {
 			var name = this.name;
-			if (!name || name.indexOf('infcl[') !== 0) {
+			if (!name || name.indexOf('inls[') !== 0) {
 				return;
 			}
 			if (this.type === 'checkbox') {
@@ -120,10 +120,10 @@
 		if (!doc || !doc.head) {
 			return;
 		}
-		var tag = doc.getElementById('infcl-live');
+		var tag = doc.getElementById('inls-live');
 		if (!tag) {
 			tag = doc.createElement('style');
-			tag.id = 'infcl-live';
+			tag.id = 'inls-live';
 			doc.head.appendChild(tag);
 		}
 		tag.textContent = css;
@@ -135,7 +135,7 @@
 			return;
 		}
 		function field(key) {
-			return $form.find('[name="infcl[' + key + ']"]').first();
+			return $form.find('[name="inls[' + key + ']"]').first();
 		}
 		function checked(key) {
 			var $el = field(key);
@@ -153,9 +153,9 @@
 		show('#backtoblog', !checked('hide_back_to'));
 
 		var socialOn = checked('social_enable');
-		show('.infcl-social', !!socialOn);
+		show('.inls-social', !!socialOn);
 
-		var cp = doc.querySelector('.infcl-copyright');
+		var cp = doc.querySelector('.inls-copyright');
 		if (cp) {
 			if (checked('copyright_enable')) {
 				var tpl = String(field('copyright_text').val() || '');
@@ -201,7 +201,7 @@
 			}
 			var visible = true;
 			$.each(cond, function (key, expected) {
-				var $el = $form.find('[name="infcl[' + key + ']"]').first();
+				var $el = $form.find('[name="inls[' + key + ']"]').first();
 				var current;
 				if (!$el.length) {
 					visible = false;
@@ -222,7 +222,7 @@
 
 	function refreshOutputs() {
 		$form.find('input[type=range]').each(function () {
-			var $out = $(this).closest('.infcl-range-row').find('output');
+			var $out = $(this).closest('.inls-range-row').find('output');
 			$out.text(this.value + ($out.data('unit') || ''));
 		});
 	}
@@ -232,33 +232,33 @@
 	 * ---------------------------------------------------------------- */
 
 	$form.on('input change', 'input, select, textarea', function () {
-		if (!applyingPreset && this.name && this.name !== 'infcl[preset]') {
-			$('[name="infcl[preset]"]').val('custom');
-			$('.infcl-preset').removeClass('is-active');
+		if (!applyingPreset && this.name && this.name !== 'inls[preset]') {
+			$('[name="inls[preset]"]').val('custom');
+			$('.inls-preset').removeClass('is-active');
 		}
 		refreshShowIf();
 		schedulePreview();
 	});
 
 	$form.on('input change', 'input[type=range]', function () {
-		var $out = $(this).closest('.infcl-range-row').find('output');
+		var $out = $(this).closest('.inls-range-row').find('output');
 		$out.text(this.value + ($out.data('unit') || ''));
 	});
 
 	/* Onglets */
-	$(document).on('click', '.infcl-tab', function () {
+	$(document).on('click', '.inls-tab', function () {
 		var tab = $(this).data('tab');
-		$('.infcl-tab').removeClass('is-active');
+		$('.inls-tab').removeClass('is-active');
 		$(this).addClass('is-active');
-		$('.infcl-panel').removeClass('is-active');
-		$('.infcl-panel[data-panel="' + tab + '"]').addClass('is-active');
+		$('.inls-panel').removeClass('is-active');
+		$('.inls-panel[data-panel="' + tab + '"]').addClass('is-active');
 		if (window.history && window.history.replaceState) {
 			window.history.replaceState(null, '', '#' + tab);
 		}
 	});
 
 	$(document).on('click', '[data-goto]', function () {
-		var $tab = $('.infcl-tab[data-tab="' + $(this).data('goto') + '"]');
+		var $tab = $('.inls-tab[data-tab="' + $(this).data('goto') + '"]');
 		if ($tab.length) {
 			$tab.trigger('click');
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -267,13 +267,13 @@
 
 	/* Onglet initial (ancre) */
 	var initial = (window.location.hash || '#dashboard').slice(1);
-	var $initialTab = $('.infcl-tab[data-tab="' + initial + '"]');
+	var $initialTab = $('.inls-tab[data-tab="' + initial + '"]');
 	if ($initialTab.length) {
 		$initialTab.trigger('click');
 	}
 
 	/* Presets */
-	$(document).on('click', '.infcl-preset', function () {
+	$(document).on('click', '.inls-preset', function () {
 		var key = $(this).data('preset');
 		var values = PRESETS[key];
 		if (!values) {
@@ -281,20 +281,20 @@
 		}
 		applyingPreset = true;
 		$.each(values, function (fieldKey, value) {
-			var $el = $form.find('[name="infcl[' + fieldKey + ']"]').first();
+			var $el = $form.find('[name="inls[' + fieldKey + ']"]').first();
 			if (!$el.length) {
 				return;
 			}
 			if ($el.is(':checkbox')) {
 				$el.prop('checked', value === 1 || value === true);
-			} else if ($el.hasClass('infcl-color') && $.fn.wpColorPicker) {
+			} else if ($el.hasClass('inls-color') && $.fn.wpColorPicker) {
 				$el.wpColorPicker('color', value);
 			} else {
 				$el.val(value);
 			}
 		});
-		$('[name="infcl[preset]"]').val(key);
-		$('.infcl-preset').removeClass('is-active');
+		$('[name="inls[preset]"]').val(key);
+		$('.inls-preset').removeClass('is-active');
 		$(this).addClass('is-active');
 		applyingPreset = false;
 
@@ -305,7 +305,7 @@
 
 	/* Sélecteur de couleur natif (iris) */
 	if ($.fn.wpColorPicker) {
-		$('.infcl-color').wpColorPicker({
+		$('.inls-color').wpColorPicker({
 			change: function () {
 				schedulePreview();
 			},
@@ -317,9 +317,9 @@
 
 	/* Médiathèque */
 	var mediaFrame = null;
-	$(document).on('click', '.infcl-media-pick', function (e) {
+	$(document).on('click', '.inls-media-pick', function (e) {
 		e.preventDefault();
-		var $wrap = $(this).closest('.infcl-media');
+		var $wrap = $(this).closest('.inls-media');
 		if (!mediaFrame) {
 			mediaFrame = window.wp.media({
 				title: 'Choisir une image',
@@ -331,42 +331,42 @@
 			var attachment = mediaFrame.state().get('selection').first().toJSON();
 			var url = (attachment.sizes && attachment.sizes.full) ? attachment.sizes.full.url : attachment.url;
 			$wrap.find('input[type=url]').val(url).trigger('change');
-			$wrap.find('.infcl-media-thumb').attr('src', url).removeAttr('hidden');
+			$wrap.find('.inls-media-thumb').attr('src', url).removeAttr('hidden');
 		});
 		mediaFrame.open();
 	});
 
-	$(document).on('click', '.infcl-media-clear', function (e) {
+	$(document).on('click', '.inls-media-clear', function (e) {
 		e.preventDefault();
-		var $wrap = $(this).closest('.infcl-media');
+		var $wrap = $(this).closest('.inls-media');
 		$wrap.find('input[type=url]').val('').trigger('change');
-		$wrap.find('.infcl-media-thumb').attr('src', '').attr('hidden', '');
+		$wrap.find('.inls-media-thumb').attr('src', '').attr('hidden', '');
 	});
 
 	/* Aperçu : appareils, rechargement */
-	$(document).on('click', '.infcl-device', function () {
-		$('.infcl-device').removeClass('is-active');
+	$(document).on('click', '.inls-device', function () {
+		$('.inls-device').removeClass('is-active');
 		$(this).addClass('is-active');
 		var width = parseInt($(this).data('width'), 10);
 		$frame.css('width', width > 0 ? width + 'px' : '100%');
 	});
 
-	$(document).on('click', '.infcl-refresh', function () {
+	$(document).on('click', '.inls-refresh', function () {
 		$frame[0].src = $frame[0].src;
 	});
 
 	/* Aperçu plein écran */
 	function exitFullscreenPreview() {
-		$('.infcl-preview').removeClass('is-fullscreen');
-		$('.infcl-expand').removeClass('is-active');
-		$('body').removeClass('infcl-preview-lock');
+		$('.inls-preview').removeClass('is-fullscreen');
+		$('.inls-expand').removeClass('is-active');
+		$('body').removeClass('inls-preview-lock');
 	}
 
-	$(document).on('click', '.infcl-expand', function () {
-		var $preview = $('.infcl-preview');
+	$(document).on('click', '.inls-expand', function () {
+		var $preview = $('.inls-preview');
 		var fullscreen = $preview.toggleClass('is-fullscreen').hasClass('is-fullscreen');
 		$(this).toggleClass('is-active', fullscreen);
-		$('body').toggleClass('infcl-preview-lock', fullscreen);
+		$('body').toggleClass('inls-preview-lock', fullscreen);
 	});
 
 	$(document).on('keydown', function (e) {
@@ -375,69 +375,99 @@
 		}
 	});
 
+	/* Thèmes d'interface du formulaire */
+	$(document).on('click', '.inls-theme-card', function () {
+		$('.inls-theme-card').removeClass('is-active');
+		$(this).addClass('is-active');
+		$('[name="inls[form_theme]"]').val($(this).data('theme'));
+		schedulePreview();
+	});
+
+	/* Vider le journal de sécurité */
+	$(document).on('click', '.inls-purge-log', function () {
+		var $btn = $(this);
+		var $out = $btn.closest('.inls-journal').find('.inls-purge-status');
+		if (!window.confirm('Vider le journal de sécurité ?')) {
+			return;
+		}
+		$btn.prop('disabled', true);
+		$.post(cfg.ajaxUrl, { action: 'inls_purge_log', nonce: cfg.nonce })
+			.always(function () {
+				$btn.prop('disabled', false);
+			})
+			.done(function (res) {
+				if (res && res.success) {
+					var $journal = $('.inls-journal');
+					$journal.find('table, p.inls-desc, .inls-purge-log').remove();
+					$journal.append('<p class="inls-desc">Aucun événement enregistré pour le moment.</p>');
+					$out.text('✓ Journal vidé');
+				}
+			});
+	});
+
 	/* Vérifier les mises à jour */
-	$(document).on('click', '.infcl-check-updates', function () {
+	$(document).on('click', '.inls-check-updates', function () {
 		var $btn = $(this);
 		if ($btn.prop('disabled')) {
 			return;
 		}
-		var $out = $btn.closest('.infcl-card, .infcl-about-card, .infcl-installer').find('.infcl-update-status').first();
+		var $out = $btn.closest('.inls-card, .inls-about-card, .inls-installer').find('.inls-update-status').first();
 		$btn.prop('disabled', true).addClass('is-loading');
-		$out.html('<span class="infcl-update-msg">…</span>');
+		$out.html('<span class="inls-update-msg">…</span>');
 
-		$.post(cfg.ajaxUrl, { action: 'infcl_check_updates', nonce: cfg.nonce })
+		$.post(cfg.ajaxUrl, { action: 'inls_check_updates', nonce: cfg.nonce })
 			.always(function () {
 				$btn.prop('disabled', false).removeClass('is-loading');
 			})
 			.done(function (res) {
 				if (!res || !res.success) {
 					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
-					$out.html('<span class="infcl-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
+					$out.html('<span class="inls-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
 					return;
 				}
 				if (res.data.status === 'up_to_date') {
-					$out.html('<span class="infcl-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
+					$out.html('<span class="inls-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
 				} else {
-					$out.html('<span class="infcl-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="infcl-update-link" href="' + res.data.url + '">Mettre à jour</a>');
+					$out.html('<span class="inls-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="inls-update-link" href="' + res.data.url + '">Mettre à jour</a>');
 				}
 			})
 			.fail(function () {
-				$out.html('<span class="infcl-update-msg is-err">Erreur réseau</span>');
+				$out.html('<span class="inls-update-msg is-err">Erreur réseau</span>');
 			});
 	});
 
 	/* Installateur : navigation entre les étapes */
 	var wizardStep = 1;
-	var wizardTotal = $('.infcl-wstep').length || 3;
+	var wizardTotal = $('.inls-wstep').length || 3;
 
 	function wizardShow(n) {
 		wizardStep = Math.max(1, Math.min(wizardTotal, n));
-		$('.infcl-wstep').removeClass('is-active');
-		$('.infcl-wstep[data-step="' + wizardStep + '"]').addClass('is-active');
-		$('.infcl-inst-steps li').removeClass('is-active is-done');
-		$('.infcl-inst-steps li').each(function () {
+		$('.inls-wstep').removeClass('is-active');
+		$('.inls-wstep[data-step="' + wizardStep + '"]').addClass('is-active');
+		$('.inls-inst-steps li').removeClass('is-active is-done');
+		$('.inls-inst-steps li').each(function () {
 			var dot = parseInt($(this).data('step-dot'), 10);
 			if (dot < wizardStep) $(this).addClass('is-done');
 			if (dot === wizardStep) $(this).addClass('is-active');
 		});
-		$('.infcl-step-prev').toggle(wizardStep > 1);
-		$('.infcl-step-next').toggle(wizardStep < wizardTotal);
-		$('.infcl-step-finish').toggle(wizardStep === wizardTotal);
+		$('.inls-step-prev').toggle(wizardStep > 1);
+		$('.inls-step-next').toggle(wizardStep < wizardTotal);
+		$('.inls-step-finish').toggle(wizardStep === wizardTotal);
 	}
 
-	$(document).on('click', '.infcl-step-next', function () {
+	$(document).on('click', '.inls-step-next', function () {
 		wizardShow(wizardStep + 1);
 	});
-	$(document).on('click', '.infcl-step-prev', function () {
+	$(document).on('click', '.inls-step-prev', function () {
 		wizardShow(wizardStep - 1);
 	});
 
-	if ($('.infcl-installer').length) {
+	if ($('.inls-installer').length) {
 		wizardShow(1);
 	}
 
 	/* Réinitialisation : confirmation */
-	$(document).on('click', '#infcl-reset', function (e) {
+	$(document).on('click', '#inls-reset', function (e) {
 		if (!window.confirm('Réinitialiser tous les réglages aux valeurs par défaut ?')) {
 			e.preventDefault();
 		}

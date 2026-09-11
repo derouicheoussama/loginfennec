@@ -10,23 +10,23 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-const INFINITY_CUSTOMIZER_OPTION      = 'infinity_customizer_settings';
-const INFINITY_CUSTOMIZER_ATTEMPTS    = 'infcl_login_attempts';
-const INFINITY_CUSTOMIZER_TRANSIENT   = 'infcl_gh_release';
-const INFINITY_CUSTOMIZER_WPORG_CHECK = 'infcl_wporg_check';
-const INFINITY_CUSTOMIZER_PENDING     = 'infcl_pending_installer';
-const INFINITY_CUSTOMIZER_VERSION_KEY = 'infcl_stored_version';
+const INFINITY_LOGINSHIELD_OPTION      = 'infinity_loginshield_settings';
+const INFINITY_LOGINSHIELD_ATTEMPTS    = 'inls_login_attempts';
+const INFINITY_LOGINSHIELD_TRANSIENT   = 'inls_gh_release';
+const INFINITY_LOGINSHIELD_WPORG_CHECK = 'inls_wporg_check';
+const INFINITY_LOGINSHIELD_PENDING     = 'inls_pending_installer';
+const INFINITY_LOGINSHIELD_VERSION_KEY = 'inls_stored_version';
 
-function infcl_uninstall_site() {
-	delete_option( INFINITY_CUSTOMIZER_OPTION );
-	delete_option( INFINITY_CUSTOMIZER_ATTEMPTS );
-	delete_option( INFINITY_CUSTOMIZER_PENDING );
-	delete_option( INFINITY_CUSTOMIZER_VERSION_KEY );
-	delete_transient( INFINITY_CUSTOMIZER_TRANSIENT );
-	delete_transient( INFINITY_CUSTOMIZER_WPORG_CHECK );
+function inls_uninstall_site() {
+	delete_option( INFINITY_LOGINSHIELD_OPTION );
+	delete_option( INFINITY_LOGINSHIELD_ATTEMPTS );
+	delete_option( INFINITY_LOGINSHIELD_PENDING );
+	delete_option( INFINITY_LOGINSHIELD_VERSION_KEY );
+	delete_transient( INFINITY_LOGINSHIELD_TRANSIENT );
+	delete_transient( INFINITY_LOGINSHIELD_WPORG_CHECK );
 }
 
-infcl_uninstall_site();
+inls_uninstall_site();
 
 if ( is_multisite() ) {
 	$site_ids = get_sites(
@@ -37,7 +37,7 @@ if ( is_multisite() ) {
 	);
 	foreach ( $site_ids as $site_id ) {
 		switch_to_blog( (int) $site_id );
-		infcl_uninstall_site();
+		inls_uninstall_site();
 		restore_current_blog();
 	}
 }

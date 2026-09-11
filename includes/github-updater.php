@@ -4,18 +4,18 @@
  *
  * Cherche la dernière release du dépôt configuré et la propose dans
  * l'écran « Extensions » de WordPress. Le fichier zip doit idéalement
- * s'appeler infinity-customizer.zip (voir .github/workflows/release.yml).
+ * s'appeler infinity-loginshield.zip (voir .github/workflows/release.yml).
  *
  * @package InfinityCustomizer
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class Infcl_GitHub_Updater {
+class Inls_GitHub_Updater {
 
-	const SLUG           = 'infinity-customizer/infinity-customizer.php';
-	const CACHE_KEY      = 'infcl_gh_release';
-	const WPORG_CHECK_KEY = 'infcl_wporg_check';
+	const SLUG           = 'infinity-loginshield/infinity-loginshield.php';
+	const CACHE_KEY      = 'inls_gh_release';
+	const WPORG_CHECK_KEY = 'inls_wporg_check';
 
 	/**
 	 * Dépôt GitHub « utilisateur/depot ».
@@ -29,11 +29,11 @@ class Infcl_GitHub_Updater {
 	 * n'est pas hébergé sur WordPress.org (détection automatique, cache 12 h).
 	 */
 	public static function init() {
-		$source = apply_filters( 'infinity_customizer_update_source', self::detect_source() );
+		$source = apply_filters( 'infinity_loginshield_update_source', self::detect_source() );
 		if ( 'github' !== $source ) {
 			return; // WordPress.org (ou forçage manuel) gère les mises à jour.
 		}
-		self::$repo = apply_filters( 'infinity_customizer_github_repo', INFINITY_CUSTOMIZER_GITHUB_REPO );
+		self::$repo = apply_filters( 'infinity_loginshield_github_repo', INFINITY_LOGINSHIELD_GITHUB_REPO );
 		if ( '' === trim( (string) self::$repo ) ) {
 			return;
 		}
@@ -61,7 +61,7 @@ class Infcl_GitHub_Updater {
 			$info = plugins_api(
 				'plugin_information',
 				array(
-					'slug'   => 'infinity-customizer',
+					'slug'   => 'infinity-loginshield',
 					'fields' => array(
 						'download_link'  => true,
 						'version'        => true,
@@ -122,14 +122,14 @@ class Infcl_GitHub_Updater {
 				'timeout' => 10,
 				'headers' => array(
 					'Accept'     => 'application/vnd.github+json',
-					'User-Agent' => 'Infinity-Customizer-Updater/' . INFINITY_CUSTOMIZER_VERSION,
+					'User-Agent' => 'Infinity-LoginShield-Updater/' . INFINITY_LOGINSHIELD_VERSION,
 				),
 			)
 		);
 
 		if ( is_wp_error( $results ) || 200 !== wp_remote_retrieve_response_code( $results ) ) {
 			// Nouvel essai dans 15 minutes en cas d'échec réseau ou de quota.
-			set_transient( self::CACHE_KEY, array( 'version' => INFINITY_CUSTOMIZER_VERSION ), 15 * MINUTE_IN_SECONDS );
+			set_transient( self::CACHE_KEY, array( 'version' => INFINITY_LOGINSHIELD_VERSION ), 15 * MINUTE_IN_SECONDS );
 			return false;
 		}
 
@@ -146,13 +146,13 @@ class Infcl_GitHub_Updater {
 			'download'  => '',
 		);
 
-		// Asset zip préféré : infinity-customizer.zip (sinon le premier zip).
+		// Asset zip préféré : infinity-loginshield.zip (sinon le premier zip).
 		if ( ! empty( $data['assets'] ) && is_array( $data['assets'] ) ) {
 			foreach ( $data['assets'] as $asset ) {
 				$name = isset( $asset['name'] ) ? strtolower( (string) $asset['name'] ) : '';
 				$url2 = isset( $asset['browser_download_url'] ) ? (string) $asset['browser_download_url'] : '';
 				if ( $url2 && '.zip' === substr( $name, -4 ) ) {
-					if ( 'infinity-customizer.zip' === $name ) {
+					if ( 'infinity-loginshield.zip' === $name ) {
 						$release['download'] = $url2;
 						break;
 					}
@@ -186,7 +186,7 @@ class Infcl_GitHub_Updater {
 			return $transient;
 		}
 
-		if ( version_compare( INFINITY_CUSTOMIZER_VERSION, $release['version'], '<' ) ) {
+		if ( version_compare( INFINITY_LOGINSHIELD_VERSION, $release['version'], '<' ) ) {
 			$transient->response[ self::SLUG ] = self::to_update_object( $release );
 		} else {
 			$transient->no_update[ self::SLUG ] = self::to_update_object( $release );
@@ -202,7 +202,7 @@ class Infcl_GitHub_Updater {
 	 */
 	protected static function to_update_object( $release ) {
 		$obj           = new stdClass();
-		$obj->slug     = 'infinity-customizer';
+		$obj->slug     = 'infinity-loginshield';
 		$obj->plugin   = self::SLUG;
 		$obj->new_version = $release['version'];
 		$obj->url      = $release['url'] ? $release['url'] : 'https://github.com/' . self::$repo;
@@ -221,7 +221,7 @@ class Infcl_GitHub_Updater {
 	 * @return false|object
 	 */
 	public static function plugin_info( $result, $action, $args ) {
-		if ( 'plugin_information' !== $action || empty( $args->slug ) || 'infinity-customizer' !== $args->slug ) {
+		if ( 'plugin_information' !== $action || empty( $args->slug ) || 'infinity-loginshield' !== $args->slug ) {
 			return $result;
 		}
 		$release = self::fetch_latest_release();
@@ -230,8 +230,8 @@ class Infcl_GitHub_Updater {
 		}
 
 		$info             = new stdClass();
-		$info->name       = 'Infinity Customizer – Login Customizer & Security';
-		$info->slug       = 'infinity-customizer';
+		$info->name       = 'Infinity LoginShield – Login Customizer & Security';
+		$info->slug       = 'infinity-loginshield';
 		$info->version    = $release['version'];
 		$info->author     = '<a href="https://github.com/derouiche-oussama" target="_blank" rel="noopener">Derouiche Oussama</a>';
 		$info->homepage   = $release['url'] ? $release['url'] : 'https://github.com/' . self::$repo;
@@ -241,7 +241,7 @@ class Infcl_GitHub_Updater {
 		$info->sections   = array(
 			'description' => '<p>' . sprintf(
 				/* translators: %s : nom du dépôt GitHub. */
-				esc_html__( 'Personnalisez votre page de connexion (logo, arrière-plan, flou, opacité, styles modernes, liens, réseaux sociaux, copyright) et protégez-la contre les tentatives de mot de passe. Mises à jour via le dépôt GitHub %s.', 'infinity-customizer' ),
+				esc_html__( 'Personnalisez votre page de connexion (logo, arrière-plan, flou, opacité, styles modernes, liens, réseaux sociaux, copyright) et protégez-la contre les tentatives de mot de passe. Mises à jour via le dépôt GitHub %s.', 'infinity-loginshield' ),
 				'<strong>' . esc_html( self::$repo ) . '</strong>'
 			) . '</p>',
 			'changelog'   => '<pre>' . esc_html( $release['changelog'] ) . '</pre>',
@@ -251,7 +251,7 @@ class Infcl_GitHub_Updater {
 
 	/**
 	 * Renomme le dossier extrait si l'archive ne s'appelle pas
-	 * « infinity-customizer » (archives de source GitHub : repo-tag).
+	 * « infinity-loginshield » (archives de source GitHub : repo-tag).
 	 *
 	 * @param string     $source        Chemin source.
 	 * @param string     $remote_source Chemin distant.
@@ -264,14 +264,14 @@ class Infcl_GitHub_Updater {
 			return $source;
 		}
 		$basename = basename( untrailingslashit( $source ) );
-		if ( 'infinity-customizer' === $basename ) {
+		if ( 'infinity-loginshield' === $basename ) {
 			return $source;
 		}
 		// Ne s'applique qu'à nos propres paquets.
-		if ( 0 !== strpos( $basename, 'infinity-customizer' ) ) {
+		if ( 0 !== strpos( $basename, 'infinity-loginshield' ) ) {
 			return $source;
 		}
-		$target = dirname( untrailingslashit( $source ) ) . '/infinity-customizer';
+		$target = dirname( untrailingslashit( $source ) ) . '/infinity-loginshield';
 		if ( $wp_filesystem->move( $source, $target ) ) {
 			return $target;
 		}
@@ -287,7 +287,7 @@ class Infcl_GitHub_Updater {
 	public static function update_notice( $data, $release ) {
 		if ( ! empty( $release->url ) ) {
 			echo ' <a href="' . esc_url( $release->url ) . '" target="_blank" rel="noopener">'
-				. esc_html__( 'Voir les notes de version sur GitHub', 'infinity-customizer' )
+				. esc_html__( 'Voir les notes de version sur GitHub', 'infinity-loginshield' )
 				. '</a>.';
 		}
 	}

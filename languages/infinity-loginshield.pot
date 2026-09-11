@@ -2,12 +2,15 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity Customizer 1.2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-customizer\n"
+"Project-Id-Version: Infinity LoginShield 1.3.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: infinity-customizer\n"
+"X-Domain: infinity-loginshield\n"
+
+msgid "%d événements enregistrés (50 maximum)."
+msgstr ""
 
 msgid "2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail."
 msgstr ""
@@ -21,7 +24,13 @@ msgstr ""
 msgid "6 styles modernes (effet verre, sombre…)"
 msgstr ""
 
+msgid "Accent"
+msgstr ""
+
 msgid "Accès refusé."
+msgstr ""
+
+msgid "Action"
 msgstr ""
 
 msgid "Activé — %1$d tentatives, blocage %2$d min"
@@ -72,7 +81,7 @@ msgstr ""
 msgid "Aperçu plein écran"
 msgstr ""
 
-msgid "Appliquez un style en un clic, puis affinez-le dans les onglets suivants."
+msgid "Appliquez un style et un thème d’interface en un clic, puis affinez-les dans les onglets suivants."
 msgstr ""
 
 msgid "Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement."
@@ -99,6 +108,9 @@ msgstr ""
 msgid "Aucun réseau configuré"
 msgstr ""
 
+msgid "Aucun événement enregistré pour le moment."
+msgstr ""
+
 msgid "Aucune"
 msgstr ""
 
@@ -111,13 +123,13 @@ msgstr ""
 msgid "Bienvenue"
 msgstr ""
 
-msgid "Bienvenue dans Infinity Customizer"
+msgid "Bienvenue dans Infinity LoginShield"
 msgstr ""
 
-msgid "Bienvenue dans Infinity Customizer !"
+msgid "Bienvenue dans Infinity LoginShield !"
 msgstr ""
 
-msgid "Bienvenue — Infinity Customizer"
+msgid "Bienvenue — Infinity LoginShield"
 msgstr ""
 
 msgid "Blocage automatique des tentatives de mot de passe."
@@ -132,6 +144,9 @@ msgstr ""
 msgid "Bloquez les attaques par force brute sur la page de connexion."
 msgstr ""
 
+msgid "Bloqué"
+msgstr ""
+
 msgid "Bordure des champs"
 msgstr ""
 
@@ -139,6 +154,12 @@ msgid "Bouton « Se connecter »"
 msgstr ""
 
 msgid "Bureau"
+msgstr ""
+
+msgid "CSS brut pour la page de connexion"
+msgstr ""
+
+msgid "CSS personnalisé"
 msgstr ""
 
 msgid "Carré"
@@ -165,7 +186,13 @@ msgstr ""
 msgid "Cible du lien « Retour au site »"
 msgstr ""
 
+msgid "Classique"
+msgstr ""
+
 msgid "Configurer"
+msgstr ""
+
+msgid "Connexion"
 msgstr ""
 
 msgid "Conteneur"
@@ -175,6 +202,9 @@ msgid "Contenir (contain)"
 msgstr ""
 
 msgid "Continuer"
+msgstr ""
+
+msgid "Contour"
 msgstr ""
 
 msgid "Contrôle du flou (backdrop)."
@@ -216,10 +246,16 @@ msgstr ""
 msgid "Couleurs officielles des marques"
 msgstr ""
 
+msgid "Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress)."
+msgstr ""
+
 msgid "Couvrir (cover)"
 msgstr ""
 
 msgid "Créateur du plugin, passionné par WordPress et les interfaces modernes."
+msgstr ""
+
+msgid "Date"
 msgstr ""
 
 msgid "Derouiche Oussama"
@@ -231,9 +267,6 @@ msgstr ""
 msgid "Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique."
 msgstr ""
 
-msgid "Durcissement XML-RPC & REST"
-msgstr ""
-
 msgid "Durée du blocage"
 msgstr ""
 
@@ -243,10 +276,16 @@ msgstr ""
 msgid "Dégradé — couleur 2"
 msgstr ""
 
+msgid "Désactiver XML-RPC"
+msgstr ""
+
 msgid "Désactivé"
 msgstr ""
 
 msgid "Désactivée automatiquement si l’utilisateur demande moins d’animations."
+msgstr ""
+
+msgid "Détection avancée des activités suspectes"
 msgstr ""
 
 msgid "Développeur"
@@ -351,6 +390,9 @@ msgstr ""
 msgid "Icônes de réseaux sociaux et votre mention de copyright."
 msgstr ""
 
+msgid "Identifiant"
+msgstr ""
+
 msgid "Identifiants incorrects. Veuillez réessayer."
 msgstr ""
 
@@ -369,19 +411,25 @@ msgstr ""
 msgid "Impossible de joindre GitHub pour le moment. Réessayez plus tard."
 msgstr ""
 
-msgid "Infinity Customizer"
+msgid "Infinity LoginShield"
 msgstr ""
 
-msgid "Infinity Customizer Pro"
+msgid "Infinity LoginShield Pro"
 msgstr ""
 
-msgid "Infinity Customizer est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgid "Infinity LoginShield est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgstr ""
+
+msgid "Injecté après tous les réglages du plugin — les balises sont retirées automatiquement."
 msgstr ""
 
 msgid "Instagram"
 msgstr ""
 
 msgid "Installateur"
+msgstr ""
+
+msgid "Journal de sécurité"
 msgstr ""
 
 msgid "Journal des tentatives (audit complet)"
@@ -399,7 +447,10 @@ msgstr ""
 msgid "Largeur du formulaire"
 msgstr ""
 
-msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_customizer_pro_url)."
+msgid "Le design général du formulaire, indépendant des couleurs."
+msgstr ""
+
+msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_loginshield_pro_url)."
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
@@ -501,6 +552,9 @@ msgstr ""
 msgid "Modifiez la cible et le texte des liens, ou masquez-les."
 msgstr ""
 
+msgid "Monochrome"
+msgstr ""
+
 msgid "Monospace"
 msgstr ""
 
@@ -510,7 +564,10 @@ msgstr ""
 msgid "Niveaux de sécurité : Gratuit vs Pro"
 msgstr ""
 
-msgid "Niveaux de sécurité avancés — Infinity Customizer Pro"
+msgid "Niveaux de sécurité avancés — Infinity LoginShield Pro"
+msgstr ""
+
+msgid "Néon"
 msgstr ""
 
 msgid "Océan"
@@ -552,6 +609,9 @@ msgstr ""
 msgid "Personnalisé"
 msgstr ""
 
+msgid "Pillule"
+msgstr ""
+
 msgid "Police"
 msgstr ""
 
@@ -559,6 +619,9 @@ msgid "Position de l’image"
 msgstr ""
 
 msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance et contrôle total."
+msgstr ""
+
+msgid "Protection dédiée de /wp-admin (liste blanche IP)"
 msgstr ""
 
 msgid "Protégez votre page de connexion"
@@ -588,6 +651,9 @@ msgstr ""
 msgid "Revenir au dashboard"
 msgstr ""
 
+msgid "Royal"
+msgstr ""
+
 msgid "Réglages enregistrés."
 msgstr ""
 
@@ -610,6 +676,9 @@ msgid "Réseaux sociaux"
 msgstr ""
 
 msgid "SVG ou PNG transparent recommandé."
+msgstr ""
+
+msgid "Sakura"
 msgstr ""
 
 msgid "Saturation de l’image"
@@ -652,6 +721,9 @@ msgid "Styles"
 msgstr ""
 
 msgid "Styles modernes"
+msgstr ""
+
+msgid "Surélevé"
 msgstr ""
 
 msgid "Système (moderne)"
@@ -699,6 +771,9 @@ msgstr ""
 msgid "Textes et champs"
 msgstr ""
 
+msgid "Thème d’interface du formulaire"
+msgstr ""
+
 msgid "Titre"
 msgstr ""
 
@@ -733,6 +808,9 @@ msgid "Version de WordPress"
 msgstr ""
 
 msgid "Version du plugin"
+msgstr ""
+
+msgid "Vider le journal"
 msgstr ""
 
 msgid "Voile coloré"
@@ -795,7 +873,10 @@ msgstr ""
 msgid "À propos"
 msgstr ""
 
-msgid "À propos d’Infinity Customizer"
+msgid "À propos d’Infinity LoginShield"
+msgstr ""
+
+msgid "Échec"
 msgstr ""
 
 msgid "État du système"

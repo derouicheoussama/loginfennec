@@ -1,4 +1,4 @@
-=== Infinity Customizer – Login Customizer & Security ===
+=== Infinity LoginShield – Login Customizer & Security ===
 Contributors: derouicheoussama
 Donate link: https://www.paypal.com/donate
 Tags: login, customizer, login page, security, social icons
@@ -13,7 +13,7 @@ Make the WordPress login page yours: logo, background (blur, opacity, gradients)
 
 == Description ==
 
-Infinity Customizer redesigns your WordPress login page with a modern, fluid experience and protects it against brute-force attacks — all from an elegant dashboard with a **live preview**.
+Infinity LoginShield redesigns your WordPress login page with a modern, fluid experience and protects it against brute-force attacks — all from an elegant dashboard with a **live preview**.
 
 **Design**
 
@@ -48,9 +48,9 @@ Infinity Customizer redesigns your WordPress login page with a modern, fluid exp
 
 == Installation ==
 
-1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `infinity-customizer.zip`.
+1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `infinity-loginshield.zip`.
 2. Activate the plugin.
-3. Open the new **Infinity Customizer** menu and start customizing — the live preview updates as you type.
+3. Open the new **Infinity LoginShield** menu and start customizing — the live preview updates as you type.
 4. Click **Save** to apply your design to the real login page.
 
 == Frequently Asked Questions ==
@@ -66,7 +66,7 @@ The plugin checks the latest GitHub release of its repository every 6 hours and 
 = I published the plugin on WordPress.org, how do I switch updates? =
 
 Add this to your site (or a small companion plugin):
-`add_filter( 'infinity_customizer_update_source', fn() => 'wordpress' );`
+`add_filter( 'infinity_loginshield_update_source', fn() => 'wordpress' );`
 
 = Can I reset everything? =
 
@@ -82,6 +82,15 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.3.0 =
+* Important: the plugin is now called **Infinity LoginShield**
+* New: 7 form UI themes (glass, classic, outline, pill, elevated, accent, minimal) — independent from colors
+* New: 4 color styles (Neon, Sakura, Monochrome, Royal) — 10 presets total
+* New: custom CSS field for the login page
+* New: security journal — the last 50 events (failures, blocks, logins) with IP and username
+* New: XML-RPC hardening toggle
+* Existing settings are migrated automatically
 
 = 1.2.0 =
 * New: official brand colors for social icons (Facebook blue, X black, Instagram gradient, LinkedIn blue, YouTube red, Gmail red) — toggle on/off

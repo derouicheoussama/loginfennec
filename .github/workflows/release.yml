@@ -1,6 +1,6 @@
 name: Release
 
-# Publie un zip nommé infinity-customizer.zip à chaque tag v* :
+# Publie un zip nommé infinity-loginshield.zip à chaque tag v* :
 # c'est ce zip que le module de mise à jour intégré téléchargera.
 
 on:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Construire le zip
         run: |
-          mkdir -p build/infinity-customizer
+          mkdir -p build/infinity-loginshield
           rsync -a --delete \
             --exclude '.github' \
             --exclude '.git' \
@@ -30,9 +30,9 @@ jobs:
             --exclude 'wporg-assets' \
             --exclude 'README.md' \
             --exclude '*.pot' \
-            ./ build/infinity-customizer/
+            ./ build/infinity-loginshield/
           cd build
-          zip -r ../infinity-customizer.zip infinity-customizer
+          zip -r ../infinity-loginshield.zip infinity-loginshield
 
       - name: Vérifier la syntaxe PHP
         run: |
@@ -41,5 +41,5 @@ jobs:
       - name: Créer la release GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: infinity-customizer.zip
+          files: infinity-loginshield.zip
           generate_release_notes: true
