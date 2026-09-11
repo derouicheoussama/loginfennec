@@ -38,27 +38,46 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Garde anti-doublon : si une autre génération du plugin (ancien dossier
  * « loginfence » ou « infinity-loginshield ») est encore active, ses
- * fonctions existent déjà — on stoppe cette copie proprement avec un
- * avertissement clair au lieu d'une erreur critique.
+ * fonctions existent déjà. On désactive automatiquement l'ancienne copie
+ * (dans l'administration) pour éviter toute erreur critique.
  */
 if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || function_exists( 'infcl_settings' ) ) {
 	if ( is_admin() ) {
 		add_action(
-			'admin_notices',
+			'admin_init',
 			function () {
-				if ( ! current_user_can( 'manage_options' ) ) {
+				if ( ! current_user_can( 'activate_plugins' ) || ! function_exists( 'deactivate_plugins' ) ) {
 					return;
 				}
-				echo '<div class="notice notice-error"><p><strong>LoginFennec Pro :</strong> '
-					. esc_html__( 'une autre copie du plugin est encore active sur ce site (ancien dossier « loginfence » ou « infinity-loginshield »). Désactivez puis supprimez l’ancienne copie dans Extensions — cette nouvelle version fonctionnera immédiatement.', 'loginfennec' )
-					. '</p></div>';
+				$old_candidates = array(
+					'loginfence/loginfence.php',
+					'infinity-loginshield/infinity-loginshield.php',
+				);
+				$old_active = array();
+				foreach ( $old_candidates as $candidate ) {
+					if ( function_exists( 'is_plugin_active' ) && is_plugin_active( $candidate ) ) {
+						$old_active[] = $candidate;
+					}
+				}
+				if ( empty( $old_active ) ) {
+					return;
+				}
+				deactivate_plugins( $old_active, true );
+				add_action(
+					'admin_notices',
+					function () use ( $old_active ) {
+						echo '<div class="notice notice-warning is-dismissible"><p><strong>LoginFennec Pro :</strong> '
+							. esc_html__( 'l’ancienne copie du plugin a été désactivée automatiquement pour éviter tout conflit. Vous pouvez maintenant la supprimer dans Extensions.', 'loginfennec' )
+							. '</p></div>';
+					}
+				);
 			}
 		);
 	}
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '2.1.1' );
+define( 'LOGINFENNEC_VERSION', '2.1.2' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
