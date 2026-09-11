@@ -1,0 +1,19 @@
+name: CI
+
+# Garde-fou continu : la syntaxe de tous les fichiers PHP est vérifiée
+# à chaque push et pull request.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Vérifier la syntaxe PHP
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l

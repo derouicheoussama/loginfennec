@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ruleset name="Infinity LoginShield">
+	<description>Standards de codage WordPress pour Infinity LoginShield.</description>
+
+	<!-- Analyse du dossier du plugin. -->
+	<file>.</file>
+	<exclude-pattern>/.git/</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>/vendor/</exclude-pattern>
+	<exclude-pattern>/wporg-assets/</exclude-pattern>
+
+	<!-- Règles officielles WordPress. -->
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- Compatibilité annoncée : PHP 7.2+. -->
+	<config name="testVersion" value="7.2-"/>
+</ruleset>

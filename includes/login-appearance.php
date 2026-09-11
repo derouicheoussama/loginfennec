@@ -369,6 +369,20 @@ function inls_login_head() {
 add_action( 'login_head', 'inls_login_head', 30 );
 
 /**
+ * Honeypot anti-robots : champ caché hors écran, rempli uniquement par les bots.
+ */
+function inls_login_honeypot() {
+	$s = inls_settings();
+	if ( empty( $s['sec_honeypot'] ) ) {
+		return;
+	}
+	echo '<p class="inls-hp" style="position:absolute!important;left:-9999px!important;top:-9999px!important;margin:0;" aria-hidden="true">'
+		. '<label>' . esc_html__( 'Ne pas remplir ce champ', 'infinity-loginshield' )
+		. ' <input type="text" name="inls_hp" value="" tabindex="-1" autocomplete="off"></label></p>';
+}
+add_action( 'login_form', 'inls_login_honeypot' );
+
+/**
  * Charge Dashicons (icônes sociales) sur la page de connexion.
  */
 function inls_login_enqueue() {

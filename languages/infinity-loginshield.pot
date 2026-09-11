@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.3.0\n"
+"Project-Id-Version: Infinity LoginShield 1.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,9 @@ msgid "Affichez votre mention de copyright sous le formulaire."
 msgstr ""
 
 msgid "Affiché"
+msgstr ""
+
+msgid "Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal."
 msgstr ""
 
 msgid "Alertes e-mail après chaque blocage"
@@ -139,6 +142,9 @@ msgid "Blocage des tentatives de mot de passe"
 msgstr ""
 
 msgid "Blocage géographique (pays)"
+msgstr ""
+
+msgid "Bloquer le balayage des auteurs"
 msgstr ""
 
 msgid "Bloquez les attaques par force brute sur la page de connexion."
@@ -255,6 +261,9 @@ msgstr ""
 msgid "Créateur du plugin, passionné par WordPress et les interfaces modernes."
 msgstr ""
 
+msgid "C’est noté"
+msgstr ""
+
 msgid "Date"
 msgstr ""
 
@@ -321,6 +330,12 @@ msgstr ""
 msgid "Espacement intérieur"
 msgstr ""
 
+msgid "Export / import des réglages (JSON)"
+msgstr ""
+
+msgid "Exporter (JSON)"
+msgstr ""
+
 msgid "Extras"
 msgstr ""
 
@@ -331,6 +346,9 @@ msgid "Faire un don"
 msgstr ""
 
 msgid "Faire un don via PayPal"
+msgstr ""
+
+msgid "Fichier de réglages (JSON)"
 msgstr ""
 
 msgid "Flou (effet verre)"
@@ -384,6 +402,12 @@ msgstr ""
 msgid "Hauteur"
 msgstr ""
 
+msgid "Honeypot anti-robots"
+msgstr ""
+
+msgid "Honeypot anti-robots et anti-énumération des auteurs"
+msgstr ""
+
 msgid "Icônes de réseaux sociaux"
 msgstr ""
 
@@ -406,6 +430,12 @@ msgid "Image du logo"
 msgstr ""
 
 msgid "Image personnalisée"
+msgstr ""
+
+msgid "Import impossible : fichier JSON invalide ou illisible."
+msgstr ""
+
+msgid "Importer"
 msgstr ""
 
 msgid "Impossible de joindre GitHub pour le moment. Réessayez plus tard."
@@ -432,10 +462,16 @@ msgstr ""
 msgid "Journal de sécurité"
 msgstr ""
 
+msgid "Journal de sécurité des 50 derniers événements"
+msgstr ""
+
 msgid "Journal des tentatives (audit complet)"
 msgstr ""
 
 msgid "La page de connexion de WordPress, enfin à votre image."
+msgstr ""
+
+msgid "Laisser un avis"
 msgstr ""
 
 msgid "Laisser vide pour pointer vers l’accueil du site."
@@ -501,6 +537,9 @@ msgstr ""
 msgid "Luminosité de l’image"
 msgstr ""
 
+msgid "Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs."
+msgstr ""
+
 msgid "Masquer complètement le logo"
 msgstr ""
 
@@ -559,6 +598,9 @@ msgid "Monospace"
 msgstr ""
 
 msgid "Médiathèque"
+msgstr ""
+
+msgid "Ne pas remplir ce champ"
 msgstr ""
 
 msgid "Niveaux de sécurité : Gratuit vs Pro"
@@ -657,6 +699,9 @@ msgstr ""
 msgid "Réglages enregistrés."
 msgstr ""
 
+msgid "Réglages importés avec succès."
+msgstr ""
+
 msgid "Réglages réinitialisés aux valeurs par défaut."
 msgstr ""
 
@@ -682,6 +727,9 @@ msgid "Sakura"
 msgstr ""
 
 msgid "Saturation de l’image"
+msgstr ""
+
+msgid "Sauvegarde des réglages"
 msgstr ""
 
 msgid "Sections de personnalisation"
@@ -792,6 +840,9 @@ msgstr ""
 msgid "URL de connexion personnalisée"
 msgstr ""
 
+msgid "Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !"
+msgstr ""
+
 msgid "Utilisez %%d pour la durée restante en minutes."
 msgstr ""
 
@@ -831,6 +882,9 @@ msgstr ""
 msgid "Votre page de connexion est à jour."
 msgstr ""
 
+msgid "Vous aimez Infinity LoginShield ?"
+msgstr ""
+
 msgid "Vous pourrez tout affiner plus tard (couleurs, flou, opacité…)."
 msgstr ""
 
@@ -864,6 +918,9 @@ msgstr ""
 msgid "reCAPTCHA v3 / hCaptcha sur la connexion"
 msgstr ""
 
+msgid "requête refusée par la protection anti-robots."
+msgstr ""
+
 msgid "À droite"
 msgstr ""
 
@@ -871,6 +928,9 @@ msgid "À gauche"
 msgstr ""
 
 msgid "À propos"
+msgstr ""
+
+msgid "À propos & don"
 msgstr ""
 
 msgid "À propos d’Infinity LoginShield"

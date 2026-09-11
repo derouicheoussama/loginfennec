@@ -20,10 +20,15 @@ class Inls_Admin {
 		add_action( 'admin_post_inls_save', array( __CLASS__, 'save' ) );
 		add_action( 'admin_post_inls_wizard', array( __CLASS__, 'wizard_save' ) );
 		add_action( 'admin_post_inls_reset', array( __CLASS__, 'reset' ) );
+		add_action( 'admin_post_inls_export', array( __CLASS__, 'export_settings' ) );
+		add_action( 'admin_post_inls_import', array( __CLASS__, 'import_settings' ) );
+		add_action( 'admin_post_inls_dismiss_review', array( __CLASS__, 'dismiss_review' ) );
 		add_action( 'wp_ajax_inls_preview_css', array( __CLASS__, 'ajax_preview_css' ) );
 		add_action( 'wp_ajax_inls_check_updates', array( __CLASS__, 'ajax_check_updates' ) );
 		add_action( 'wp_ajax_inls_purge_log', array( __CLASS__, 'ajax_purge_log' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( INFINITY_LOGINSHIELD_FILE ), array( __CLASS__, 'plugin_action_links' ) );
+		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
 
 	/**
@@ -275,6 +280,113 @@ class Inls_Admin {
 	}
 
 	/**
+	 * Exporte les réglages en fichier JSON.
+	 */
+	public static function export_settings() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-loginshield' ) );
+		}
+		check_admin_referer( 'inls_export' );
+
+		nocache_headers();
+		header( 'Content-Type: application/json; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=infinity-loginshield-settings-' . gmdate( 'Ymd-Hi' ) . '.json' );
+		echo wp_json_encode( inls_settings(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+		exit;
+	}
+
+	/**
+	 * Importe des réglages depuis un fichier JSON.
+	 */
+	public static function import_settings() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-loginshield' ) );
+		}
+		check_admin_referer( 'inls_import', 'inls_import_nonce' );
+
+		$redirect_ok = add_query_arg(
+			array(
+				'page'          => 'infinity-loginshield',
+				'inls-imported' => 1,
+			),
+			admin_url( 'admin.php' )
+		);
+		$redirect_ko = add_query_arg(
+			array(
+				'page'           => 'infinity-loginshield',
+				'inls-import-error' => 1,
+			),
+			admin_url( 'admin.php' )
+		);
+
+		if ( empty( $_FILES['inls_import_file'] ) || ! isset( $_FILES['inls_import_file']['error'] ) || UPLOAD_ERR_OK !== (int) $_FILES['inls_import_file']['error'] ) {
+			wp_safe_redirect( $redirect_ko );
+			exit;
+		}
+		$file     = $_FILES['inls_import_file'];
+		$filesize = isset( $file['size'] ) ? (int) $file['size'] : 0;
+		if ( $filesize < 2 || $filesize > MB_IN_BYTES || ! is_uploaded_file( $file['tmp_name'] ) ) {
+			wp_safe_redirect( $redirect_ko );
+			exit;
+		}
+
+		$content = (string) file_get_contents( $file['tmp_name'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- fichier téléversé temporaire.
+		$data    = json_decode( $content, true );
+		if ( ! is_array( $data ) ) {
+			wp_safe_redirect( $redirect_ko );
+			exit;
+		}
+
+		update_option( INFINITY_LOGINSHIELD_OPTION, inls_sanitize_settings( $data, null ), 'yes' );
+		wp_safe_redirect( $redirect_ok );
+		exit;
+	}
+
+	/**
+	 * Enregistre la fermeture de la demande d'avis.
+	 */
+	public static function dismiss_review() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-loginshield' ) );
+		}
+		check_admin_referer( 'inls_dismiss_review' );
+		update_option( 'inls_review_dismissed', 1, false );
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'admin.php?page=infinity-loginshield' ) );
+		exit;
+	}
+
+	/**
+	 * Lien « Personnaliser » sur la ligne du plugin (liste des extensions).
+	 *
+	 * @param array $links Liens existants.
+	 * @return array
+	 */
+	public static function plugin_action_links( $links ) {
+		array_unshift(
+			$links,
+			'<a href="' . esc_url( admin_url( 'admin.php?page=infinity-loginshield' ) ) . '">'
+			. esc_html__( 'Personnaliser', 'infinity-loginshield' ) . '</a>'
+		);
+		return $links;
+	}
+
+	/**
+	 * Métadonnées de ligne (GitHub, À propos, don).
+	 *
+	 * @param array  $meta Liens existants.
+	 * @param string $file Fichier du plugin de la ligne.
+	 * @return array
+	 */
+	public static function plugin_row_meta( $meta, $file ) {
+		if ( plugin_basename( INFINITY_LOGINSHIELD_FILE ) !== $file ) {
+			return $meta;
+		}
+		$meta[] = '<a href="https://github.com/derouicheoussama/infinity-loginshield" target="_blank" rel="noopener noreferrer">GitHub</a>';
+		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=infinity-loginshield-about' ) ) . '">' . esc_html__( 'À propos & don', 'infinity-loginshield' ) . '</a>';
+		return $meta;
+	}
+
+	/**
 	 * Notices de confirmation.
 	 */
 	public static function notices() {
@@ -290,6 +402,37 @@ class Inls_Admin {
 		if ( 'infinity-loginshield' === $_GET['page'] && isset( $_GET['inls-reset'] ) ) {
 			echo '<div class="notice notice-info is-dismissible"><p>' . esc_html__( 'Réglages réinitialisés aux valeurs par défaut.', 'infinity-loginshield' ) . '</p></div>';
 		}
+		if ( 'infinity-loginshield' === $_GET['page'] && isset( $_GET['inls-imported'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages importés avec succès.', 'infinity-loginshield' ) . '</strong></p></div>';
+		}
+		if ( 'infinity-loginshield' === $_GET['page'] && isset( $_GET['inls-import-error'] ) ) {
+			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Import impossible : fichier JSON invalide ou illisible.', 'infinity-loginshield' ) . '</p></div>';
+		}
+
+		// Demande d'avis : une seule fois, après 14 jours d'utilisation.
+		if ( 'infinity-loginshield' !== $_GET['page'] ) {
+			return;
+		}
+		$first = (int) get_option( 'inls_first_activated', 0 );
+		if ( ! $first ) {
+			update_option( 'inls_first_activated', time(), false );
+			return;
+		}
+		if ( get_option( 'inls_review_dismissed', false ) || ( time() - $first ) <= 14 * DAY_IN_SECONDS ) {
+			return;
+		}
+		$dismiss = wp_nonce_url( admin_url( 'admin-post.php?action=inls_dismiss_review' ), 'inls_dismiss_review' );
+		?>
+		<div class="notice notice-info inls-review">
+			<p>
+				<span class="inls-stars" aria-hidden="true">★★★★★</span>
+				<strong><?php esc_html_e( 'Vous aimez Infinity LoginShield ?', 'infinity-loginshield' ); ?></strong>
+				<?php esc_html_e( 'Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !', 'infinity-loginshield' ); ?>
+				<a class="button button-primary" href="https://wordpress.org/plugins/infinity-loginshield/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis', 'infinity-loginshield' ); ?></a>
+				<a class="button-link" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'C’est noté', 'infinity-loginshield' ); ?></a>
+			</p>
+		</div>
+		<?php
 	}
 
 	/* ---------------------------------------------------------------------
@@ -495,6 +638,20 @@ class Inls_Admin {
 						<?php esc_html_e( 'Enregistrer', 'infinity-loginshield' ); ?>
 					</button>
 				</div>
+			</div>
+
+			<div class="inls-backup-bar">
+				<span class="inls-backup-title"><span class="dashicons dashicons-database-export"></span> <?php esc_html_e( 'Sauvegarde des réglages', 'infinity-loginshield' ); ?></span>
+				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=inls_export' ), 'inls_export' ) ); ?>">
+					<?php esc_html_e( 'Exporter (JSON)', 'infinity-loginshield' ); ?>
+				</a>
+				<form class="inls-import-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
+					<input type="hidden" name="action" value="inls_import">
+					<?php wp_nonce_field( 'inls_import', 'inls_import_nonce' ); ?>
+					<label class="screen-reader-text" for="inls-import-file"><?php esc_html_e( 'Fichier de réglages (JSON)', 'infinity-loginshield' ); ?></label>
+					<input type="file" id="inls-import-file" name="inls_import_file" accept="application/json,.json" required>
+					<?php submit_button( __( 'Importer', 'infinity-loginshield' ), 'secondary', 'submit', false ); ?>
+				</form>
 			</div>
 
 			<form id="inls-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -991,6 +1148,8 @@ class Inls_Admin {
 		self::field_toggle( $s, 'sec_generic_error', __( 'Masquer le détail des erreurs', 'infinity-loginshield' ), __( 'Affiche un message générique au lieu de « mot de passe incorrect ».', 'infinity-loginshield' ) );
 		self::field_toggle( $s, 'sec_hide_language_switcher', __( 'Masquer le sélecteur de langue', 'infinity-loginshield' ) );
 		self::field_toggle( $s, 'sec_disable_xmlrpc', __( 'Désactiver XML-RPC', 'infinity-loginshield' ), __( 'Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress).', 'infinity-loginshield' ) );
+		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'infinity-loginshield' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'infinity-loginshield' ) );
+		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'infinity-loginshield' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'infinity-loginshield' ) );
 
 		// ——— Journal de sécurité ———.
 		$log = Inls_Login_Security::get_log();
@@ -1111,6 +1270,9 @@ class Inls_Admin {
 						<li><?php esc_html_e( 'Icônes de réseaux sociaux', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Mention de copyright', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Blocage des tentatives de mot de passe', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Honeypot anti-robots et anti-énumération des auteurs', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Journal de sécurité des 50 derniers événements', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Export / import des réglages (JSON)', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Aperçu en direct 100 % responsive', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Mises à jour automatiques via GitHub', 'infinity-loginshield' ); ?></li>
 					</ul>

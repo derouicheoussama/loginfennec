@@ -37,11 +37,80 @@ class Inls_Login_Security {
 	 * Déclare les hooks.
 	 */
 	public static function init() {
+		add_filter( 'authenticate', array( __CLASS__, 'check_honeypot' ), 1, 3 );
 		add_filter( 'authenticate', array( __CLASS__, 'authenticate' ), 5, 3 );
 		add_action( 'wp_login_failed', array( __CLASS__, 'register_failure' ) );
 		add_action( 'wp_login', array( __CLASS__, 'clear_for' ), 10, 2 );
 		add_filter( 'login_message', array( __CLASS__, 'remaining_message' ) );
 		add_filter( 'xmlrpc_enabled', array( __CLASS__, 'maybe_disable_xmlrpc' ) );
+		add_action( 'init', array( __CLASS__, 'harden_author_scans' ) );
+	}
+
+	/**
+	 * Honeypot : champ caché rempli uniquement par les robots.
+	 *
+	 * @param WP_User|WP_Error|null $user     Utilisateur ou erreur.
+	 * @param string                $username Identifiant.
+	 * @param string                $password Mot de passe.
+	 * @return WP_User|WP_Error
+	 */
+	public static function check_honeypot( $user, $username, $password ) {
+		$s = inls_settings();
+		if ( empty( $s['sec_honeypot'] ) ) {
+			return $user;
+		}
+		$trap = isset( $_POST['inls_hp'] ) ? trim( wp_unslash( $_POST['inls_hp'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- vérification anti-bot publique.
+		if ( '' === $trap ) {
+			return $user;
+		}
+		self::log_event( 'blocked', $username );
+		return new WP_Error(
+			'inls_honeypot',
+			'<strong>' . esc_html__( 'Erreur', 'infinity-loginshield' ) . '</strong> : ' . esc_html__( 'requête refusée par la protection anti-robots.', 'infinity-loginshield' )
+		);
+	}
+
+	/**
+	 * Active la protection contre le balayage des auteurs (visiteurs non connectés).
+	 */
+	public static function harden_author_scans() {
+		$s = inls_settings();
+		if ( empty( $s['sec_disable_authors'] ) ) {
+			return;
+		}
+		add_filter( 'redirect_canonical', array( __CLASS__, 'block_author_scan' ) );
+		add_filter( 'rest_endpoints', array( __CLASS__, 'hide_rest_users' ) );
+	}
+
+	/**
+	 * ?author=N est redirigé vers l'accueil au lieu de révéler l'identifiant.
+	 *
+	 * @param string $redirect_url URL de redirection canonique.
+	 * @return string
+	 */
+	public static function block_author_scan( $redirect_url ) {
+		if ( isset( $_GET['author'] ) && ! is_user_logged_in() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- blocage de balayage public.
+			return home_url( '/' );
+		}
+		return $redirect_url;
+	}
+
+	/**
+	 * Masque l'endpoint REST des utilisateurs pour les non-connectés.
+	 *
+	 * @param array $endpoints Routes REST.
+	 * @return array
+	 */
+	public static function hide_rest_users( $endpoints ) {
+		if ( is_user_logged_in() ) {
+			return $endpoints;
+		}
+		foreach ( array_keys( $endpoints ) as $route ) {
+			if ( false !== strpos( $route, '/users' ) ) {
+				unset( $endpoints[ $route ] );
+			}
+		}
+		return $endpoints;
 	}
 
 	/**

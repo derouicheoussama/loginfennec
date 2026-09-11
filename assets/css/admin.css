@@ -1384,3 +1384,60 @@ body.inls-preview-lock {
 	color: var(--inls-green);
 	font-weight: 600;
 }
+
+/* ---------- Sauvegarde des réglages (export / import) ---------- */
+
+.inls-backup-bar {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+	background: var(--inls-panel);
+	border: 1px solid var(--inls-line);
+	border-radius: 12px;
+	padding: 10px 16px;
+	margin: 0 0 14px;
+	box-shadow: 0 4px 18px -12px rgba(35, 33, 61, .3);
+}
+
+.inls-backup-title {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12.5px;
+	font-weight: 700;
+	color: var(--inls-muted);
+	margin-right: auto;
+}
+
+.inls-backup-title .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	color: var(--inls-accent);
+}
+
+.inls-import-form {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+}
+
+.inls-import-form input[type="file"] {
+	max-width: 260px;
+}
+
+/* ---------- Demande d'avis ---------- */
+
+.inls-review .inls-stars {
+	color: #f5a623;
+	font-size: 16px;
+	letter-spacing: 2px;
+	margin-right: 6px;
+}
+
+.inls-review .button-link {
+	margin-left: 6px;
+	color: var(--inls-muted);
+}

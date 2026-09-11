@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.2.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,9 +20,11 @@ Infinity LoginShield redesigns your WordPress login page with a modern, fluid ex
 * Custom logo (image, size, link) — or hide it completely
 * Background: solid color, gradient (angle control) or image
 * Blur control (backdrop) and colored overlay with opacity control
-* 6 one-click modern styles: Glassmorphism, Minimal, Dark, Sunset, Ocean, Forest
+* 10 one-click modern styles: Glassmorphism, Minimal, Dark, Sunset, Ocean, Forest, Neon, Sakura, Monochrome, Royal
+* 7 form UI themes (glass, classic, outline, pill, elevated, accent, minimal) — independent from the colors
 * Glassmorphism form: translucency, blur, radius, shadow, width, padding
 * Full control over text, labels, inputs, button (normal + hover) and link colors
+* Welcome message, 4 font families, entry animations, custom CSS
 * Fully responsive (desktop, tablet, mobile)
 
 **Content**
@@ -36,6 +38,10 @@ Infinity LoginShield redesigns your WordPress login page with a modern, fluid ex
 
 * Limit login attempts: after N failures, the IP address and the username are locked for a configurable duration
 * Live "attempts remaining" warning on the login screen
+* Honeypot anti-bot field (blocked bots show up in the journal)
+* Block author scans (?author=N) and close the REST users endpoint to visitors
+* Optional XML-RPC deactivation
+* Security journal: the last 50 events (failures, blocks, logins) with IP and username
 * Option to hide detailed error messages (generic message instead)
 * Optional: hide the language switcher
 * Security headers on the login page (X-Frame-Options, nosniff, Referrer-Policy)
@@ -44,7 +50,9 @@ Infinity LoginShield redesigns your WordPress login page with a modern, fluid ex
 
 * Modern admin dashboard: tabs, toggle switches, sliders, color pickers
 * Live preview of the login page with desktop / tablet / mobile views
-* Auto-updates from your GitHub releases (built-in updater)
+* Export / import your settings as JSON
+* Custom onboarding wizard, official brand colors, welcome message, copyright
+* Auto-updates from your GitHub releases (built-in updater, switches to WordPress.org automatically)
 
 == Installation ==
 
@@ -82,6 +90,13 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.4.0 =
+* New: honeypot anti-bot field on the login form (blocked bots appear in the security journal)
+* New: block author scans (?author=N) and close the REST users endpoint to logged-out visitors
+* New: export / import your settings as JSON
+* New: "Customize" shortcut on the Plugins screen + GitHub / About row links
+* Dev: CI workflow with PHP syntax checks and PHPCS configuration
 
 = 1.3.0 =
 * Important: the plugin is now called **Infinity LoginShield**
