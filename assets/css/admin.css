@@ -1883,3 +1883,81 @@ body.inls-preview-lock {
 	border-top: 1px solid var(--inls-line);
 	background: #fafaff;
 }
+
+/* ---------- Installateur : centrage et détails ---------- */
+
+.inls-installer {
+	max-width: 1120px;
+	margin: 0 auto;
+}
+
+.inls-inst-hero {
+	text-align: center;
+	padding: 52px 60px;
+}
+
+.inls-inst-hero p {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.inls-inst-steps {
+	justify-content: center;
+}
+
+.inls-installer form {
+	max-width: 1040px;
+	margin: 0 auto;
+}
+
+.inls-inst-subtitle {
+	margin: 26px 0 2px;
+	font-size: 17px;
+}
+
+.inls-inst-note {
+	text-align: center;
+	color: var(--inls-muted);
+	font-size: 12px;
+	font-weight: 600;
+	margin: 16px 0 0;
+}
+
+.inls-inst-checks {
+	display: grid;
+	gap: 10px;
+	margin-top: 14px;
+}
+
+.inls-inst-check {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+	border: 1px solid var(--inls-line);
+	border-radius: 12px;
+	padding: 12px 16px;
+	background: #fafaff;
+}
+
+.inls-inst-check .inls-switch {
+	flex: 0 0 44px;
+}
+
+.inls-inst-check strong {
+	font-size: 13.5px;
+}
+
+.inls-inst-check .inls-inst-desc {
+	margin: 2px 0 0;
+}
+
+.inls-inst-attempts {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	flex: 0 0 220px;
+}
+
+.inls-inst-attempts .inls-input {
+	width: 100%;
+}

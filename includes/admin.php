@@ -35,6 +35,7 @@ class Inls_Admin {
 		add_action( 'admin_post_inls_export', array( __CLASS__, 'export_settings' ) );
 		add_action( 'admin_post_inls_import', array( __CLASS__, 'import_settings' ) );
 		add_action( 'admin_post_inls_export_log', array( __CLASS__, 'export_log_csv' ) );
+		add_action( 'admin_post_inls_purge_cache', array( __CLASS__, 'purge_cache' ) );
 		add_action( 'admin_post_inls_dismiss_review', array( __CLASS__, 'dismiss_review' ) );
 		add_action( 'wp_ajax_inls_preview_css', array( __CLASS__, 'ajax_preview_css' ) );
 		add_action( 'wp_ajax_inls_check_updates', array( __CLASS__, 'ajax_check_updates' ) );
@@ -142,17 +143,30 @@ class Inls_Admin {
 		}
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_media();
+
+		// Cache-busting : la version intègre la date de modification des fichiers.
+		$css_ver = INFINITY_LOGINSHIELD_VERSION;
+		$js_ver  = INFINITY_LOGINSHIELD_VERSION;
+		$css_file = INFINITY_LOGINSHIELD_DIR . 'assets/css/admin.css';
+		$js_file  = INFINITY_LOGINSHIELD_DIR . 'assets/js/admin.js';
+		if ( file_exists( $css_file ) ) {
+			$css_ver .= '.' . (string) filemtime( $css_file );
+		}
+		if ( file_exists( $js_file ) ) {
+			$js_ver .= '.' . (string) filemtime( $js_file );
+		}
+
 		wp_enqueue_style(
 			'inls-admin',
 			INFINITY_LOGINSHIELD_URL . 'assets/css/admin.css',
 			array(),
-			INFINITY_LOGINSHIELD_VERSION
+			$css_ver
 		);
 		wp_enqueue_script(
 			'inls-admin',
 			INFINITY_LOGINSHIELD_URL . 'assets/js/admin.js',
 			array( 'jquery', 'wp-color-picker' ),
-			INFINITY_LOGINSHIELD_VERSION,
+			$js_ver,
 			true
 		);
 		wp_localize_script(
@@ -374,6 +388,31 @@ class Inls_Admin {
 	}
 
 	/**
+	 * Vide le cache du plugin (transients de mises à jour et de vérifications)
+	 * et rafraîchit les assets côté navigateur.
+	 */
+	public static function purge_cache() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-loginshield' ) );
+		}
+		check_admin_referer( 'inls_purge_cache' );
+
+		delete_transient( 'inls_gh_release' );
+		delete_transient( 'inls_wporg_check' );
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'       => 'infinity-loginshield',
+					'inls-cache' => 1,
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
+	}
+
+	/**
 	 * Exporte le journal de sécurité en CSV.
 	 */
 	public static function export_log_csv() {
@@ -486,6 +525,10 @@ class Inls_Admin {
 		}
 		if ( 'infinity-loginshield' === $_GET['page'] && isset( $_GET['inls-import-error'] ) ) {
 			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Import impossible : fichier JSON invalide ou illisible.', 'infinity-loginshield' ) . '</p></div>';
+		}
+
+		if ( 'infinity-loginshield' === $_GET['page'] && isset( $_GET['inls-cache'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache du plugin vidé : vérifications de mises à jour réinitialisées et assets rafraîchis.', 'infinity-loginshield' ) . '</p></div>';
 		}
 
 		// Demande d'avis : une seule fois, après 14 jours d'utilisation.
@@ -723,6 +766,9 @@ class Inls_Admin {
 				<span class="inls-backup-title"><span class="dashicons dashicons-database-export"></span> <?php esc_html_e( 'Sauvegarde des réglages', 'infinity-loginshield' ); ?></span>
 				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=inls_export' ), 'inls_export' ) ); ?>">
 					<?php esc_html_e( 'Exporter (JSON)', 'infinity-loginshield' ); ?>
+				</a>
+				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=inls_purge_cache' ), 'inls_purge_cache' ) ); ?>">
+					<span class="dashicons dashicons-image-rotate"></span> <?php esc_html_e( 'Vider le cache du plugin', 'infinity-loginshield' ); ?>
 				</a>
 				<form class="inls-import-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="action" value="inls_import">
@@ -1711,11 +1757,12 @@ class Inls_Admin {
 		<div class="wrap inls-installer">
 			<header class="inls-inst-hero">
 				<span class="inls-inst-mark" aria-hidden="true">&#8734;</span>
+				<span class="inls-version"><?php esc_html_e( 'Configuration guidée', 'infinity-loginshield' ); ?></span>
 				<h1><?php esc_html_e( 'Bienvenue dans Infinity LoginShield', 'infinity-loginshield' ); ?></h1>
-				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style moderne, activez la protection anti force brute, et c’est parti.', 'infinity-loginshield' ); ?></p>
+				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite.', 'infinity-loginshield' ); ?></p>
 				<ol class="inls-inst-steps" aria-hidden="true">
 					<li class="is-active" data-step-dot="1"><?php esc_html_e( 'Bienvenue', 'infinity-loginshield' ); ?></li>
-					<li data-step-dot="2"><?php esc_html_e( 'Style', 'infinity-loginshield' ); ?></li>
+					<li data-step-dot="2"><?php esc_html_e( 'Style & thème', 'infinity-loginshield' ); ?></li>
 					<li data-step-dot="3"><?php esc_html_e( 'Sécurité', 'infinity-loginshield' ); ?></li>
 				</ol>
 			</header>
@@ -1723,20 +1770,26 @@ class Inls_Admin {
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="inls_wizard">
 				<input type="hidden" name="inls[preset]" value="<?php echo esc_attr( $s['preset'] ); ?>">
+				<input type="hidden" name="inls[form_theme]" value="<?php echo esc_attr( $s['form_theme'] ); ?>">
 				<?php wp_nonce_field( 'inls_wizard', 'inls_wizard_nonce' ); ?>
 
 				<section class="inls-wstep is-active" data-step="1">
+					<h2><?php esc_html_e( 'Ce que vous allez obtenir', 'infinity-loginshield' ); ?></h2>
+					<p class="inls-inst-desc"><?php esc_html_e( 'Un aperçu de tout ce que couvre Infinity LoginShield.', 'infinity-loginshield' ); ?></p>
 					<div class="inls-inst-grid">
-						<div class="inls-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Votre logo, votre image de fond, flou et voile réglables.', 'infinity-loginshield' ); ?></p></div>
-						<div class="inls-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '6 styles modernes', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, coucher de soleil… un clic, tout est prêt.', 'infinity-loginshield' ); ?></p></div>
-						<div class="inls-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Blocage automatique des tentatives de mot de passe.', 'infinity-loginshield' ); ?></p></div>
-						<div class="inls-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Icônes de réseaux sociaux et votre mention de copyright.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Logo image ou texte, image de fond avec flou, luminosité et voile coloré réglables.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '10 styles & 7 thèmes', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, néon, sakura… combinés à 7 designs de formulaire.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Honeypot anti-robots, blocage IP + identifiant et liste blanche de confiance.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Icônes aux couleurs officielles des marques et mention de copyright.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-desktop"></span><h3><?php esc_html_e( 'Aperçu en direct', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Bureau, tablette et mobile — chaque changement se voit instantanément.', 'infinity-loginshield' ); ?></p></div>
+						<div class="inls-inst-feature"><span class="dashicons dashicons-chart-bar"></span><h3><?php esc_html_e( 'Statistiques', 'infinity-loginshield' ); ?></h3><p><?php esc_html_e( 'Score de sécurité et journal des 50 derniers événements de connexion.', 'infinity-loginshield' ); ?></p></div>
 					</div>
+					<p class="inls-inst-note">∞ <?php esc_html_e( 'Création de Derouiche Oussama — sans publicité, sans collecte de données.', 'infinity-loginshield' ); ?></p>
 				</section>
 
 				<section class="inls-wstep" data-step="2">
 					<h2><?php esc_html_e( 'Choisissez votre style', 'infinity-loginshield' ); ?></h2>
-					<p class="inls-inst-desc"><?php esc_html_e( 'Vous pourrez tout affiner plus tard (couleurs, flou, opacité…).', 'infinity-loginshield' ); ?></p>
+					<p class="inls-inst-desc"><?php esc_html_e( 'Un style définit les couleurs d’ambiance. Vous pourrez tout affiner plus tard (flou, opacité, typographie…).', 'infinity-loginshield' ); ?></p>
 					<div class="inls-presets">
 						<?php
 						$presets = array(
@@ -1746,6 +1799,10 @@ class Inls_Admin {
 							'sunset'  => array( __( 'Coucher de soleil', 'infinity-loginshield' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
 							'ocean'   => array( __( 'Océan', 'infinity-loginshield' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
 							'forest'  => array( __( 'Forêt', 'infinity-loginshield' ), 'linear-gradient(135deg,#059669,#065f46)' ),
+							'neon'    => array( __( 'Néon', 'infinity-loginshield' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
+							'sakura'  => array( __( 'Sakura', 'infinity-loginshield' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
+							'mono'    => array( __( 'Monochrome', 'infinity-loginshield' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
+							'royal'   => array( __( 'Royal', 'infinity-loginshield' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
 						);
 						foreach ( $presets as $key => $preset ) {
 							printf(
@@ -1758,11 +1815,37 @@ class Inls_Admin {
 						}
 						?>
 					</div>
+
+					<h2 class="inls-inst-subtitle"><?php esc_html_e( 'Et le design du formulaire', 'infinity-loginshield' ); ?></h2>
+					<p class="inls-inst-desc"><?php esc_html_e( 'La silhouette du formulaire, indépendante des couleurs.', 'infinity-loginshield' ); ?></p>
+					<div class="inls-presets inls-themes">
+						<?php
+						$themes = array(
+							'glass'    => array( __( 'Effet verre', 'infinity-loginshield' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
+							'classic'  => array( __( 'Classique', 'infinity-loginshield' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
+							'outline'  => array( __( 'Contour', 'infinity-loginshield' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
+							'pill'     => array( __( 'Pillule', 'infinity-loginshield' ), 'background:#fff;border-radius:999px;' ),
+							'elevated' => array( __( 'Surélevé', 'infinity-loginshield' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
+							'accent'   => array( __( 'Accent', 'infinity-loginshield' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
+							'minimal'  => array( __( 'Minimal', 'infinity-loginshield' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
+						);
+						foreach ( $themes as $key => $theme ) {
+							printf(
+								'<button type="button" class="inls-preset inls-theme-card%3$s" data-theme="%1$s"><span class="inls-preset-preview" style="%2$s"></span><span class="inls-preset-name">%4$s</span></button>',
+								esc_attr( $key ),
+								esc_attr( $theme[1] ),
+								$s['form_theme'] === $key ? ' is-active' : '',
+								esc_html( $theme[0] )
+							);
+						}
+						?>
+					</div>
 				</section>
 
 				<section class="inls-wstep" data-step="3">
 					<h2><?php esc_html_e( 'Protégez votre page de connexion', 'infinity-loginshield' ); ?></h2>
-					<p class="inls-inst-desc"><?php esc_html_e( 'Recommandé : bloquez les attaques par force brute dès maintenant.', 'infinity-loginshield' ); ?></p>
+					<p class="inls-inst-desc"><?php esc_html_e( 'Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité.', 'infinity-loginshield' ); ?></p>
+
 					<div class="inls-inst-security">
 						<label class="inls-switch"><input type="checkbox" name="inls[sec_enable]" value="1" <?php checked( ! empty( $s['sec_enable'] ) ); ?>><span class="inls-switch-ui"></span></label>
 						<div>
@@ -1772,7 +1855,15 @@ class Inls_Admin {
 						<div class="inls-inst-attempts">
 							<label for="inls-wizard-attempts"><?php esc_html_e( 'Tentatives autorisées', 'infinity-loginshield' ); ?></label>
 							<input type="number" id="inls-wizard-attempts" class="inls-input" name="inls[sec_max_attempts]" min="1" max="20" value="<?php echo esc_attr( $s['sec_max_attempts'] ); ?>">
+							<label for="inls-wizard-lockout"><?php esc_html_e( 'Blocage (minutes)', 'infinity-loginshield' ); ?></label>
+							<input type="number" id="inls-wizard-lockout" class="inls-input" name="inls[sec_lockout_minutes]" min="1" max="1440" value="<?php echo esc_attr( $s['sec_lockout_minutes'] ); ?>">
 						</div>
+					</div>
+
+					<div class="inls-inst-checks">
+						<div class="inls-inst-check"><label class="inls-switch"><input type="checkbox" name="inls[sec_honeypot]" value="1" <?php checked( ! empty( $s['sec_honeypot'] ) ); ?>><span class="inls-switch-ui"></span></label><div><strong><?php esc_html_e( 'Honeypot anti-robots', 'infinity-loginshield' ); ?></strong><p class="inls-inst-desc"><?php esc_html_e( 'Un champ caché piège les bots avant même la connexion.', 'infinity-loginshield' ); ?></p></div></div>
+						<div class="inls-inst-check"><label class="inls-switch"><input type="checkbox" name="inls[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="inls-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'infinity-loginshield' ); ?></strong><p class="inls-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'infinity-loginshield' ); ?></p></div></div>
+						<div class="inls-inst-check"><label class="inls-switch"><input type="checkbox" name="inls[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="inls-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'infinity-loginshield' ); ?></strong><p class="inls-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'infinity-loginshield' ); ?></p></div></div>
 					</div>
 					<p class="inls-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-loginshield-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'infinity-loginshield' ); ?></p>
 				</section>
