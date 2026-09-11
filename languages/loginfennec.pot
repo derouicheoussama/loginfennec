@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LoginFennec Pro 2.0.0\n"
+"Project-Id-Version: LoginFennec Pro 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfennec\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +103,9 @@ msgid "Aperçu en direct"
 msgstr ""
 
 msgid "Aperçu en direct 100 % responsive"
+msgstr ""
+
+msgid "Aperçu en direct, journal et score"
 msgstr ""
 
 msgid "Aperçu plein écran"
@@ -252,6 +255,9 @@ msgstr ""
 msgid "Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même."
 msgstr ""
 
+msgid "Cliquez sur « Terminer » pour appliquer et ouvrir votre tableau de bord."
+msgstr ""
+
 msgid "Clé de licence"
 msgstr ""
 
@@ -336,6 +342,9 @@ msgstr ""
 msgid "Couleurs officielles des marques"
 msgstr ""
 
+msgid "Coupe l’accès des applications externes (appli mobile, éditeurs) — durcissement recommandé si vous ne les utilisez pas."
+msgstr ""
+
 msgid "Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress)."
 msgstr ""
 
@@ -382,6 +391,9 @@ msgid "Désactiver XML-RPC"
 msgstr ""
 
 msgid "Désactiver la licence sur ce site"
+msgstr ""
+
+msgid "Désactiver les mots de passe d’application"
 msgstr ""
 
 msgid "Désactivé"
@@ -592,6 +604,9 @@ msgid "Journal des tentatives (audit complet)"
 msgstr ""
 
 msgid "Journal étendu, alertes e-mail immédiates et détection des comportements suspects."
+msgstr ""
+
+msgid "La durée double automatiquement à chaque récidive (jusqu’à ×8), pour user la patience des bots."
 msgstr ""
 
 msgid "La page de connexion de WordPress, enfin à votre image."
@@ -825,6 +840,9 @@ msgstr ""
 msgid "Passer en Pro"
 msgstr ""
 
+msgid "Passer l’assistant et aller au dashboard →"
+msgstr ""
+
 msgid "Personnalisation"
 msgstr ""
 
@@ -1005,6 +1023,9 @@ msgstr ""
 msgid "Statistiques, score de sécurité et accès rapide à tous vos réglages."
 msgstr ""
 
+msgid "Style"
+msgstr ""
+
 msgid "Style & thème"
 msgstr ""
 
@@ -1059,6 +1080,9 @@ msgstr ""
 msgid "Terminer et ouvrir le dashboard"
 msgstr ""
 
+msgid "Terminé"
+msgstr ""
+
 msgid "Texte des champs"
 msgstr ""
 
@@ -1077,6 +1101,9 @@ msgstr ""
 msgid "Textes et champs"
 msgstr ""
 
+msgid "Thème du formulaire"
+msgstr ""
+
 msgid "Thème d’interface du formulaire"
 msgstr ""
 
@@ -1084,6 +1111,9 @@ msgid "Titre"
 msgstr ""
 
 msgid "Titre et sous-titre affichés au-dessus du formulaire."
+msgstr ""
+
+msgid "Tout est prêt !"
 msgstr ""
 
 msgid "Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite."
@@ -1149,6 +1179,9 @@ msgstr ""
 msgid "Vider le journal"
 msgstr ""
 
+msgid "Voici votre configuration de départ — tout reste modifiable dans le dashboard."
+msgstr ""
+
 msgid "Voile coloré"
 msgstr ""
 
@@ -1159,6 +1192,9 @@ msgid "Voir sur GitHub"
 msgstr ""
 
 msgid "Vos identifiants restent invisibles aux scanners."
+msgstr ""
+
+msgid "Votre IP actuelle"
 msgstr ""
 
 msgid "Votre page de connexion est prête — explorez les onglets pour la personnaliser."
@@ -1183,6 +1219,12 @@ msgid "YouTube"
 msgstr ""
 
 msgid "Zoom"
+msgstr ""
+
+msgid "ajoutez-la à la liste blanche (onglet Sécurité) pour ne jamais être verrouillé lors de vos tests."
+msgstr ""
+
+msgid "disponibles dans le dashboard"
 msgstr ""
 
 msgid "ex. : Bon retour parmi nous ✨"

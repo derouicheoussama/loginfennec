@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,13 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.1.0 =
+* Security: escalating lockout — the ban duration doubles on each repeat offense (up to ×8)
+* Security: optional deactivation of application passwords
+* Security: extra headers on the login page (X-XSS-Protection, Permissions-Policy)
+* Improved: onboarding wizard with a recap step, your current IP displayed and a skip option
+* Improved: About page social icons in a simple flat brand-color style
 
 = 2.0.0 =
 * Important: the plugin is now called **LoginFennec Pro** — your settings are migrated automatically

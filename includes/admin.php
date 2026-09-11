@@ -1380,13 +1380,14 @@ class Lnf_Admin {
 
 		self::field_toggle( $s, 'sec_enable', __( 'Limiter les tentatives de connexion', 'loginfennec' ), __( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfennec' ) );
 		self::field_range( $s, 'sec_max_attempts', __( 'Tentatives autorisées', 'loginfennec' ), 1, 20, '', '', array( 'sec_enable' => 1 ) );
-		self::field_range( $s, 'sec_lockout_minutes', __( 'Durée du blocage', 'loginfennec' ), 1, 1440, 'min', '', array( 'sec_enable' => 1 ) );
+		self::field_range( $s, 'sec_lockout_minutes', __( 'Durée du blocage', 'loginfennec' ), 1, 1440, 'min', __( 'La durée double automatiquement à chaque récidive (jusqu’à ×8), pour user la patience des bots.', 'loginfennec' ), array( 'sec_enable' => 1 ) );
 		self::field_text( $s, 'sec_lock_message', __( 'Message de blocage', 'loginfennec' ), 'text', '', sprintf( __( 'Utilisez %%d pour la durée restante en minutes.', 'loginfennec' ) ), array( 'sec_enable' => 1 ) );
 		self::field_toggle( $s, 'sec_generic_error', __( 'Masquer le détail des erreurs', 'loginfennec' ), __( 'Affiche un message générique au lieu de « mot de passe incorrect ».', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_hide_language_switcher', __( 'Masquer le sélecteur de langue', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_xmlrpc', __( 'Désactiver XML-RPC', 'loginfennec' ), __( 'Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress).', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfennec' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfennec' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfennec' ) );
+		self::field_toggle( $s, 'sec_disable_app_passwords', __( 'Désactiver les mots de passe d’application', 'loginfennec' ), __( 'Coupe l’accès des applications externes (appli mobile, éditeurs) — durcissement recommandé si vous ne les utilisez pas.', 'loginfennec' ) );
 		self::field_textarea(
 			$s,
 			'sec_whitelist',
@@ -1494,7 +1495,7 @@ class Lnf_Admin {
 					<p><?php esc_html_e( 'Créateur du plugin, passionné par WordPress et les interfaces modernes.', 'loginfennec' ); ?></p>
 					<div class="lnf-dev-social" aria-label="<?php esc_attr_e( 'Réseaux du développeur', 'loginfennec' ); ?>">
 						<?php foreach ( self::dev_socials() as $network ) : ?>
-							<a class="lnf-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>" style="<?php echo esc_attr( ! empty( $network['bg'] ) ? 'background:' . $network['bg'] : '' ); ?>">
+							<a class="lnf-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>" style="<?php echo esc_attr( ! empty( $network['color'] ) ? 'color:' . $network['color'] : '' ); ?>">
 								<?php if ( ! empty( $network['svg'] ) ) : ?>
 									<?php echo $network['svg']; // SVG de marque (simple-icons), statique et sûr. ?>
 								<?php else : ?>
@@ -1685,31 +1686,31 @@ class Lnf_Admin {
 				),
 				array(
 					'label' => 'GitHub',
-					'bg'    => '#24292F',
+					'color' => '#24292F',
 					'url'   => 'https://github.com/derouicheoussama',
 					'svg'   => $icon( 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12' ),
 				),
 				array(
 					'label' => 'WordPress.org',
-					'bg'    => '#21759B',
+					'color' => '#21759B',
 					'icon'  => 'dashicons-wordpress',
 					'url'   => 'https://profiles.wordpress.org/derouicheoussama/',
 				),
 				array(
 					'label' => 'Facebook',
-					'bg'    => '#1877F2',
+					'color' => '#1877F2',
 					'url'   => 'https://www.facebook.com/derouiche.oussama',
 					'svg'   => $icon( 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' ),
 				),
 				array(
 					'label' => 'Instagram',
-					'bg'    => 'radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)',
+					'color' => '#D6249F',
 					'url'   => 'https://www.instagram.com/derouiche.oussama/',
 					'svg'   => $icon( 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' ),
 				),
 				array(
 					'label' => 'TikTok',
-					'bg'    => '#010101',
+					'color' => '#010101',
 					'url'   => 'https://www.tiktok.com/@derouiche.oussama',
 					'svg'   => $icon( 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' ),
 				),
@@ -1773,7 +1774,9 @@ class Lnf_Admin {
 					<li class="is-active" data-step-dot="1"><?php esc_html_e( 'Bienvenue', 'loginfennec' ); ?></li>
 					<li data-step-dot="2"><?php esc_html_e( 'Style & thème', 'loginfennec' ); ?></li>
 					<li data-step-dot="3"><?php esc_html_e( 'Sécurité', 'loginfennec' ); ?></li>
+					<li data-step-dot="4"><?php esc_html_e( 'Terminé', 'loginfennec' ); ?></li>
 				</ol>
+				<a class="lnf-inst-skip" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec' ) ); ?>"><?php esc_html_e( 'Passer l’assistant et aller au dashboard →', 'loginfennec' ); ?></a>
 			</header>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
@@ -1874,7 +1877,20 @@ class Lnf_Admin {
 						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'loginfennec' ); ?></p></div></div>
 						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfennec' ); ?></p></div></div>
 					</div>
+					<p class="lnf-inst-desc"><strong><?php esc_html_e( 'Votre IP actuelle', 'loginfennec' ); ?></strong> : <code><?php echo esc_html( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' ); ?></code> — <?php esc_html_e( 'ajoutez-la à la liste blanche (onglet Sécurité) pour ne jamais être verrouillé lors de vos tests.', 'loginfennec' ); ?></p>
 					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'loginfennec' ); ?></p>
+				</section>
+
+				<section class="lnf-wstep" data-step="4">
+					<h2><?php esc_html_e( 'Tout est prêt !', 'loginfennec' ); ?></h2>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'Voici votre configuration de départ — tout reste modifiable dans le dashboard.', 'loginfennec' ); ?></p>
+					<ul class="lnf-recap-list">
+						<li><strong><?php esc_html_e( 'Style', 'loginfennec' ); ?></strong> <span id="lnf-recap-style">—</span></li>
+						<li><strong><?php esc_html_e( 'Thème du formulaire', 'loginfennec' ); ?></strong> <span id="lnf-recap-theme">—</span></li>
+						<li><strong><?php esc_html_e( 'Sécurité', 'loginfennec' ); ?></strong> <span id="lnf-recap-sec">—</span></li>
+						<li><strong><?php esc_html_e( 'Aperçu en direct, journal et score', 'loginfennec' ); ?></strong> <?php esc_html_e( 'disponibles dans le dashboard', 'loginfennec' ); ?></li>
+					</ul>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'Cliquez sur « Terminer » pour appliquer et ouvrir votre tableau de bord.', 'loginfennec' ); ?></p>
 				</section>
 
 				<footer class="lnf-inst-footer">

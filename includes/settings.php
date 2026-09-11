@@ -146,6 +146,7 @@ function lnf_get_defaults() {
 		'sec_disable_xmlrpc'       => false,
 		'sec_honeypot'             => true,
 		'sec_disable_authors'      => true,
+		'sec_disable_app_passwords' => false,
 		'sec_whitelist'            => '',
 	);
 }
@@ -188,6 +189,7 @@ function lnf_field_spec() {
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
 			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
 			'sec_disable_xmlrpc', 'sec_honeypot', 'sec_disable_authors',
+			'sec_disable_app_passwords',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',

@@ -55,7 +55,30 @@ class Lnf_Login_Security {
 		add_action( 'wp_login', array( __CLASS__, 'clear_for' ), 10, 2 );
 		add_filter( 'login_message', array( __CLASS__, 'remaining_message' ) );
 		add_filter( 'xmlrpc_enabled', array( __CLASS__, 'maybe_disable_xmlrpc' ) );
+		add_filter( 'wp_is_application_passwords_available', array( __CLASS__, 'maybe_disable_app_passwords' ) );
 		add_action( 'init', array( __CLASS__, 'harden_author_scans' ) );
+	}
+
+	/**
+	 * Désactive XML-RPC si l'option de durcissement est active.
+	 *
+	 * @param bool $enabled État courant.
+	 * @return bool
+	 */
+	public static function maybe_disable_xmlrpc( $enabled ) {
+		$s = lnf_settings();
+		return empty( $s['sec_disable_xmlrpc'] ) ? $enabled : false;
+	}
+
+	/**
+	 * Désactive les mots de passe d'application si l'option est active.
+	 *
+	 * @param bool $available État courant.
+	 * @return bool
+	 */
+	public static function maybe_disable_app_passwords( $available ) {
+		$s = lnf_settings();
+		return ! empty( $s['sec_disable_app_passwords'] ) ? false : $available;
 	}
 
 	/**
@@ -395,8 +418,13 @@ class Lnf_Login_Security {
 			}
 			$data[ $key ]['c'] = (int) $data[ $key ]['c'] + 1;
 			if ( $data[ $key ]['c'] >= (int) $s['sec_max_attempts'] ) {
-				$data[ $key ]['u'] = $now + ( (int) $s['sec_lockout_minutes'] * MINUTE_IN_SECONDS );
+				// Verrouillage progressif : la durée double à chaque récidive (×8 maximum).
+				$strikes    = isset( $data[ $key ]['s'] ) ? (int) $data[ $key ]['s'] + 1 : 1;
+				$multiplier = min( 8, 2 ** ( $strikes - 1 ) );
+				$minutes    = min( DAY_IN_SECONDS / MINUTE_IN_SECONDS, (int) $s['sec_lockout_minutes'] * $multiplier );
+				$data[ $key ]['u'] = $now + ( (int) $minutes * MINUTE_IN_SECONDS );
 				$data[ $key ]['c'] = 0;
+				$data[ $key ]['s'] = $strikes;
 				self::log_event( 'blocked', $username );
 			}
 			self::$last_fail_count = max( self::$last_fail_count, (int) $data[ $key ]['c'] );

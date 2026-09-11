@@ -327,9 +327,13 @@
 	}
 
 	/* Presets */
+	var chosenPreset = $('.lnf-preset.is-active .lnf-preset-name').first().text() || null;
+	var chosenTheme = $('.lnf-theme-card.is-active .lnf-preset-name').first().text() || null;
+
 	$(document).on('click', '.lnf-preset', function () {
 		var key = $(this).data('preset');
 		var values = PRESETS[key];
+		chosenPreset = $('.lnf-preset-name', this).text();
 		if (!values) {
 			// Style inconnu du navigateur : on active la carte sans écraser les couleurs.
 			$('.lnf-preset').removeClass('is-active');
@@ -439,6 +443,7 @@
 		$('.lnf-theme-card').removeClass('is-active');
 		$(this).addClass('is-active');
 		$('[name="lnf[form_theme]"]').val($(this).data('theme'));
+		chosenTheme = $('.lnf-preset-name', this).text();
 		schedulePreview();
 	});
 
@@ -598,6 +603,12 @@
 		$('.lnf-step-prev').toggle(wizardStep > 1);
 		$('.lnf-step-next').toggle(wizardStep < wizardTotal);
 		$('.lnf-step-finish').toggle(wizardStep === wizardTotal);
+		if (wizardStep === wizardTotal) {
+			$('#lnf-recap-style').text(chosenPreset || '—');
+			$('#lnf-recap-theme').text(chosenTheme || '—');
+			var secOn = $('[name="lnf[sec_enable]"]').first().prop('checked');
+			$('#lnf-recap-sec').text(secOn ? 'activée ✓' : 'désactivée');
+		}
 	}
 
 	$(document).on('click', '.lnf-step-next', function () {

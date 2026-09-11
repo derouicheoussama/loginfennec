@@ -1988,3 +1988,70 @@ body.lnf-preview-lock {
 .lnf-inst-attempts .lnf-input {
 	width: 100%;
 }
+
+/* ---------- Icônes sociales : style simple coloré ---------- */
+
+.lnf-dev-social {
+	justify-content: center;
+	gap: 20px;
+	margin-top: 16px;
+}
+
+.lnf-dev-icon {
+	width: auto;
+	height: 44px;
+	padding: 0 4px;
+	background: transparent !important;
+	color: var(--lnf-ink);
+	border-radius: 0;
+	transition: opacity .15s ease;
+}
+
+.lnf-dev-icon:hover {
+	opacity: .6;
+	background: transparent !important;
+	box-shadow: none;
+	color: inherit;
+}
+
+.lnf-dev-icon .dashicons,
+.lnf-dev-icon svg {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+	display: block;
+}
+
+/* ---------- Installateur : récapitulatif et skip ---------- */
+
+.lnf-inst-skip {
+	display: inline-block;
+	margin-top: 14px;
+	color: rgba(255, 255, 255, .85);
+	font-size: 12.5px;
+	text-decoration: none;
+}
+
+.lnf-inst-skip:hover {
+	color: #fff;
+}
+
+.lnf-recap-list {
+	list-style: none;
+	margin: 0 0 12px;
+	padding: 0;
+}
+
+.lnf-recap-list li {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 0;
+	border-bottom: 1px dashed var(--lnf-line);
+	font-size: 13px;
+}
+
+.lnf-recap-list li span {
+	font-weight: 700;
+	color: var(--lnf-accent);
+}
