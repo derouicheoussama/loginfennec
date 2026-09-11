@@ -147,6 +147,7 @@ function lnf_get_defaults() {
 		'sec_honeypot'             => true,
 		'sec_disable_authors'      => true,
 		'sec_disable_app_passwords' => false,
+		'sec_alert_email'          => '',
 		'sec_whitelist'            => '',
 	);
 }
@@ -196,7 +197,7 @@ function lnf_field_spec() {
 			'social_facebook', 'social_twitter', 'social_instagram',
 			'social_linkedin', 'social_youtube', 'login_redirect',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',

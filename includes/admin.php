@@ -1032,11 +1032,13 @@ class Lnf_Admin {
 			array(
 				'icon'   => 'dashicons-superhero-alt',
 				'title'  => __( 'LoginFennec Pro', 'loginfennec' ),
-				'state'  => __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'loginfennec' ),
-				'ok'     => false,
+				'state'  => lnf_is_pro()
+					? __( 'Licence active : ', 'loginfennec' ) . lnf_license_label()
+					: __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'loginfennec' ),
+				'ok'     => lnf_is_pro(),
 				'goto'   => '',
 				'link'   => admin_url( 'admin.php?page=loginfennec-pro' ),
-				'button' => __( 'Passer en Pro', 'loginfennec' ),
+				'button' => lnf_is_pro() ? __( 'Gérer ma licence', 'loginfennec' ) : __( 'Passer en Pro', 'loginfennec' ),
 			),
 		);
 
@@ -1388,6 +1390,16 @@ class Lnf_Admin {
 		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfennec' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfennec' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_app_passwords', __( 'Désactiver les mots de passe d’application', 'loginfennec' ), __( 'Coupe l’accès des applications externes (appli mobile, éditeurs) — durcissement recommandé si vous ne les utilisez pas.', 'loginfennec' ) );
+		self::field_text(
+			$s,
+			'sec_alert_email',
+			__( 'Alerte e-mail en cas de blocage', 'loginfennec' ) . ( lnf_is_pro() ? '' : ' — 🔒 Pro' ),
+			'email',
+			'vous@exemple.com',
+			lnf_is_pro()
+				? __( 'Un e-mail vous est envoyé à chaque nouvelle IP bloquée.', 'loginfennec' )
+				: __( 'Réservé Pro — activez votre licence (page Passer en Pro) pour recevoir les alertes.', 'loginfennec' )
+		);
 		self::field_textarea(
 			$s,
 			'sec_whitelist',
@@ -1944,9 +1956,28 @@ class Lnf_Admin {
 				'text'  => __( 'Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle.', 'loginfennec' ),
 			),
 		);
-		$checkout = lnf_checkout_url();
-		$license  = lnf_license_get();
-		$pro      = lnf_is_pro();
+		$checkout  = lnf_checkout_url();
+		$license   = lnf_license_get();
+		$pro       = lnf_is_pro();
+		$plans     = lnf_license_plans();
+		$expired   = ( ! $pro && 'expired' === $license['status'] );
+
+		// URLs d'achat par pack/billing pour le paiement intégré.
+		$buy_urls = array();
+		if ( '' !== $checkout ) {
+			foreach ( array( 'site1', 'site5' ) as $pack_key ) {
+				foreach ( array( 'yearly', 'lifetime' ) as $bill ) {
+					$buy_urls[ $pack_key . '-' . $bill ] = add_query_arg(
+						array(
+							'pack'    => $pack_key,
+							'billing' => $bill,
+							'site'    => rawurlencode( home_url( '/' ) ),
+						),
+						$checkout
+					);
+				}
+			}
+		}
 		?>
 		<div class="wrap lnf-wrap lnf-pro">
 			<div class="lnf-hero lnf-pro-hero">
@@ -1956,7 +1987,7 @@ class Lnf_Admin {
 				<div class="lnf-hero-actions">
 					<?php if ( ! $pro ) : ?>
 						<?php if ( '' !== $checkout ) : ?>
-							<button type="button" class="lnf-btn lnf-btn-pro lnf-open-checkout" data-checkout="<?php echo esc_url( $checkout ); ?>">
+							<button type="button" class="lnf-btn lnf-btn-pro lnf-open-checkout" data-checkout="<?php echo esc_url( add_query_arg( array( 'pack' => 'site1', 'billing' => 'yearly', 'site' => rawurlencode( home_url( '/' ) ) ), $checkout ) ); ?>">
 								<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter Pro — paiement intégré', 'loginfennec' ); ?>
 							</button>
 						<?php else : ?>
@@ -1972,47 +2003,134 @@ class Lnf_Admin {
 			</div>
 
 			<?php if ( $pro ) : ?>
-				<section class="lnf-about-card lnf-pro-active">
-					<h2><span class="dashicons dashicons-yes-alt"></span> <?php esc_html_e( 'Pro actif — merci pour votre soutien !', 'loginfennec' ); ?></h2>
-					<p>
-						<?php esc_html_e( 'Licence :', 'loginfennec' ); ?>
-						<code><?php echo esc_html( strlen( $license['key'] ) > 10 ? substr( $license['key'], 0, 4 ) . '••••' . substr( $license['key'], -4 ) : $license['key'] ); ?></code>
-					</p>
-					<button type="button" class="button lnf-deactivate-license"><?php esc_html_e( 'Désactiver la licence sur ce site', 'loginfennec' ); ?></button>
-					<span class="lnf-license-status" aria-live="polite"></span>
+				<section class="lnf-about-card lnf-license-card">
+					<h2>
+						<span class="dashicons dashicons-yes-alt"></span>
+						<?php esc_html_e( 'Votre licence Pro', 'loginfennec' ); ?>
+						<span class="lnf-chip <?php echo lnf_is_pro() ? 'is-on' : 'is-off'; ?>">
+							<?php echo lnf_is_pro() ? esc_html__( 'Active', 'loginfennec' ) : esc_html__( 'Expirée', 'loginfennec' ); ?>
+						</span>
+					</h2>
+					<ul class="lnf-license-details">
+						<li><strong><?php esc_html_e( 'Clé', 'loginfennec' ); ?></strong> <code><?php echo esc_html( strlen( $license['key'] ) > 10 ? substr( $license['key'], 0, 4 ) . '••••' . substr( $license['key'], -4 ) : $license['key'] ); ?></code></li>
+						<li><strong><?php esc_html_e( 'Pack', 'loginfennec' ); ?></strong> <?php echo esc_html( lnf_license_label() ); ?></li>
+						<li><strong><?php esc_html_e( 'Type', 'loginfennec' ); ?></strong> <?php echo esc_html( 'lifetime' === $license['billing'] ? __( 'À vie — mises à jour pour toujours', 'loginfennec' ) : __( 'Annuelle', 'loginfennec' ) ); ?></li>
+						<li><strong><?php esc_html_e( 'Expiration', 'loginfennec' ); ?></strong> <?php echo esc_html( 'lifetime' === $license['billing'] || 0 === (int) $license['expires'] ? __( 'Jamais — licence à vie', 'loginfennec' ) : date_i18n( get_option( 'date_format' ), (int) $license['expires'] ) ); ?></li>
+						<li><strong><?php esc_html_e( 'Sites autorisés', 'loginfennec' ); ?></strong> <?php echo esc_html( $license['sites'] ); ?></li>
+						<li><strong><?php esc_html_e( 'Dernière vérification', 'loginfennec' ); ?></strong> <?php echo esc_html( (int) $license['checked'] > 0 ? date_i18n( get_option( 'date_format' ) . ' H:i', (int) $license['checked'] + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ) : '—' ); ?></li>
+					</ul>
+					<div class="lnf-hero-actions">
+						<button type="button" class="button lnf-check-license"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier maintenant', 'loginfennec' ); ?></button>
+						<button type="button" class="button-link lnf-deactivate-license"><?php esc_html_e( 'Désactiver la licence sur ce site', 'loginfennec' ); ?></button>
+						<span class="lnf-license-status" aria-live="polite"></span>
+					</div>
 				</section>
 			<?php else : ?>
+				<?php if ( $expired ) : ?>
+					<div class="notice notice-warning"><p><strong><?php esc_html_e( 'Votre licence a expiré.', 'loginfennec' ); ?></strong> <?php esc_html_e( 'Renouvelez votre pack pour réactiver les fonctionnalités Pro.', 'loginfennec' ); ?></p></div>
+				<?php endif; ?>
 				<section class="lnf-about-card lnf-purchase-card">
 					<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'loginfennec' ); ?></h2>
 					<ol class="lnf-purchase-steps">
-						<li><?php esc_html_e( 'Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même.', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Choisissez votre pack ci-dessous (annuelle ou à vie) et achetez : le paiement s’ouvre ici même.', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Après l’achat, vous recevez votre clé de licence par e-mail.', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Collez la clé ci-dessous : Pro est activé instantanément.', 'loginfennec' ); ?></li>
 					</ol>
 					<div class="lnf-license-form">
-						<label class="screen-reader-text" for="lnf-license-key"><?php esc_html_e( 'Clé de licence', 'loginfennec' ); ?></label>
+						<select id="lnf-license-pack" class="lnf-input" aria-label="<?php esc_attr_e( 'Pack', 'loginfennec' ); ?>">
+							<option value="site1"><?php esc_html_e( 'Pro — 1 site', 'loginfennec' ); ?></option>
+							<option value="site5"><?php esc_html_e( 'Pro — 5 sites', 'loginfennec' ); ?></option>
+						</select>
+						<select id="lnf-license-billing" class="lnf-input" aria-label="<?php esc_attr_e( 'Type de licence', 'loginfennec' ); ?>">
+							<option value="yearly"><?php esc_html_e( 'Annuelle', 'loginfennec' ); ?></option>
+							<option value="lifetime"><?php esc_html_e( 'À vie', 'loginfennec' ); ?></option>
+						</select>
 						<input type="text" id="lnf-license-key" class="lnf-input" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off">
 						<button type="button" class="button button-primary lnf-activate-license"><?php esc_html_e( 'Activer Pro', 'loginfennec' ); ?></button>
 					</div>
 					<p class="lnf-license-status" aria-live="polite"></p>
 					<?php if ( '' === $checkout ) : ?>
-						<p class="lnf-pro-note"><?php esc_html_e( 'Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe.', 'loginfennec' ); ?></p>
+						<p class="lnf-pro-note"><?php esc_html_e( 'Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, l’activation est acceptée localement pour vos tests.', 'loginfennec' ); ?></p>
 					<?php endif; ?>
 				</section>
 			<?php endif; ?>
 
-			<?php if ( ! $pro && '' !== $checkout ) : ?>
-				<div class="lnf-modal" id="lnf-checkout-modal" hidden>
-					<div class="lnf-modal-backdrop" data-close></div>
-					<div class="lnf-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'loginfennec' ); ?>">
-						<div class="lnf-modal-head">
-							<strong><?php esc_html_e( 'Paiement sécurisé — LoginFennec Pro', 'loginfennec' ); ?></strong>
-							<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfennec' ); ?>">×</button>
-						</div>
-						<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'loginfennec' ); ?>"></iframe>
-						<p class="lnf-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous.', 'loginfennec' ); ?></p>
+			<?php if ( ! $pro ) : ?>
+				<div class="lnf-packs-head">
+					<h2><?php esc_html_e( 'Choisissez votre pack', 'loginfennec' ); ?></h2>
+					<div class="lnf-billing-toggle" role="group" aria-label="<?php esc_attr_e( 'Type de licence', 'loginfennec' ); ?>">
+						<button type="button" class="lnf-bill-btn is-active" data-billing="yearly"><?php esc_html_e( 'Annuelle', 'loginfennec' ); ?></button>
+						<button type="button" class="lnf-bill-btn" data-billing="lifetime"><?php esc_html_e( 'À vie', 'loginfennec' ); ?></button>
 					</div>
 				</div>
+
+				<div class="lnf-packs">
+					<div class="lnf-pack">
+						<h3><?php esc_html_e( 'Gratuit', 'loginfennec' ); ?></h3>
+						<div class="lnf-pack-price"><span class="lnf-price">0 DA</span></div>
+						<p class="lnf-pack-per"><?php esc_html_e( 'pour toujours', 'loginfennec' ); ?></p>
+						<ul class="lnf-pack-list">
+							<li><?php esc_html_e( 'Personnalisation complète de la page de connexion', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Journal de sécurité (50 événements)', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Honeypot + anti-énumération', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Score de sécurité et aperçu en direct', 'loginfennec' ); ?></li>
+						</ul>
+						<p class="lnf-pack-note">✨ <?php esc_html_e( 'Vous y êtes déjà', 'loginfennec' ); ?></p>
+					</div>
+
+					<div class="lnf-pack is-featured">
+						<div class="lnf-pack-badge"><?php esc_html_e( 'Recommandé', 'loginfennec' ); ?></div>
+						<h3><?php esc_html_e( 'Pro — 1 site', 'loginfennec' ); ?></h3>
+						<div class="lnf-pack-price">
+							<span class="lnf-price" data-yearly="<?php echo esc_attr( $plans['site1']['yearly']['label'] ); ?>" data-lifetime="<?php echo esc_attr( $plans['site1']['lifetime']['label'] ); ?>"><?php echo esc_html( $plans['site1']['yearly']['label'] ); ?></span>
+						</div>
+						<ul class="lnf-pack-list">
+							<li><?php esc_html_e( 'Tout le gratuit, plus :', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Alertes e-mail de blocage', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( '2FA, reCAPTCHA, URL personnalisée*', 'loginfennec' ); ?></li>
+							<li class="lnf-updates" data-yearly="<?php esc_attr_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?>" data-lifetime="<?php esc_attr_e( 'Mises à jour à vie ♾️', 'loginfennec' ); ?>"><?php esc_html_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?></li>
+						</ul>
+						<?php if ( '' !== $checkout ) : ?>
+							<button type="button" class="lnf-btn lnf-btn-pro lnf-buy" data-pack="site1" data-url-yearly="<?php echo esc_url( $buy_urls['site1-yearly'] ); ?>" data-url-lifetime="<?php echo esc_url( $buy_urls['site1-lifetime'] ); ?>"><?php esc_html_e( 'Acheter', 'loginfennec' ); ?></button>
+						<?php else : ?>
+							<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( self::pro_url() ); ?>"><?php esc_html_e( 'Bientôt disponible', 'loginfennec' ); ?></a>
+						<?php endif; ?>
+					</div>
+
+					<div class="lnf-pack">
+						<div class="lnf-pack-badge"><?php esc_html_e( 'Agences & multi-sites', 'loginfennec' ); ?></div>
+						<h3><?php esc_html_e( 'Pro — 5 sites', 'loginfennec' ); ?></h3>
+						<div class="lnf-pack-price">
+							<span class="lnf-price" data-yearly="<?php echo esc_attr( $plans['site5']['yearly']['label'] ); ?>" data-lifetime="<?php echo esc_attr( $plans['site5']['lifetime']['label'] ); ?>"><?php echo esc_html( $plans['site5']['yearly']['label'] ); ?></span>
+						</div>
+						<ul class="lnf-pack-list">
+							<li><?php esc_html_e( 'Tout le pack 1 site, plus :', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Licence pour 5 sites', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'Idéal pour agences et clients', 'loginfennec' ); ?></li>
+							<li class="lnf-updates" data-yearly="<?php esc_attr_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?>" data-lifetime="<?php esc_attr_e( 'Mises à jour à vie ♾️', 'loginfennec' ); ?>"><?php esc_html_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?></li>
+						</ul>
+						<?php if ( '' !== $checkout ) : ?>
+							<button type="button" class="lnf-btn lnf-btn-pro lnf-buy" data-pack="site5" data-url-yearly="<?php echo esc_url( $buy_urls['site5-yearly'] ); ?>" data-url-lifetime="<?php echo esc_url( $buy_urls['site5-lifetime'] ); ?>"><?php esc_html_e( 'Acheter', 'loginfennec' ); ?></button>
+						<?php else : ?>
+							<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( self::pro_url() ); ?>"><?php esc_html_e( 'Bientôt disponible', 'loginfennec' ); ?></a>
+						<?php endif; ?>
+					</div>
+				</div>
+				<p class="lnf-pack-footnote">* <?php esc_html_e( 'Fonctionnalités livrées par le module Pro en préparation — votre licence les débloquera automatiquement dès leur sortie.', 'loginfennec' ); ?></p>
+
+				<?php if ( '' !== $checkout ) : ?>
+					<div class="lnf-modal" id="lnf-checkout-modal" hidden>
+						<div class="lnf-modal-backdrop" data-close></div>
+						<div class="lnf-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'loginfennec' ); ?>">
+							<div class="lnf-modal-head">
+								<strong><?php esc_html_e( 'Paiement sécurisé — LoginFennec Pro', 'loginfennec' ); ?></strong>
+								<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfennec' ); ?>">×</button>
+							</div>
+							<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'loginfennec' ); ?>"></iframe>
+							<p class="lnf-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessus.', 'loginfennec' ); ?></p>
+						</div>
+					</div>
+				<?php endif; ?>
 			<?php endif; ?>
 
 			<div class="lnf-pro-benefits">

@@ -82,6 +82,30 @@ class Lnf_Login_Security {
 	}
 
 	/**
+	 * Avantage Pro : alerte e-mail à chaque nouveau verrouillage.
+	 *
+	 * @param string $username Identifiant tenté.
+	 * @param int    $minutes  Durée du blocage en minutes.
+	 */
+	public static function notify_lock( $username, $minutes ) {
+		$s     = lnf_settings();
+		$email = trim( (string) $s['sec_alert_email'] );
+		if ( '' === $email || ! lnf_is_pro() || ! is_email( $email ) ) {
+			return;
+		}
+		$subject = sprintf( '[%s] LoginFennec — IP bloquée', get_bloginfo( 'name' ) );
+		$body    = sprintf(
+			/* translators: 1 : IP, 2 : identifiant, 3 : durée en minutes, 4 : URL du site. */
+			__( "LoginFennec Pro a bloqué une tentative d'intrusion.\n\nIP : %1\$s\nIdentifiant tenté : %2\$s\nDurée du blocage : %3\$d minutes\nSite : %4\$s", 'loginfennec' ),
+			self::client_ip(),
+			$username,
+			$minutes,
+			home_url( '/' )
+		);
+		wp_mail( $email, $subject, $body );
+	}
+
+	/**
 	 * Honeypot : champ caché rempli uniquement par les robots.
 	 *
 	 * @param WP_User|WP_Error|null $user     Utilisateur ou erreur.
@@ -415,6 +439,7 @@ class Lnf_Login_Security {
 				$data[ $key ]['c'] = 0;
 				$data[ $key ]['s'] = $strikes;
 				self::log_event( 'blocked', $username );
+				self::notify_lock( $username, (int) $minutes );
 			}
 			self::$last_fail_count = max( self::$last_fail_count, (int) $data[ $key ]['c'] );
 		}

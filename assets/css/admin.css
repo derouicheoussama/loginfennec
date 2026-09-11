@@ -2066,3 +2066,191 @@ body.lnf-preview-lock {
 	font-weight: 700;
 	color: var(--lnf-accent);
 }
+
+/* ---------- Packs Pro : bascule et cartes ---------- */
+
+.lnf-packs-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	flex-wrap: wrap;
+	margin: 26px 0 16px;
+}
+
+.lnf-packs-head h2 {
+	margin: 0;
+	font-size: 20px;
+}
+
+.lnf-billing-toggle {
+	display: inline-flex;
+	background: #eceaf6;
+	border-radius: 999px;
+	padding: 4px;
+	gap: 4px;
+}
+
+.lnf-bill-btn {
+	border: none;
+	background: transparent;
+	border-radius: 999px;
+	padding: 8px 18px;
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--lnf-muted);
+	cursor: pointer;
+	transition: background .15s ease, color .15s ease;
+}
+
+.lnf-bill-btn.is-active {
+	background: var(--lnf-grad);
+	color: #fff;
+	box-shadow: 0 6px 16px -6px var(--lnf-accent);
+}
+
+.lnf-packs {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 18px;
+	align-items: stretch;
+}
+
+.lnf-pack {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	border: 2px solid var(--lnf-line);
+	border-radius: 16px;
+	padding: 22px;
+	background: #fff;
+	box-shadow: var(--lnf-shadow);
+	transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.lnf-pack:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 20px 40px -18px rgba(35, 33, 61, .35);
+}
+
+.lnf-pack.is-featured {
+	border-color: var(--inls-accent, #6d5df6);
+	box-shadow: 0 16px 40px -16px rgba(109, 93, 246, .5);
+}
+
+.lnf-pack-badge {
+	position: absolute;
+	top: -12px;
+	left: 20px;
+	background: linear-gradient(120deg, #1d4ed8, #3b82f6);
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	border-radius: 999px;
+	padding: 4px 12px;
+	letter-spacing: .4px;
+}
+
+.lnf-pack h3 {
+	margin: 0 0 10px;
+	font-size: 16px;
+}
+
+.lnf-pack-price {
+	margin: 4px 0 2px;
+}
+
+.lnf-pack-price .lnf-price {
+	font-size: 26px;
+	font-weight: 800;
+	color: var(--inls-ink, #23213d);
+}
+
+.lnf-pack-per {
+	color: var(--inls-muted, #7a7796);
+	font-size: 12.5px;
+	font-weight: 600;
+	margin: 0 0 12px;
+}
+
+.lnf-pack-list {
+	list-style: none;
+	margin: 0 0 16px;
+	padding: 0;
+	flex: 1;
+}
+
+.lnf-pack-list li {
+	position: relative;
+	padding: 5px 0 5px 24px;
+	font-size: 13px;
+}
+
+.lnf-pack-list li::before {
+	content: "✓";
+	position: absolute;
+	left: 2px;
+	top: 4px;
+	width: 16px;
+	height: 16px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 10px;
+	font-weight: 700;
+	color: #fff;
+	background: var(--lnf-grad);
+	border-radius: 50%;
+}
+
+.lnf-pack .lnf-btn {
+	justify-content: center;
+}
+
+.lnf-pack-note {
+	margin: 10px 0 0;
+	text-align: center;
+	font-size: 12px;
+	color: var(--inls-muted, #7a7796);
+	font-weight: 600;
+}
+
+.lnf-pack-footnote {
+	margin-top: 12px;
+	font-size: 11.5px;
+	color: var(--lnf-muted);
+}
+
+/* ---------- Licence Pro : détails ---------- */
+
+.lnf-license-card h2 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.lnf-license-details {
+	list-style: none;
+	margin: 0 0 16px;
+	padding: 0;
+}
+
+.lnf-license-details li {
+	display: flex;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 9px 0;
+	border-bottom: 1px dashed var(--lnf-line);
+	font-size: 13.5px;
+}
+
+.lnf-license-details li:last-child {
+	border-bottom: none;
+}
+
+.lnf-license-details code {
+	background: rgba(109, 93, 246, .08);
+	border-radius: 4px;
+	padding: 1px 8px;
+}

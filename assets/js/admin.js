@@ -447,6 +447,77 @@
 		schedulePreview();
 	});
 
+	/* Packs : bascule Annuelle / À vie */
+	var currentBilling = 'yearly';
+	$(document).on('click', '.lnf-bill-btn', function () {
+		$('.lnf-bill-btn').removeClass('is-active');
+		$(this).addClass('is-active');
+		currentBilling = $(this).data('billing');
+		$('.lnf-price').each(function () {
+			var v = $(this).data(currentBilling);
+			if (v) { $(this).text(v); }
+		});
+		$('.lnf-per, .lnf-updates').each(function () {
+			var v = $(this).data(currentBilling);
+			if (v) { $(this).text(v); }
+		});
+		$('.lnf-buy').each(function () {
+			var url = $(this).data('url-' + currentBilling);
+			if (url) { $(this).attr('data-checkout', url); }
+		});
+	});
+
+	/* Activer une licence (avec pack et type) */
+	$(document).on('click', '.lnf-activate-license', function () {
+		var $btn = $(this);
+		var $key = $('#lnf-license-key');
+		var $out = $('.lnf-license-status');
+		var key = $.trim($key.val());
+		if (!key) {
+			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
+			return;
+		}
+		$btn.prop('disabled', true);
+		$out.text('…').removeClass('is-err is-ok');
+		$.post(cfg.ajaxUrl, {
+			action: 'lnf_activate_license',
+			nonce: cfg.nonce,
+			license_key: key,
+			plan: $('#lnf-license-pack').val() || 'site1',
+			billing: $('#lnf-license-billing').val() || 'yearly'
+		})
+			.done(function (res) {
+				if (res && res.success) {
+					$out.text('✓ ' + res.data.message).addClass('is-ok').removeClass('is-err');
+					window.location.reload();
+				} else {
+					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
+					$out.text(msg).addClass('is-err').removeClass('is-ok');
+					$btn.prop('disabled', false);
+				}
+			})
+			.fail(function () {
+				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
+				$btn.prop('disabled', false);
+			});
+	});
+
+	/* Vérifier la licence maintenant */
+	$(document).on('click', '.lnf-check-license', function () {
+		var $btn = $(this);
+		var $out = $('.lnf-license-status');
+		$btn.prop('disabled', true);
+		$out.text('…').removeClass('is-err is-ok');
+		$.post(cfg.ajaxUrl, { action: 'lnf_check_license', nonce: cfg.nonce })
+			.always(function () { $btn.prop('disabled', false); })
+			.done(function (res) {
+				if (res && res.success) { window.location.reload(); }
+			})
+			.fail(function () {
+				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
+			});
+	});
+
 	/* Pack recommandé : active les 5 protections d'un coup */
 	$(document).on('click', '.lnf-recommended', function () {
 		var $btn = $(this);

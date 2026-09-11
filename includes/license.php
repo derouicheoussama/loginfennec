@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFennec Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Personnalisation page login et Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -12,17 +12,21 @@
  *            de licence et d'attribution (article 2(c) de la GPL).
  */
 /**
- * Gestion de la licence Pro : achat intégré, activation et vérification.
+ * Gestion de la licence Pro : packs, achat intégré, activation,
+ * vérification quotidienne et statut détaillé.
  *
  * Pour activer le paiement intégré, définissez dans wp-config.php :
  *
- *   define( 'LOGINFENNEC_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…" );
+ *   define( 'LOGINFENNEC_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…' );
  *   define( 'LOGINFENNEC_LICENSE_API', 'https://votre-serveur.com/api/licence' );
  *
  * - CHECKOUT_URL : lien de paiement (Lemon Squeezy, Stripe Payment Link,
- *   Gumroad…) affiché dans une fenêtre intégrée au plugin.
+ *   Gumroad…). Les paramètres pack / billing / site sont ajoutés
+ *   automatiquement par le plugin.
  * - LICENSE_API  : endpoint de votre serveur de licences. Le plugin envoie
- *   { license_key, site_url } en POST et attend { valid: true } en JSON.
+ *   { license_key, site_url } en POST et attend en JSON :
+ *   { valid: true, plan: "site1|site5", billing: "yearly|lifetime",
+ *     expires: 0|timestamp, email: "…" }.
  *   Sans endpoint, l'activation est acceptée localement (mode développement).
  *
  * @package LoginFennecPro
@@ -87,37 +91,91 @@ function lnf_license_api() {
 }
 
 /**
- * Données de licence courantes.
+ * Définition des packs Pro (prix en dinars algériens, filtrable).
  *
- * @return array { key, email, status, checked }
+ * @return array
  */
-function lnf_license_get() {
-	$license = get_option( 'lnf_license', array() );
-	return wp_parse_args(
-		is_array( $license ) ? $license : array(),
+function lnf_license_plans() {
+	return apply_filters(
+		'loginfennec_license_plans',
 		array(
-			'key'     => '',
-			'email'   => '',
-			'status'  => 'inactive',
-			'checked' => 0,
+			'site1' => array(
+				'label'    => __( 'LoginFennec Pro — 1 site', 'loginfennec' ),
+				'sites'    => 1,
+				'yearly'   => array( 'price' => 3900, 'label' => __( '3 900 DA / an', 'loginfennec' ) ),
+				'lifetime' => array( 'price' => 6800, 'label' => __( '6 800 DA à vie', 'loginfennec' ) ),
+			),
+			'site5' => array(
+				'label'    => __( 'LoginFennec Pro — 5 sites', 'loginfennec' ),
+				'sites'    => 5,
+				'yearly'   => array( 'price' => 6800, 'label' => __( '6 800 DA / an', 'loginfennec' ) ),
+				'lifetime' => array( 'price' => 7600, 'label' => __( '7 600 DA à vie', 'loginfennec' ) ),
+			),
 		)
 	);
 }
 
 /**
- * Le site est-il en mode Pro ?
+ * Données de licence courantes.
+ *
+ * @return array
+ */
+function lnf_license_get() {
+	$license  = get_option( 'lnf_license', array() );
+	$defaults = array(
+		'key'     => '',
+		'email'   => '',
+		'status'  => 'inactive', // inactive | active | expired.
+		'plan'    => 'site1',    // site1 | site5.
+		'billing' => 'yearly',   // yearly | lifetime.
+		'sites'   => 1,
+		'expires' => 0,          // timestamp (0 = à vie).
+		'site'    => '',
+		'checked' => 0,
+	);
+	return wp_parse_args( is_array( $license ) ? $license : array(), $defaults );
+}
+
+/**
+ * La licence est-elle valide (Pro débloqué) ?
  *
  * @return bool
  */
 function lnf_is_pro() {
 	$license = lnf_license_get();
-	return 'active' === $license['status'] && '' !== $license['key'];
+	if ( 'active' !== $license['status'] || '' === $license['key'] ) {
+		return false;
+	}
+	if ( 'lifetime' === $license['billing'] ) {
+		return true;
+	}
+	return (int) $license['expires'] > time();
 }
 
 /**
- * Gestion des requêtes AJAX de licence.
+ * Libellé lisible du pack actif.
+ *
+ * @return string
+ */
+function lnf_license_label() {
+	$license = lnf_license_get();
+	$plans   = lnf_license_plans();
+	$plan    = isset( $plans[ $license['plan'] ] ) ? $plans[ $license['plan'] ] : null;
+	if ( ! $plan ) {
+		return __( 'Aucune licence', 'loginfennec' );
+	}
+	$type = ( 'lifetime' === $license['billing'] )
+		? __( 'À vie', 'loginfennec' )
+		: __( 'Annuelle', 'loginfennec' );
+	return $plan['label'] . ' — ' . $type;
+}
+
+/**
+ * Gestion des requêtes AJAX et du contrôle quotidien de licence.
  */
 class Lnf_License {
+
+	const CRON_HOOK = 'lnf_license_cron';
 
 	/**
 	 * Déclare les hooks.
@@ -125,10 +183,45 @@ class Lnf_License {
 	public static function init() {
 		add_action( 'wp_ajax_lnf_activate_license', array( __CLASS__, 'ajax_activate' ) );
 		add_action( 'wp_ajax_lnf_deactivate_license', array( __CLASS__, 'ajax_deactivate' ) );
+		add_action( 'wp_ajax_lnf_check_license', array( __CLASS__, 'ajax_check' ) );
+		add_action( self::CRON_HOOK, array( __CLASS__, 'daily_check' ) );
+
+		if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
+			wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', self::CRON_HOOK );
+		}
 	}
 
 	/**
-	 * Active une clé de licence.
+	 * Enregistre une licence.
+	 *
+	 * @param string $key     Clé.
+	 * @param string $plan    Pack (site1|site5).
+	 * @param string $billing Type (yearly|lifetime).
+	 * @param string $email   E-mail.
+	 * @param int    $expires Timestamp d'expiration (0 = à vie).
+	 * @param string $status  Statut (active|expired).
+	 */
+	protected static function save( $key, $plan, $billing, $email, $expires, $status = 'active' ) {
+		$plans = lnf_license_plans();
+		update_option(
+			'lnf_license',
+			array(
+				'key'     => sanitize_text_field( $key ),
+				'email'   => sanitize_email( (string) $email ),
+				'status'  => sanitize_key( $status ),
+				'plan'    => isset( $plans[ $plan ] ) ? $plan : 'site1',
+				'billing' => ( 'lifetime' === $billing ) ? 'lifetime' : 'yearly',
+				'sites'   => isset( $plans[ $plan ] ) ? (int) $plans[ $plan ]['sites'] : 1,
+				'expires' => (int) $expires,
+				'site'    => home_url( '/' ),
+				'checked' => time(),
+			),
+			false
+		);
+	}
+
+	/**
+	 * Activation d'une clé de licence.
 	 */
 	public static function ajax_activate() {
 		check_ajax_referer( 'lnf_admin', 'nonce' );
@@ -136,26 +229,24 @@ class Lnf_License {
 			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
 
-		$key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+		$key     = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+		$plan    = isset( $_POST['plan'] ) ? sanitize_key( wp_unslash( $_POST['plan'] ) ) : 'site1';
+		$billing = isset( $_POST['billing'] ) ? sanitize_key( wp_unslash( $_POST['billing'] ) ) : 'yearly';
 		if ( '' === $key || strlen( $key ) < 8 ) {
 			wp_send_json_error( array( 'message' => __( 'Veuillez saisir une clé de licence valide.', 'loginfennec' ) ) );
 		}
 
+		$expires = ( 'lifetime' === $billing ) ? 0 : time() + YEAR_IN_SECONDS;
+
 		$api = lnf_license_api();
 		if ( '' === $api ) {
 			// Mode développement : aucun serveur de licences configuré, activation locale.
-			update_option(
-				'lnf_license',
-				array(
-					'key'     => $key,
-					'email'   => '',
-					'status'  => 'active',
-					'checked' => time(),
-				),
-				false
-			);
+			self::save( $key, $plan, $billing, '', $expires, 'active' );
 			wp_send_json_success(
-				array( 'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'loginfennec' ) )
+				array(
+					'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'loginfennec' ),
+					'details' => lnf_license_get(),
+				)
 			);
 		}
 
@@ -166,6 +257,8 @@ class Lnf_License {
 				'body'    => array(
 					'license_key' => $key,
 					'site_url'    => home_url( '/' ),
+					'plan'        => $plan,
+					'billing'     => $billing,
 				),
 			)
 		);
@@ -177,17 +270,18 @@ class Lnf_License {
 			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'loginfennec' ) ) );
 		}
 
-		update_option(
-			'lnf_license',
+		$plan    = isset( $data['plan'] ) ? sanitize_key( (string) $data['plan'] ) : $plan;
+		$billing = isset( $data['billing'] ) ? sanitize_key( (string) $data['billing'] ) : $billing;
+		$expires = isset( $data['expires'] ) ? (int) $data['expires'] : $expires;
+		$email   = isset( $data['email'] ) ? sanitize_email( (string) $data['email'] ) : '';
+
+		self::save( $key, $plan, $billing, $email, $expires, 'active' );
+		wp_send_json_success(
 			array(
-				'key'     => $key,
-				'email'   => isset( $data['email'] ) ? sanitize_email( (string) $data['email'] ) : '',
-				'status'  => 'active',
-				'checked' => time(),
-			),
-			false
+				'message' => __( 'Pro activé. Merci pour votre soutien !', 'loginfennec' ),
+				'details' => lnf_license_get(),
+			)
 		);
-		wp_send_json_success( array( 'message' => __( 'Pro activé. Merci pour votre soutien !', 'loginfennec' ) ) );
 	}
 
 	/**
@@ -216,6 +310,60 @@ class Lnf_License {
 		}
 		delete_option( 'lnf_license' );
 		wp_send_json_success();
+	}
+
+	/**
+	 * Vérification manuelle du statut (bouton « Vérifier maintenant »).
+	 */
+	public static function ajax_check() {
+		check_ajax_referer( 'lnf_admin', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
+		self::daily_check();
+		wp_send_json_success( array( 'license' => lnf_license_get() ) );
+	}
+
+	/**
+	 * Contrôle quotidien : expiration annuelle et révocation distante.
+	 */
+	public static function daily_check() {
+		$license = lnf_license_get();
+		if ( 'active' !== $license['status'] || '' === $license['key'] ) {
+			return;
+		}
+
+		// Expiration d'une licence annuelle.
+		if ( 'lifetime' !== $license['billing'] && (int) $license['expires'] > 0 && (int) $license['expires'] < time() ) {
+			$license['status'] = 'expired';
+			update_option( 'lnf_license', $license, false );
+			return;
+		}
+
+		// Révocation à distance via le serveur de licences.
+		$api = lnf_license_api();
+		if ( '' === $api ) {
+			return;
+		}
+		$response = wp_remote_post(
+			$api,
+			array(
+				'timeout' => 10,
+				'body'    => array(
+					'license_key' => $license['key'],
+					'site_url'    => home_url( '/' ),
+					'check'       => 1,
+				),
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return; // Serveur injoignable : on garde le statut actuel.
+		}
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( isset( $data['valid'] ) && ! $data['valid'] ) {
+			$license['status'] = 'expired';
+			update_option( 'lnf_license', $license, false );
+		}
 	}
 }
 
