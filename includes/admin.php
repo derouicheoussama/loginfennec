@@ -1497,6 +1497,46 @@ class Inls_Admin {
 				</section>
 
 				<section class="inls-about-card">
+					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Protection & DMCA', 'infinity-loginshield' ); ?></h2>
+					<p class="inls-desc">
+						<?php
+						printf(
+							/* translators: %s : année courante. */
+							esc_html__( 'Infinity LoginShield est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée.', 'infinity-loginshield' ),
+							esc_html( gmdate( 'Y' ) )
+						);
+						?>
+					</p>
+					<ul class="inls-about-links-list">
+						<li>
+							<strong><?php esc_html_e( 'Version gratuite', 'infinity-loginshield' ); ?></strong>
+							— <?php esc_html_e( 'libre d’utilisation sous licence GPL, avec signature intacte.', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<strong><?php esc_html_e( 'Version Pro', 'infinity-loginshield' ); ?></strong>
+							— <?php esc_html_e( 'soumise à licence : une clé invalide ou révoquée suspend les fonctionnalités Pro à distance.', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<strong><?php esc_html_e( 'Copies illégales', 'infinity-loginshield' ); ?></strong>
+							— <?php esc_html_e( 'revente, republication ou retrait de la signature : signalement DMCA immédiat à l’hébergeur (retrait sous 24-72 h).', 'infinity-loginshield' ); ?>
+						</li>
+					</ul>
+					<?php $badge = inls_dmca_badge(); ?>
+					<?php if ( '' !== $badge ) : ?>
+						<p>
+							<a href="<?php echo esc_url( inls_dmca_url() ); ?>" target="_blank" rel="noopener noreferrer nofollow">
+								<img src="<?php echo esc_url( $badge ); ?>" alt="<?php esc_attr_e( 'Protégé par DMCA.com', 'infinity-loginshield' ); ?>" loading="lazy">
+							</a>
+						</p>
+					<?php endif; ?>
+					<div class="inls-hero-actions">
+						<a class="inls-btn inls-btn-ghost" href="<?php echo esc_url( inls_dmca_url() ); ?>" target="_blank" rel="noopener noreferrer nofollow">
+							<span class="dashicons dashicons-flag"></span> <?php esc_html_e( 'Signaler une violation', 'infinity-loginshield' ); ?>
+						</a>
+					</div>
+				</section>
+
+				<section class="inls-about-card">
 					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'infinity-loginshield' ); ?></h2>
 					<p>
 						<?php

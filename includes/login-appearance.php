@@ -185,7 +185,7 @@ function inls_build_login_css( $s ) {
 			$s['social_icon_color']
 		);
 
-		// Couleurs officielles des marques (priorité sur les couleurs génériques).
+		// Couleurs officielles des marques (priorité absolue sur les couleurs génériques).
 		if ( ! empty( $s['social_brand'] ) ) {
 			$brands = array(
 				'facebook'  => '#1877F2',
@@ -197,11 +197,13 @@ function inls_build_login_css( $s ) {
 			);
 			foreach ( $brands as $network => $color ) {
 				$css .= sprintf(
-					'.inls-social a.inls-icon[data-network="%1$s"],.inls-social a.inls-icon[data-network="%1$s"]:hover{background:%2$s;color:#fff;}',
+					'.inls-social a.inls-icon[data-network="%1$s"],.inls-social a.inls-icon[data-network="%1$s"]:hover{background:%2$s !important;color:#fff !important;}',
 					$network,
 					$color
 				);
 			}
+			// L'icône X est noire : un liseré discret la rend visible sur fond sombre.
+			$css .= '.inls-social a.inls-icon[data-network="twitter"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28) !important;}';
 		}
 	}
 

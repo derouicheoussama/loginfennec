@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,11 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.8.1 =
+* Fixed: official brand colors of social icons now always win over any other CSS
+* New: "Protection & DMCA" card on the About page — copyright, license terms and violation reporting
+* New: optional DMCA badge via INFINITY_LOGINSHIELD_DMCA_BADGE / INFINITY_LOGINSHIELD_DMCA_URL
 
 = 1.8.0 =
 * New: "∞ Infinity Coder" signature in every source file (PHP, JS, CSS) and in the generated login-page HTML

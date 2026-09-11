@@ -40,6 +40,34 @@ if ( ! defined( 'INFINITY_LOGINSHIELD_LICENSE_API' ) ) {
 	define( 'INFINITY_LOGINSHIELD_LICENSE_API', '' );
 }
 
+/** Page « protection / signalement DMCA » (filtrable). */
+if ( ! defined( 'INFINITY_LOGINSHIELD_DMCA_URL' ) ) {
+	define( 'INFINITY_LOGINSHIELD_DMCA_URL', 'https://www.dmca.com/' );
+}
+
+/** URL du badge DMCA (optionnel, ex. badge DMCA.com Protection Pro). */
+if ( ! defined( 'INFINITY_LOGINSHIELD_DMCA_BADGE' ) ) {
+	define( 'INFINITY_LOGINSHIELD_DMCA_BADGE', '' );
+}
+
+/**
+ * Lien de signalement DMCA (filtrable).
+ *
+ * @return string
+ */
+function inls_dmca_url() {
+	return apply_filters( 'infinity_loginshield_dmca_url', INFINITY_LOGINSHIELD_DMCA_URL );
+}
+
+/**
+ * URL du badge DMCA affiché sur la page À propos (filtrable, vide par défaut).
+ *
+ * @return string
+ */
+function inls_dmca_badge() {
+	return apply_filters( 'infinity_loginshield_dmca_badge', INFINITY_LOGINSHIELD_DMCA_BADGE );
+}
+
 /**
  * URL de paiement (filtrable).
  *

@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.7.0\n"
+"Project-Id-Version: Infinity LoginShield 1.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -282,6 +282,9 @@ msgstr ""
 msgid "Contrôles de flou et d’opacité"
 msgstr ""
 
+msgid "Copies illégales"
+msgstr ""
+
 msgid "Copyright"
 msgstr ""
 
@@ -538,6 +541,9 @@ msgid "Infinity LoginShield Pro"
 msgstr ""
 
 msgid "Infinity LoginShield est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgstr ""
+
+msgid "Infinity LoginShield est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
 msgstr ""
 
 msgid "Injecté après tous les réglages du plugin — les balises sont retirées automatiquement."
@@ -804,10 +810,16 @@ msgstr ""
 msgid "Protection"
 msgstr ""
 
+msgid "Protection & DMCA"
+msgstr ""
+
 msgid "Protection dédiée de /wp-admin (liste blanche IP)"
 msgstr ""
 
 msgid "Protégez votre page de connexion"
+msgstr ""
+
+msgid "Protégé par DMCA.com"
 msgstr ""
 
 msgid "Prêt pour la traduction"
@@ -901,6 +913,9 @@ msgid "Sessions & appareils de confiance"
 msgstr ""
 
 msgid "Signaler un bug"
+msgstr ""
+
+msgid "Signaler une violation"
 msgstr ""
 
 msgid "Site"
@@ -1035,6 +1050,9 @@ msgstr ""
 msgid "Version %s — GitHub : "
 msgstr ""
 
+msgid "Version Pro"
+msgstr ""
+
 msgid "Version de PHP"
 msgstr ""
 
@@ -1042,6 +1060,9 @@ msgid "Version de WordPress"
 msgstr ""
 
 msgid "Version du plugin"
+msgstr ""
+
+msgid "Version gratuite"
 msgstr ""
 
 msgid "Veuillez saisir une clé de licence valide."
@@ -1104,6 +1125,9 @@ msgstr ""
 msgid "guide complet sur GitHub"
 msgstr ""
 
+msgid "libre d’utilisation sous licence GPL, avec signature intacte."
+msgstr ""
+
 msgid "ouverture d’un ticket en un clic"
 msgstr ""
 
@@ -1114,6 +1138,12 @@ msgid "reCAPTCHA v3 / hCaptcha sur la connexion"
 msgstr ""
 
 msgid "requête refusée par la protection anti-robots."
+msgstr ""
+
+msgid "revente, republication ou retrait de la signature : signalement DMCA immédiat à l’hébergeur (retrait sous 24-72 h)."
+msgstr ""
+
+msgid "soumise à licence : une clé invalide ou révoquée suspend les fonctionnalités Pro à distance."
 msgstr ""
 
 msgid "soutenir le projet"
