@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,12 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.5.0 =
+* New: dashboard with live security statistics (logins, blocks, failures, active locks)
+* New: security score (0-5) with a visual checklist of active protections
+* New: recent activity feed right on the dashboard
+* Improved: About page — quick links, latest changelog and quality commitments
 
 = 1.4.0 =
 * New: honeypot anti-bot field on the login form (blocked bots appear in the security journal)

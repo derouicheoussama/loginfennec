@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.4.0\n"
+"Project-Id-Version: Infinity LoginShield 1.5.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,9 @@ msgid "Accès refusé."
 msgstr ""
 
 msgid "Action"
+msgstr ""
+
+msgid "Activité récente"
 msgstr ""
 
 msgid "Activé — %1$d tentatives, blocage %2$d min"
@@ -70,6 +73,9 @@ msgid "Animation d’entrée"
 msgstr ""
 
 msgid "Anti force brute"
+msgstr ""
+
+msgid "Anti-énumération des auteurs"
 msgstr ""
 
 msgid "Aperçu de la page de connexion"
@@ -114,7 +120,13 @@ msgstr ""
 msgid "Aucun événement enregistré pour le moment."
 msgstr ""
 
+msgid "Aucun événement pour le moment — votre page de connexion est tranquille."
+msgstr ""
+
 msgid "Aucune"
+msgstr ""
+
+msgid "Aucune donnée collectée"
 msgstr ""
 
 msgid "Bas droit"
@@ -142,6 +154,9 @@ msgid "Blocage des tentatives de mot de passe"
 msgstr ""
 
 msgid "Blocage géographique (pays)"
+msgstr ""
+
+msgid "Blocages (7 jours)"
 msgstr ""
 
 msgid "Bloquer le balayage des auteurs"
@@ -195,10 +210,16 @@ msgstr ""
 msgid "Classique"
 msgstr ""
 
+msgid "Compatible multisite"
+msgstr ""
+
 msgid "Configurer"
 msgstr ""
 
 msgid "Connexion"
+msgstr ""
+
+msgid "Connexions (7 jours)"
 msgstr ""
 
 msgid "Conteneur"
@@ -270,6 +291,9 @@ msgstr ""
 msgid "Derouiche Oussama"
 msgstr ""
 
+msgid "Documentation"
+msgstr ""
+
 msgid "Double authentification (2FA)"
 msgstr ""
 
@@ -321,10 +345,16 @@ msgstr ""
 msgid "En haut"
 msgstr ""
 
+msgid "Engagements qualité"
+msgstr ""
+
 msgid "Enregistrer"
 msgstr ""
 
 msgid "Erreur"
+msgstr ""
+
+msgid "Erreurs masquées"
 msgstr ""
 
 msgid "Espacement intérieur"
@@ -402,6 +432,12 @@ msgstr ""
 msgid "Hauteur"
 msgstr ""
 
+msgid "Historique complet sur GitHub"
+msgstr ""
+
+msgid "Historique disponible sur GitHub."
+msgstr ""
+
 msgid "Honeypot anti-robots"
 msgstr ""
 
@@ -474,6 +510,9 @@ msgstr ""
 msgid "Laisser un avis"
 msgstr ""
 
+msgid "Laisser un avis ★"
+msgstr ""
+
 msgid "Laisser vide pour pointer vers l’accueil du site."
 msgstr ""
 
@@ -495,6 +534,9 @@ msgstr ""
 msgid "Libellés"
 msgstr ""
 
+msgid "Licence GPL v2+"
+msgstr ""
+
 msgid "Lien du logo"
 msgstr ""
 
@@ -513,7 +555,13 @@ msgstr ""
 msgid "Liens personnalisés"
 msgstr ""
 
+msgid "Liens rapides"
+msgstr ""
+
 msgid "Limitation des tentatives + blocage IP"
+msgstr ""
+
+msgid "Limite des tentatives"
 msgstr ""
 
 msgid "Limiter les tentatives de connexion"
@@ -609,6 +657,9 @@ msgstr ""
 msgid "Niveaux de sécurité avancés — Infinity LoginShield Pro"
 msgstr ""
 
+msgid "Notes de version"
+msgstr ""
+
 msgid "Néon"
 msgstr ""
 
@@ -628,6 +679,9 @@ msgid "Opacité du voile"
 msgstr ""
 
 msgid "Ouvrir dans un onglet"
+msgstr ""
+
+msgid "Ouvrir le journal complet"
 msgstr ""
 
 msgid "Passer en Pro"
@@ -669,6 +723,9 @@ msgstr ""
 msgid "Protégez votre page de connexion"
 msgstr ""
 
+msgid "Prêt pour la traduction"
+msgstr ""
+
 msgid "Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
 msgstr ""
 
@@ -679,6 +736,9 @@ msgid "Recommandé : bloquez les attaques par force brute dès maintenant."
 msgstr ""
 
 msgid "Remplacez le logo WordPress par le vôtre."
+msgstr ""
+
+msgid "Renforcer la sécurité"
 msgstr ""
 
 msgid "Renseignez une URL pour afficher l’icône — laissez vide pour la masquer."
@@ -726,10 +786,16 @@ msgstr ""
 msgid "Sakura"
 msgstr ""
 
+msgid "Sans publicité"
+msgstr ""
+
 msgid "Saturation de l’image"
 msgstr ""
 
 msgid "Sauvegarde des réglages"
+msgstr ""
+
+msgid "Score de sécurité"
 msgstr ""
 
 msgid "Sections de personnalisation"
@@ -739,6 +805,9 @@ msgid "Serif élégante"
 msgstr ""
 
 msgid "Sessions & appareils de confiance"
+msgstr ""
+
+msgid "Signaler un bug"
 msgstr ""
 
 msgid "Site"
@@ -757,6 +826,9 @@ msgid "Sous-titre"
 msgstr ""
 
 msgid "Soutenir le projet"
+msgstr ""
+
+msgid "Statistiques, score de sécurité et accès rapide à tous vos réglages."
 msgstr ""
 
 msgid "Style"
@@ -849,6 +921,9 @@ msgstr ""
 msgid "Variables disponibles : %1$s (année) et %2$s (nom du site)."
 msgstr ""
 
+msgid "Verrouillages actifs"
+msgstr ""
+
 msgid "Version %s — GitHub : "
 msgstr ""
 
@@ -888,13 +963,13 @@ msgstr ""
 msgid "Vous pourrez tout affiner plus tard (couleurs, flou, opacité…)."
 msgstr ""
 
-msgid "Vue d’ensemble de votre page de connexion."
-msgstr ""
-
 msgid "Vérifier les mises à jour"
 msgstr ""
 
 msgid "X (Twitter)"
+msgstr ""
+
+msgid "XML-RPC désactivé"
 msgstr ""
 
 msgid "YouTube"
@@ -915,10 +990,25 @@ msgstr ""
 msgid "ex. : Retour à la boutique"
 msgstr ""
 
+msgid "guide complet sur GitHub"
+msgstr ""
+
+msgid "ouverture d’un ticket en un clic"
+msgstr ""
+
+msgid "poser une question"
+msgstr ""
+
 msgid "reCAPTCHA v3 / hCaptcha sur la connexion"
 msgstr ""
 
 msgid "requête refusée par la protection anti-robots."
+msgstr ""
+
+msgid "soutenir le projet"
+msgstr ""
+
+msgid "tutoriels et actualités"
 msgstr ""
 
 msgid "À droite"
@@ -937,6 +1027,9 @@ msgid "À propos d’Infinity LoginShield"
 msgstr ""
 
 msgid "Échec"
+msgstr ""
+
+msgid "Échecs (24 h)"
 msgstr ""
 
 msgid "État du système"

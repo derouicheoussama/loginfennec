@@ -168,6 +168,44 @@ class Inls_Login_Security {
 	}
 
 	/**
+	 * Statistiques de sécurité pour le tableau de bord.
+	 *
+	 * @return array { logins7, blocked7, fails24, locks }
+	 */
+	public static function get_stats() {
+		$now   = time();
+		$stats = array(
+			'logins7'  => 0,
+			'blocked7' => 0,
+			'fails24'  => 0,
+			'locks'    => 0,
+		);
+
+		foreach ( self::get_log() as $event ) {
+			$age = $now - (int) $event['t'];
+			if ( 'login' === $event['a'] && $age <= 7 * DAY_IN_SECONDS ) {
+				$stats['logins7']++;
+			}
+			if ( 'blocked' === $event['a'] && $age <= 7 * DAY_IN_SECONDS ) {
+				$stats['blocked7']++;
+			}
+			if ( 'failed' === $event['a'] && $age <= DAY_IN_SECONDS ) {
+				$stats['fails24']++;
+			}
+		}
+
+		$attempts = get_option( self::OPT, array() );
+		if ( is_array( $attempts ) ) {
+			foreach ( $attempts as $row ) {
+				if ( ! empty( $row['u'] ) && (int) $row['u'] > $now ) {
+					$stats['locks']++;
+				}
+			}
+		}
+		return $stats;
+	}
+
+	/**
 	 * Adresse IP du client (REMOTE_ADDR uniquement : fiable sans configuration
 	 * de proxy; voir FAQ du readme pour X-Forwarded-For).
 	 *

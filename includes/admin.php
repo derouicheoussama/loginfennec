@@ -730,9 +730,92 @@ class Inls_Admin {
 	 * Panneau : tableau de bord.
 	 */
 	protected static function panel_dashboard( $s ) {
-		self::panel_open( 'dashboard', __( 'Tableau de bord', 'infinity-loginshield' ), __( 'Vue d’ensemble de votre page de connexion.', 'infinity-loginshield' ) );
+		self::panel_open( 'dashboard', __( 'Tableau de bord', 'infinity-loginshield' ), __( 'Statistiques, score de sécurité et accès rapide à tous vos réglages.', 'infinity-loginshield' ) );
 
 		$social_count  = count( inls_get_social_networks( $s ) );
+
+		// ——— Statistiques de sécurité ———.
+		$stats = Inls_Login_Security::get_stats();
+		$stat_items = array(
+			array( 'dashicons-yes-alt', __( 'Connexions (7 jours)', 'infinity-loginshield' ), $stats['logins7'], 'is-ok' ),
+			array( 'dashicons-shield-alt', __( 'Blocages (7 jours)', 'infinity-loginshield' ), $stats['blocked7'], 'is-warn' ),
+			array( 'dashicons-warning', __( 'Échecs (24 h)', 'infinity-loginshield' ), $stats['fails24'], 'is-err' ),
+			array( 'dashicons-lock', __( 'Verrouillages actifs', 'infinity-loginshield' ), $stats['locks'], 'is-lock' ),
+		);
+		echo '<div class="inls-stats">';
+		foreach ( $stat_items as $item ) {
+			printf(
+				'<div class="inls-stat %4$s"><span class="dashicons %1$s"></span><strong>%2$d</strong><small>%3$s</small></div>',
+				esc_attr( $item[0] ),
+				(int) $item[2],
+				esc_html( $item[1] ),
+				esc_attr( $item[3] )
+			);
+		}
+		echo '</div>';
+
+		// ——— Score de sécurité ———.
+		$checks = array(
+			'sec_enable'           => __( 'Limite des tentatives', 'infinity-loginshield' ),
+			'sec_honeypot'         => __( 'Honeypot anti-robots', 'infinity-loginshield' ),
+			'sec_disable_authors'  => __( 'Anti-énumération des auteurs', 'infinity-loginshield' ),
+			'sec_disable_xmlrpc'   => __( 'XML-RPC désactivé', 'infinity-loginshield' ),
+			'sec_generic_error'    => __( 'Erreurs masquées', 'infinity-loginshield' ),
+		);
+		$score    = 0;
+		foreach ( $checks as $key => $label ) {
+			if ( ! empty( $s[ $key ] ) ) {
+				$score++;
+			}
+		}
+		$score_class = 5 === $score ? 'is-high' : ( $score >= 3 ? 'is-mid' : 'is-low' );
+		echo '<div class="inls-score">';
+		echo '<div class="inls-score-head"><h3 class="inls-group-title">' . esc_html__( 'Score de sécurité', 'infinity-loginshield' ) . '</h3>';
+		printf( '<span class="inls-score-value %1$s">%2$d/5</span>', esc_attr( $score_class ), (int) $score );
+		echo '</div>';
+		printf( '<div class="inls-score-bar"><span class="%1$s" style="width:%2$d%%"></span></div>', esc_attr( $score_class ), (int) ( $score * 20 ) );
+		echo '<div class="inls-score-chips">';
+		foreach ( $checks as $key => $label ) {
+			$on = ! empty( $s[ $key ] );
+			printf(
+				'<span class="inls-chip %1$s">%2$s %3$s</span>',
+				$on ? 'is-on' : 'is-off',
+				$on ? '✔' : '✖',
+				esc_html( $label )
+			);
+		}
+		echo '</div>';
+		echo '<button type="button" class="inls-card-link" data-goto="security">' . esc_html__( 'Renforcer la sécurité', 'infinity-loginshield' ) . '</button>';
+		echo '</div>';
+
+		// ——— Activité récente ———.
+		$log = Inls_Login_Security::get_log();
+		echo '<div class="inls-activity">';
+		echo '<h3 class="inls-group-title">' . esc_html__( 'Activité récente', 'infinity-loginshield' ) . '</h3>';
+		if ( $log ) {
+			$badges = array(
+				'failed'  => array( __( 'Échec', 'infinity-loginshield' ), 'is-fail' ),
+				'blocked' => array( __( 'Bloqué', 'infinity-loginshield' ), 'is-blocked' ),
+				'login'   => array( __( 'Connexion', 'infinity-loginshield' ), 'is-login' ),
+			);
+			echo '<ul class="inls-activity-list">';
+			foreach ( array_slice( $log, 0, 5 ) as $event ) {
+				$badge = isset( $badges[ $event['a'] ] ) ? $badges[ $event['a'] ] : $badges['failed'];
+				printf(
+					'<li><span class="inls-badge %4$s">%1$s</span><code>%2$s</code><span class="inls-activity-user">%3$s</span><time>%5$s</time></li>',
+					esc_html( $badge[0] ),
+					esc_html( $event['ip'] ),
+					esc_html( $event['u'] ? $event['u'] : '—' ),
+					esc_attr( $badge[1] ),
+					esc_html( date_i18n( 'j F, H:i', $event['t'] + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ) )
+				);
+			}
+			echo '</ul>';
+			echo '<button type="button" class="inls-card-link" data-goto="security">' . esc_html__( 'Ouvrir le journal complet', 'infinity-loginshield' ) . '</button>';
+		} else {
+			echo '<p class="inls-desc">' . esc_html__( 'Aucun événement pour le moment — votre page de connexion est tranquille.', 'infinity-loginshield' ) . '</p>';
+		}
+		echo '</div>';
 		$links_count   = ( ! empty( $s['hide_lost_password'] ) ? 1 : 0 ) + ( ! empty( $s['hide_back_to'] ) ? 1 : 0 ) + ( ! empty( $s['back_to_url'] ) || ! empty( $s['back_to_text'] ) ? 1 : 0 );
 		$preset_labels = array(
 			'glass'   => __( 'Effet verre', 'infinity-loginshield' ),
@@ -1227,14 +1310,21 @@ class Inls_Admin {
 					<span class="inls-version">v<?php echo esc_html( INFINITY_LOGINSHIELD_VERSION ); ?></span>
 				</p>
 				<div class="inls-hero-actions">
-					<a class="inls-btn inls-btn-donate" href="<?php echo esc_url( self::donate_url() ); ?>" target="_blank" rel="noopener">
-						<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don', 'infinity-loginshield' ); ?>
-					</a>
-					<a class="inls-btn inls-btn-ghost is-light" href="https://github.com/derouicheoussama/infinity-loginshield" target="_blank" rel="noopener">
-						<span class="dashicons dashicons-github"></span> <?php esc_html_e( 'Voir sur GitHub', 'infinity-loginshield' ); ?>
-					</a>
+						<a class="inls-btn inls-btn-donate" href="<?php echo esc_url( self::donate_url() ); ?>" target="_blank" rel="noopener">
+							<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don', 'infinity-loginshield' ); ?>
+						</a>
+						<a class="inls-btn inls-btn-ghost is-light" href="https://github.com/derouicheoussama/infinity-loginshield" target="_blank" rel="noopener">
+							<span class="dashicons dashicons-github"></span> <?php esc_html_e( 'Voir sur GitHub', 'infinity-loginshield' ); ?>
+						</a>
+					</div>
+					<div class="inls-quality" aria-label="<?php esc_attr_e( 'Engagements qualité', 'infinity-loginshield' ); ?>">
+						<span>✔ <?php esc_html_e( 'Sans publicité', 'infinity-loginshield' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Aucune donnée collectée', 'infinity-loginshield' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Compatible multisite', 'infinity-loginshield' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Prêt pour la traduction', 'infinity-loginshield' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Licence GPL v2+', 'infinity-loginshield' ); ?></span>
+					</div>
 				</div>
-			</div>
 
 			<div class="inls-about-grid">
 				<section class="inls-about-card">
@@ -1279,6 +1369,32 @@ class Inls_Admin {
 				</section>
 
 				<section class="inls-about-card">
+					<h2><span class="dashicons dashicons-admin-links"></span> <?php esc_html_e( 'Liens rapides', 'infinity-loginshield' ); ?></h2>
+					<ul class="inls-about-links-list">
+						<li>
+							<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'infinity-loginshield' ); ?></a>
+							— <?php esc_html_e( 'tutoriels et actualités', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<a href="https://github.com/derouicheoussama/infinity-loginshield#readme" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'infinity-loginshield' ); ?></a>
+							— <?php esc_html_e( 'guide complet sur GitHub', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<a href="https://github.com/derouicheoussama/infinity-loginshield/issues" target="_blank" rel="noopener"><?php esc_html_e( 'Signaler un bug', 'infinity-loginshield' ); ?></a>
+							— <?php esc_html_e( 'ouverture d’un ticket en un clic', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<a href="https://wordpress.org/support/plugin/infinity-loginshield/" target="_blank" rel="noopener"><?php esc_html_e( 'Forum d’entraide', 'infinity-loginshield' ); ?></a>
+							— <?php esc_html_e( 'poser une question', 'infinity-loginshield' ); ?>
+						</li>
+						<li>
+							<a href="https://wordpress.org/plugins/infinity-loginshield/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis ★', 'infinity-loginshield' ); ?></a>
+							— <?php esc_html_e( 'soutenir le projet', 'infinity-loginshield' ); ?>
+						</li>
+					</ul>
+				</section>
+
+				<section class="inls-about-card">
 					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'infinity-loginshield' ); ?></h2>
 					<p>
 						<?php
@@ -1303,9 +1419,27 @@ class Inls_Admin {
 						<li><strong><?php esc_html_e( 'Version de WordPress', 'infinity-loginshield' ); ?></strong> <?php echo esc_html( get_bloginfo( 'version' ) ); ?></li>
 						<li><strong><?php esc_html_e( 'Version de PHP', 'infinity-loginshield' ); ?></strong> <?php echo esc_html( PHP_VERSION ); ?></li>
 						<li><strong><?php esc_html_e( 'Site', 'infinity-loginshield' ); ?></strong> <?php echo esc_html( get_bloginfo( 'name' ) ); ?></li>
-					</ul>
-				</section>
-			</div>
+						</ul>
+					</section>
+
+					<section class="inls-about-card">
+						<h2><span class="dashicons dashicons-list-view"></span> <?php esc_html_e( 'Notes de version', 'infinity-loginshield' ); ?></h2>
+						<?php $changelog = self::latest_changelog(); ?>
+						<?php if ( $changelog ) : ?>
+							<span class="inls-changelog-version">v<?php echo esc_html( $changelog['version'] ); ?></span>
+							<ul class="inls-changelog">
+								<?php foreach ( $changelog['items'] as $line ) : ?>
+									<li><?php echo esc_html( $line ); ?></li>
+								<?php endforeach; ?>
+							</ul>
+							<p class="inls-desc">
+								<a href="https://github.com/derouicheoussama/infinity-loginshield/releases" target="_blank" rel="noopener"><?php esc_html_e( 'Historique complet sur GitHub', 'infinity-loginshield' ); ?></a>
+							</p>
+						<?php else : ?>
+							<p class="inls-desc"><?php esc_html_e( 'Historique disponible sur GitHub.', 'infinity-loginshield' ); ?></p>
+						<?php endif; ?>
+					</section>
+				</div>
 
 			<section class="inls-about-card inls-about-support">
 				<h2><span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Soutenir le projet', 'infinity-loginshield' ); ?></h2>
@@ -1379,6 +1513,37 @@ class Inls_Admin {
 	 */
 	protected static function pro_url() {
 		return apply_filters( 'infinity_loginshield_pro_url', '#' );
+	}
+
+	/**
+	 * Extrait la dernière section du changelog depuis readme.txt.
+	 *
+	 * @return array { version: string, items: string[] } — vide si indisponible.
+	 */
+	protected static function latest_changelog() {
+		$file = INFINITY_LOGINSHIELD_DIR . 'readme.txt';
+		if ( ! is_readable( $file ) ) {
+			return array();
+		}
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- lecture locale du readme du plugin.
+		$content = (string) file_get_contents( $file );
+		if ( ! preg_match( '/== Changelog ==\s*.*?= ?([0-9.]+) ?=\s*(.*?)(?:\n= [0-9.]+ =|\z)/s', $content, $m ) ) {
+			return array();
+		}
+		$lines = array_filter(
+			array_map( 'trim', explode( "\n", trim( (string) $m[2] ) ) ),
+			function ( $line ) {
+				return '' !== $line;
+			}
+		);
+		$items = array();
+		foreach ( $lines as $line ) {
+			$items[] = ltrim( $line, "* \t" );
+		}
+		return array(
+			'version' => $m[1],
+			'items'   => $items,
+		);
 	}
 
 	/**

@@ -1441,3 +1441,232 @@ body.inls-preview-lock {
 	margin-left: 6px;
 	color: var(--inls-muted);
 }
+
+/* ---------- Tableau de bord : statistiques ---------- */
+
+.inls-stats {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 12px;
+}
+
+.inls-stat {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border: 1px solid var(--inls-line);
+	border-radius: 12px;
+	padding: 14px 16px;
+	background: linear-gradient(180deg, #fbfaff, #ffffff);
+	transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.inls-stat:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--inls-shadow);
+}
+
+.inls-stat .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+}
+
+.inls-stat strong {
+	font-size: 24px;
+	line-height: 1;
+}
+
+.inls-stat small {
+	color: var(--inls-muted);
+	font-size: 11.5px;
+	font-weight: 600;
+}
+
+.inls-stat.is-ok .dashicons   { color: var(--inls-green); }
+.inls-stat.is-warn .dashicons { color: #e08c00; }
+.inls-stat.is-err .dashicons  { color: var(--inls-red); }
+.inls-stat.is-lock .dashicons { color: var(--inls-accent); }
+
+/* ---------- Tableau de bord : score de sécurité ---------- */
+
+.inls-score {
+	grid-column: 1 / -1;
+	border: 1px solid var(--inls-line);
+	border-radius: 12px;
+	padding: 14px 18px;
+	background: #fafaff;
+}
+
+.inls-score-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.inls-score-head .inls-group-title {
+	margin: 0;
+}
+
+.inls-score-value {
+	font-size: 15px;
+	font-weight: 800;
+}
+
+.inls-score-value.is-high { color: var(--inls-green); }
+.inls-score-value.is-mid  { color: #e08c00; }
+.inls-score-value.is-low  { color: var(--inls-red); }
+
+.inls-score-bar {
+	height: 10px;
+	border-radius: 999px;
+	background: #eceaf6;
+	overflow: hidden;
+	margin: 10px 0 12px;
+}
+
+.inls-score-bar span {
+	display: block;
+	height: 100%;
+	border-radius: 999px;
+	transition: width .4s ease;
+}
+
+.inls-score-bar .is-high { background: linear-gradient(90deg, #00a86b, #00c48c); }
+.inls-score-bar .is-mid  { background: linear-gradient(90deg, #e08c00, #f5c33b); }
+.inls-score-bar .is-low  { background: linear-gradient(90deg, #d63638, #f07070); }
+
+.inls-score-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 10px;
+}
+
+/* ---------- Tableau de bord : activité récente ---------- */
+
+.inls-activity {
+	grid-column: 1 / -1;
+	border: 1px solid var(--inls-line);
+	border-radius: 12px;
+	padding: 14px 18px;
+	background: #fafaff;
+}
+
+.inls-activity .inls-group-title {
+	margin-bottom: 6px;
+}
+
+.inls-activity-list {
+	list-style: none;
+	margin: 0 0 8px;
+	padding: 0;
+}
+
+.inls-activity-list li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 7px 0;
+	border-bottom: 1px dashed var(--inls-line);
+	font-size: 12.5px;
+}
+
+.inls-activity-list li:last-child {
+	border-bottom: none;
+}
+
+.inls-activity-list code {
+	background: rgba(109, 93, 246, .08);
+	border-radius: 4px;
+	padding: 1px 6px;
+	font-size: 11.5px;
+}
+
+.inls-activity-user {
+	font-weight: 600;
+}
+
+.inls-activity-list time {
+	margin-left: auto;
+	color: var(--inls-muted);
+	font-size: 11.5px;
+}
+
+/* ---------- À propos : badge qualité + liens + changelog ---------- */
+
+.inls-quality {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 18px;
+}
+
+.inls-quality span {
+	display: inline-block;
+	background: rgba(255, 255, 255, .16);
+	border: 1px solid rgba(255, 255, 255, .35);
+	border-radius: 999px;
+	padding: 4px 14px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.inls-about-links-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.inls-about-links-list li {
+	padding: 7px 0;
+	border-bottom: 1px dashed var(--inls-line);
+	font-size: 13px;
+}
+
+.inls-about-links-list li:last-child {
+	border-bottom: none;
+}
+
+.inls-about-links-list a {
+	color: var(--inls-accent);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.inls-about-links-list a:hover {
+	text-decoration: underline;
+}
+
+.inls-changelog-version {
+	display: inline-block;
+	background: rgba(109, 93, 246, .1);
+	color: var(--inls-accent);
+	border-radius: 999px;
+	padding: 2px 12px;
+	font-weight: 700;
+	font-size: 12px;
+	margin-bottom: 8px;
+}
+
+.inls-changelog {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.inls-changelog li {
+	position: relative;
+	padding: 4px 0 4px 20px;
+	font-size: 13px;
+}
+
+.inls-changelog li::before {
+	content: "•";
+	position: absolute;
+	left: 6px;
+	color: var(--inls-accent);
+	font-weight: 700;
+}
