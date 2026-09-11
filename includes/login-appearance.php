@@ -84,7 +84,13 @@ function inls_build_login_css( $s ) {
 	if ( ! empty( $s['logo_hide'] ) ) {
 		$css .= 'body.login #login h1{display:none;}';
 	} else {
-		if ( ! empty( $s['logo_url'] ) ) {
+		if ( ! empty( $s['logo_text'] ) ) {
+			// Logo texte : remplace l'image par un titre stylé.
+			$css .= sprintf(
+				'body.login #login h1 a{background:none !important;width:auto;height:auto;text-indent:0;font-size:28px;font-weight:700;line-height:1.25;color:%1$s;text-decoration:none;}',
+				$s['text_color']
+			);
+		} elseif ( ! empty( $s['logo_url'] ) ) {
 			$css .= sprintf(
 				'body.login #login h1 a{background-image:url(%1$s);width:%2$dpx;height:%3$dpx;max-width:80vw;background-size:contain;background-position:center center;background-repeat:no-repeat;margin:0 auto 22px;}',
 				wp_json_encode( esc_url_raw( $s['logo_url'] ) ),
@@ -124,6 +130,9 @@ function inls_build_login_css( $s ) {
 		$s['button_bg'],
 		inls_hex_to_rgba( $s['button_bg'], 30 )
 	);
+	if ( (int) $s['input_height'] > 0 ) {
+		$css .= sprintf( 'body.login form .input{height:%dpx;}', (int) $s['input_height'] );
+	}
 
 	// Bouton principal.
 	$css .= sprintf(
@@ -575,8 +584,40 @@ function inls_login_footer() {
 			. 'if(el){if(r.href){el.setAttribute("href",r.href);}if(r.text){el.textContent=r.text;}}});';
 	}
 
+	// ——— Champs : placeholders, libellés, logo texte ———.
+	$field_cfg = array();
+	if ( '' !== trim( (string) $s['field_placeholder_user'] ) ) {
+		$field_cfg['phUser'] = trim( (string) $s['field_placeholder_user'] );
+	}
+	if ( '' !== trim( (string) $s['field_placeholder_pass'] ) ) {
+		$field_cfg['phPass'] = trim( (string) $s['field_placeholder_pass'] );
+	}
+	if ( '' !== trim( (string) $s['field_label_user'] ) ) {
+		$field_cfg['lbUser'] = trim( (string) $s['field_label_user'] );
+	}
+	if ( '' !== trim( (string) $s['field_label_pass'] ) ) {
+		$field_cfg['lbPass'] = trim( (string) $s['field_label_pass'] );
+	}
+	if ( '' !== trim( (string) $s['logo_text'] ) && empty( $s['logo_hide'] ) ) {
+		$field_cfg['logoText'] = trim( (string) $s['logo_text'] );
+	}
+	if ( $field_cfg ) {
+		$js .= 'var fc=' . wp_json_encode( $field_cfg ) . ';'
+			. 'if(fc.phUser){var i=document.getElementById("user_login");if(i){i.placeholder=fc.phUser;}}'
+			. 'if(fc.phPass){var i=document.getElementById("user_pass");if(i){i.placeholder=fc.phPass;}}'
+			. 'if(fc.lbUser){var l=document.querySelector("label[for=user_login]");if(l){l.textContent=fc.lbUser;}}'
+			. 'if(fc.lbPass){var l=document.querySelector("label[for=user_pass]");if(l){l.textContent=fc.lbPass;}}'
+			. 'if(fc.logoText){var a=document.querySelector("#login h1 a");if(a){a.textContent=fc.logoText;}}';
+	}
+
 	if ( $js ) {
 		echo '<script>document.addEventListener("DOMContentLoaded",function(){' . $js . '});</script>';
+	}
+
+	// ——— JS personnalisé ———.
+	if ( '' !== trim( (string) $s['custom_js'] ) ) {
+		$custom_js = str_ireplace( '</script', '<\/script', (string) $s['custom_js'] );
+		echo '<script id="infinity-loginshield-custom">' . $custom_js . '</script>';
 	}
 }
 add_action( 'login_footer', 'inls_login_footer', 20 );

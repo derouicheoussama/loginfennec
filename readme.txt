@@ -5,54 +5,62 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Make the WordPress login page yours: logo, background (blur, opacity, gradients), modern styles, links, social icons, copyright — and block brute-force password attempts.
+Make the WordPress login page yours: logo, background (blur, opacity, gradients), 10 modern styles, 7 form themes, social icons with official brand colors, security journal and brute-force protection — all with a live preview.
 
 == Description ==
 
-Infinity LoginShield redesigns your WordPress login page with a modern, fluid experience and protects it against brute-force attacks — all from an elegant dashboard with a **live preview**.
+Infinity LoginShield redesigns your WordPress login page AND protects it, from one elegant dashboard with a live preview. No code needed — and unlike most login customizers, security is built in, not an afterthought.
 
-**Design**
+<strong>🎨 Design &amp; Branding</strong>
 
-* Custom logo (image, size, link) — or hide it completely
-* Background: solid color, gradient (angle control) or image
-* Blur control (backdrop) and colored overlay with opacity control
 * 10 one-click modern styles: Glassmorphism, Minimal, Dark, Sunset, Ocean, Forest, Neon, Sakura, Monochrome, Royal
 * 7 form UI themes (glass, classic, outline, pill, elevated, accent, minimal) — independent from the colors
-* Glassmorphism form: translucency, blur, radius, shadow, width, padding
-* Full control over text, labels, inputs, button (normal + hover) and link colors
-* Welcome message, 4 font families, entry animations, custom CSS
-* Fully responsive (desktop, tablet, mobile)
+* Custom logo: image or text, with size, link and hide options
+* Background: solid color, gradient with angle control, or image with position, blur, brightness, saturation and colored overlay
+* Full color control: form, texts, labels, inputs (normal + focus), button (normal + hover), links
+* Typography: 4 font families, text size and input height
+* Welcome message (title + subtitle), copyright line with {year} and {sitename}
+* Entry animations (fade, slide, zoom) with reduced-motion support
+* Custom CSS and custom JavaScript
+* Fully responsive: desktop, tablet, mobile
 
-**Content**
+<strong>🔗 Content &amp; Links</strong>
 
+* Social media icons with official brand colors: Facebook, X, Instagram, LinkedIn, YouTube, email — circle, rounded or square
 * Customize or hide "Lost your password?", "Back to site" and "Register" links
-* Change link text and target URL (e.g. send users to your shop)
-* Social media icons: Facebook, X (Twitter), Instagram, LinkedIn, YouTube, e-mail — circle, rounded or square, with size and color controls
-* Copyright line with {year} and {sitename} variables
+* Change link text and target URL (e.g. send users back to your shop)
+* Custom placeholders and labels for the username and password fields
+* Custom redirect after login
 
-**Security**
+<strong>🛡️ Security</strong>
 
-* Limit login attempts: after N failures, the IP address and the username are locked for a configurable duration
-* Live "attempts remaining" warning on the login screen
-* Honeypot anti-bot field (blocked bots show up in the journal)
-* Block author scans (?author=N) and close the REST users endpoint to visitors
-* Optional XML-RPC deactivation
-* Security journal: the last 50 events (failures, blocks, logins) with IP and username
-* Option to hide detailed error messages (generic message instead)
-* Optional: hide the language switcher
-* Security headers on the login page (X-Frame-Options, nosniff, Referrer-Policy)
+* Limit login attempts: lock out the IP and the username after N failures, for a configurable duration
+* Honeypot anti-bot field — blocked bots show up in the journal
+* Block author scans (?author=N) and close the REST users endpoint to logged-out visitors
+* IP whitelist so you can never lock yourself out
+* Optional XML-RPC deactivation and generic error messages
+* Security journal: the last 50 events (failures, blocks, logins) with IP and username, exportable as CSV
+* Security score (0-5) with a one-click "recommended pack"
+* Security headers on the login page (X-Frame-Options, nosniff, no-cache)
 
-**Experience**
+<strong>⚡ Experience</strong>
 
-* Modern admin dashboard: tabs, toggle switches, sliders, color pickers
-* Live preview of the login page with desktop / tablet / mobile views
-* Export / import your settings as JSON
-* Custom onboarding wizard, official brand colors, welcome message, copyright
-* Auto-updates from your GitHub releases (built-in updater, switches to WordPress.org automatically)
+* Elegant dashboard: tabs, toggles, sliders, color pickers and live preview (desktop / tablet / mobile, fullscreen)
+* Security statistics and recent activity right on the dashboard
+* Onboarding wizard on activation; export / import of settings as JSON
+* In-plugin purchase and license activation for the upcoming Pro
+* Auto-updates from your GitHub releases — switches to WordPress.org automatically once hosted there
+* Translation-ready, multisite-compatible, no ads, no tracking
+
+<strong>Why LoginShield?</strong>
+
+* Most login customizers only style the page. LoginShield styles it AND protects it.
+* Everything above is free — no feature paywalled inside the free plugin.
+* Built by Derouiche Oussama, signed "∞ Infinity Coder" in every source file.
 
 == Installation ==
 
@@ -94,6 +102,13 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.9.0 =
+* New: text logo option (replaces the image with a styled title)
+* New: custom placeholders and labels for the username and password fields
+* New: custom JavaScript field for the login page
+* New: input height control (0 = WordPress default)
+* Improved: fully reorganized readme description for easier discovery
 
 = 1.8.1 =
 * Fixed: official brand colors of social icons now always win over any other CSS

@@ -1082,6 +1082,7 @@ class Inls_Admin {
 
 		self::field_toggle( $s, 'logo_hide', __( 'Masquer complètement le logo', 'infinity-loginshield' ) );
 		self::field_media( $s, 'logo_url', __( 'Image du logo', 'infinity-loginshield' ), __( 'SVG ou PNG transparent recommandé.', 'infinity-loginshield' ), array( 'logo_hide' => 0 ) );
+		self::field_text( $s, 'logo_text', __( 'Ou logo en texte', 'infinity-loginshield' ), 'text', __( 'ex. : MaBoutique', 'infinity-loginshield' ), __( 'Remplace l’image par un titre stylé — prioritaire si les deux sont remplis.', 'infinity-loginshield' ), array( 'logo_hide' => 0 ) );
 		self::field_range( $s, 'logo_width', __( 'Largeur', 'infinity-loginshield' ), 40, 400, 'px', '', array( 'logo_hide' => 0 ) );
 		self::field_range( $s, 'logo_height', __( 'Hauteur', 'infinity-loginshield' ), 24, 300, 'px', '', array( 'logo_hide' => 0 ) );
 		self::field_text( $s, 'logo_link', __( 'Lien du logo', 'infinity-loginshield' ), 'url', 'https://exemple.com', __( 'Laisser vide pour pointer vers l’accueil du site.', 'infinity-loginshield' ), array( 'logo_hide' => 0 ) );
@@ -1161,6 +1162,7 @@ class Inls_Admin {
 		self::field_range( $s, 'form_radius', __( 'Arrondi des coins', 'infinity-loginshield' ), 0, 60, 'px' );
 		self::field_range( $s, 'form_width', __( 'Largeur du formulaire', 'infinity-loginshield' ), 260, 560, 'px' );
 		self::field_range( $s, 'form_padding', __( 'Espacement intérieur', 'infinity-loginshield' ), 12, 80, 'px' );
+		self::field_range( $s, 'input_height', __( 'Hauteur des champs', 'infinity-loginshield' ), 0, 60, 'px', __( '0 = hauteur WordPress par défaut.', 'infinity-loginshield' ) );
 		self::field_toggle( $s, 'form_shadow', __( 'Ombre portée', 'infinity-loginshield' ) );
 
 		echo '<h3 class="inls-group-title">' . esc_html__( 'Textes et champs', 'infinity-loginshield' ) . '</h3>';
@@ -1291,6 +1293,12 @@ class Inls_Admin {
 			__( 'Désactivée automatiquement si l’utilisateur demande moins d’animations.', 'infinity-loginshield' )
 		);
 
+		echo '<h3 class="inls-group-title">' . esc_html__( 'Champs du formulaire', 'infinity-loginshield' ) . '</h3>';
+		self::field_text( $s, 'field_label_user', __( 'Libellé « Identifiant »', 'infinity-loginshield' ), 'text', __( 'ex. : E-mail ou pseudo', 'infinity-loginshield' ) );
+		self::field_text( $s, 'field_label_pass', __( 'Libellé « Mot de passe »', 'infinity-loginshield' ), 'text', __( 'ex. : Votre mot de passe', 'infinity-loginshield' ) );
+		self::field_text( $s, 'field_placeholder_user', __( 'Placeholder « Identifiant »', 'infinity-loginshield' ), 'text', __( 'ex. : vous@exemple.com', 'infinity-loginshield' ) );
+		self::field_text( $s, 'field_placeholder_pass', __( 'Placeholder « Mot de passe »', 'infinity-loginshield' ), 'text', __( 'ex. : ••••••••', 'infinity-loginshield' ) );
+
 		echo '<h3 class="inls-group-title">' . esc_html__( 'Après connexion', 'infinity-loginshield' ) . '</h3>';
 		self::field_text(
 			$s,
@@ -1307,6 +1315,12 @@ class Inls_Admin {
 			'custom_css',
 			__( 'CSS brut pour la page de connexion', 'infinity-loginshield' ),
 			__( 'Injecté après tous les réglages du plugin — les balises sont retirées automatiquement.', 'infinity-loginshield' )
+		);
+		self::field_textarea(
+			$s,
+			'custom_js',
+			__( 'JavaScript personnalisé', 'infinity-loginshield' ),
+			__( 'Injecté en pied de page de connexion (fermetures de balise neutralisées automatiquement).', 'infinity-loginshield' )
 		);
 
 		self::panel_close();

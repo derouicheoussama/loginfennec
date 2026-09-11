@@ -70,6 +70,7 @@ function inls_get_defaults() {
 		// Logo.
 		'logo_hide'  => false,
 		'logo_url'   => '',
+		'logo_text'  => '',
 		'logo_width' => 120,
 		'logo_height' => 84,
 		'logo_link'  => '',
@@ -82,6 +83,7 @@ function inls_get_defaults() {
 		'form_width'    => 340,
 		'form_padding'  => 36,
 		'form_shadow'   => true,
+		'input_height'  => 0,
 		'text_color'    => '#ffffff',
 		'label_color'   => '#ffffff',
 		'input_bg'      => '#ffffff',
@@ -127,7 +129,12 @@ function inls_get_defaults() {
 		'font_size'        => 13,
 		'anim'             => 'none', // none | fade | slide | zoom.
 		'custom_css'       => '',
+		'custom_js'        => '',
 		'login_redirect'   => '',
+		'field_placeholder_user' => '',
+		'field_placeholder_pass' => '',
+		'field_label_user' => '',
+		'field_label_pass' => '',
 
 		// Sécurité.
 		'sec_enable'               => true,
@@ -187,7 +194,7 @@ function inls_field_spec() {
 			'social_facebook', 'social_twitter', 'social_instagram',
 			'social_linkedin', 'social_youtube', 'login_redirect',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -208,6 +215,7 @@ function inls_field_spec() {
 			'form_radius'          => array( 0, 60 ),
 			'form_width'           => array( 260, 560 ),
 			'form_padding'         => array( 12, 80 ),
+			'input_height'         => array( 0, 60 ),
 			'button_radius'        => array( 0, 40 ),
 			'social_size'          => array( 28, 72 ),
 			'social_icon_bg_opacity' => array( 0, 100 ),

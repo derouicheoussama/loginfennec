@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.8.1\n"
+"Project-Id-Version: Infinity LoginShield 1.9.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,6 +10,9 @@ msgstr ""
 "X-Domain: infinity-loginshield\n"
 
 msgid "%d événements enregistrés (50 maximum)."
+msgstr ""
+
+msgid "0 = hauteur WordPress par défaut."
 msgstr ""
 
 msgid "2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse."
@@ -217,6 +220,9 @@ msgid "Centrée"
 msgstr ""
 
 msgid "Cercle"
+msgstr ""
+
+msgid "Champs du formulaire"
 msgstr ""
 
 msgid "Changer de style"
@@ -489,6 +495,9 @@ msgstr ""
 msgid "Hauteur"
 msgstr ""
 
+msgid "Hauteur des champs"
+msgstr ""
+
 msgid "Historique complet sur GitHub"
 msgstr ""
 
@@ -549,10 +558,16 @@ msgstr ""
 msgid "Injecté après tous les réglages du plugin — les balises sont retirées automatiquement."
 msgstr ""
 
+msgid "Injecté en pied de page de connexion (fermetures de balise neutralisées automatiquement)."
+msgstr ""
+
 msgid "Instagram"
 msgstr ""
 
 msgid "Installateur"
+msgstr ""
+
+msgid "JavaScript personnalisé"
 msgstr ""
 
 msgid "Journal de sécurité"
@@ -595,6 +610,12 @@ msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devie
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
+msgstr ""
+
+msgid "Libellé « Identifiant »"
+msgstr ""
+
+msgid "Libellé « Mot de passe »"
 msgstr ""
 
 msgid "Libellés"
@@ -753,6 +774,9 @@ msgstr ""
 msgid "Opacité du voile"
 msgstr ""
 
+msgid "Ou logo en texte"
+msgstr ""
+
 msgid "Ouvrir dans un onglet"
 msgstr ""
 
@@ -790,6 +814,12 @@ msgid "Personnalisé"
 msgstr ""
 
 msgid "Pillule"
+msgstr ""
+
+msgid "Placeholder « Identifiant »"
+msgstr ""
+
+msgid "Placeholder « Mot de passe »"
 msgstr ""
 
 msgid "Police"
@@ -835,6 +865,9 @@ msgid "Recommandé : bloquez les attaques par force brute dès maintenant."
 msgstr ""
 
 msgid "Redirection après connexion"
+msgstr ""
+
+msgid "Remplace l’image par un titre stylé — prioritaire si les deux sont remplis."
 msgstr ""
 
 msgid "Remplacez le logo WordPress par le vôtre."
@@ -1119,7 +1152,22 @@ msgstr ""
 msgid "ex. : Créer un compte client"
 msgstr ""
 
+msgid "ex. : E-mail ou pseudo"
+msgstr ""
+
+msgid "ex. : MaBoutique"
+msgstr ""
+
 msgid "ex. : Retour à la boutique"
+msgstr ""
+
+msgid "ex. : Votre mot de passe"
+msgstr ""
+
+msgid "ex. : vous@exemple.com"
+msgstr ""
+
+msgid "ex. : ••••••••"
 msgstr ""
 
 msgid "guide complet sur GitHub"
