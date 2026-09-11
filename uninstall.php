@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -15,30 +15,30 @@
  * Désinstallation : suppression de toutes les données du plugin
  * (options, transients), multisite inclus.
  *
- * @package InfinityCustomizer
+ * @package LoginFencePro
  *
  * @license GPL-2.0-or-later
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-const INFINITY_LOGINSHIELD_OPTION      = 'infinity_loginshield_settings';
-const INFINITY_LOGINSHIELD_ATTEMPTS    = 'inls_login_attempts';
-const INFINITY_LOGINSHIELD_TRANSIENT   = 'inls_gh_release';
-const INFINITY_LOGINSHIELD_WPORG_CHECK = 'inls_wporg_check';
-const INFINITY_LOGINSHIELD_PENDING     = 'inls_pending_installer';
-const INFINITY_LOGINSHIELD_VERSION_KEY = 'inls_stored_version';
+const LOGINFENCE_OPTION      = 'loginfence_settings';
+const LOGINFENCE_ATTEMPTS    = 'lnf_login_attempts';
+const LOGINFENCE_TRANSIENT   = 'lnf_gh_release';
+const LOGINFENCE_WPORG_CHECK = 'lnf_wporg_check';
+const LOGINFENCE_PENDING     = 'lnf_pending_installer';
+const LOGINFENCE_VERSION_KEY = 'lnf_stored_version';
 
-function inls_uninstall_site() {
-	delete_option( INFINITY_LOGINSHIELD_OPTION );
-	delete_option( INFINITY_LOGINSHIELD_ATTEMPTS );
-	delete_option( INFINITY_LOGINSHIELD_PENDING );
-	delete_option( INFINITY_LOGINSHIELD_VERSION_KEY );
-	delete_transient( INFINITY_LOGINSHIELD_TRANSIENT );
-	delete_transient( INFINITY_LOGINSHIELD_WPORG_CHECK );
+function lnf_uninstall_site() {
+	delete_option( LOGINFENCE_OPTION );
+	delete_option( LOGINFENCE_ATTEMPTS );
+	delete_option( LOGINFENCE_PENDING );
+	delete_option( LOGINFENCE_VERSION_KEY );
+	delete_transient( LOGINFENCE_TRANSIENT );
+	delete_transient( LOGINFENCE_WPORG_CHECK );
 }
 
-inls_uninstall_site();
+lnf_uninstall_site();
 
 if ( is_multisite() ) {
 	$site_ids = get_sites(
@@ -49,7 +49,7 @@ if ( is_multisite() ) {
 	);
 	foreach ( $site_ids as $site_id ) {
 		switch_to_blog( (int) $site_id );
-		inls_uninstall_site();
+		lnf_uninstall_site();
 		restore_current_blog();
 	}
 }

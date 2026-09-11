@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -17,16 +17,16 @@
  * Bloque temporairement une adresse IP (et un identifiant) après
  * N échecs de mot de passe, et affiche les messages correspondants.
  *
- * @package InfinityCustomizer
+ * @package LoginFencePro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class Inls_Login_Security {
+class Lnf_Login_Security {
 
-	const OPT = 'inls_login_attempts';
+	const OPT = 'lnf_login_attempts';
 
-	const LOG_OPT = 'inls_security_log';
+	const LOG_OPT = 'lnf_security_log';
 	const LOG_CAP = 50;
 
 	/**
@@ -67,18 +67,18 @@ class Inls_Login_Security {
 	 * @return WP_User|WP_Error
 	 */
 	public static function check_honeypot( $user, $username, $password ) {
-		$s = inls_settings();
+		$s = lnf_settings();
 		if ( empty( $s['sec_honeypot'] ) ) {
 			return $user;
 		}
-		$trap = isset( $_POST['inls_hp'] ) ? trim( wp_unslash( $_POST['inls_hp'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- vérification anti-bot publique.
+		$trap = isset( $_POST['lnf_hp'] ) ? trim( wp_unslash( $_POST['lnf_hp'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- vérification anti-bot publique.
 		if ( '' === $trap ) {
 			return $user;
 		}
 		self::log_event( 'blocked', $username );
 		return new WP_Error(
-			'inls_honeypot',
-			'<strong>' . esc_html__( 'Erreur', 'infinity-loginshield' ) . '</strong> : ' . esc_html__( 'requête refusée par la protection anti-robots.', 'infinity-loginshield' )
+			'lnf_honeypot',
+			'<strong>' . esc_html__( 'Erreur', 'loginfence' ) . '</strong> : ' . esc_html__( 'requête refusée par la protection anti-robots.', 'loginfence' )
 		);
 	}
 
@@ -86,7 +86,7 @@ class Inls_Login_Security {
 	 * Active la protection contre le balayage des auteurs (visiteurs non connectés).
 	 */
 	public static function harden_author_scans() {
-		$s = inls_settings();
+		$s = lnf_settings();
 		if ( empty( $s['sec_disable_authors'] ) ) {
 			return;
 		}
@@ -132,7 +132,7 @@ class Inls_Login_Security {
 	 * @return bool
 	 */
 	public static function maybe_disable_xmlrpc( $enabled ) {
-		$s = inls_settings();
+		$s = lnf_settings();
 		return empty( $s['sec_disable_xmlrpc'] ) ? $enabled : false;
 	}
 
@@ -314,7 +314,7 @@ class Inls_Login_Security {
 	 */
 	public static function is_whitelisted( $ip = '' ) {
 		$ip  = '' !== $ip ? $ip : self::client_ip();
-		$s   = inls_settings();
+		$s   = lnf_settings();
 		$raw = trim( (string) $s['sec_whitelist'] );
 		if ( '' === $raw || '' === $ip ) {
 			return false;
@@ -350,7 +350,7 @@ class Inls_Login_Security {
 		if ( self::is_whitelisted() ) {
 			return $user;
 		}
-		$s = inls_settings();
+		$s = lnf_settings();
 		if ( empty( $s['sec_enable'] ) ) {
 			return $user;
 		}
@@ -360,7 +360,7 @@ class Inls_Login_Security {
 			if ( $remaining > 0 ) {
 				self::$lock_triggered = true;
 				$message = sprintf( esc_html( $s['sec_lock_message'] ), max( 1, $remaining ) );
-				return new WP_Error( 'inls_locked', $message );
+				return new WP_Error( 'lnf_locked', $message );
 			}
 		}
 		return $user;
@@ -372,7 +372,7 @@ class Inls_Login_Security {
 	 * @param string $username Identifiant tenté.
 	 */
 	public static function register_failure( $username ) {
-		$s = inls_settings();
+		$s = lnf_settings();
 		if ( empty( $s['sec_enable'] ) ) {
 			return;
 		}
@@ -426,13 +426,13 @@ class Inls_Login_Security {
 	 * @return string
 	 */
 	public static function remaining_message( $message ) {
-		$s = inls_settings();
+		$s = lnf_settings();
 		if ( empty( $s['sec_enable'] ) || self::$lock_triggered || self::$last_fail_count < 1 ) {
 			return $message;
 		}
 		$remaining = max( 1, (int) $s['sec_max_attempts'] - self::$last_fail_count );
 		$message  .= sprintf(
-			'<div class="message inls-attempts" style="margin-top:10px">%s</div>',
+			'<div class="message lnf-attempts" style="margin-top:10px">%s</div>',
 			esc_html(
 				sprintf(
 					/* translators: %d : nombre de tentatives restantes. */
@@ -440,7 +440,7 @@ class Inls_Login_Security {
 						'Attention : il vous reste %d tentative avant le blocage temporaire.',
 						'Attention : il vous reste %d tentatives avant le blocage temporaire.',
 						$remaining,
-						'infinity-loginshield'
+						'loginfence'
 					),
 					$remaining
 				)

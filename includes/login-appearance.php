@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -15,7 +15,7 @@
  * Apparence de la page de connexion : CSS dynamique, logo, liens,
  * réseaux sociaux, copyright.
  *
- * @package InfinityCustomizer
+ * @package LoginFencePro
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,10 +24,10 @@ defined( 'ABSPATH' ) || exit;
  * Construit le CSS de la page de connexion à partir des réglages.
  * Réutilisé par l'aperçu en direct du dashboard.
  *
- * @param array $s Réglages (inls_settings()).
+ * @param array $s Réglages (lnf_settings()).
  * @return string CSS.
  */
-function inls_build_login_css( $s ) {
+function lnf_build_login_css( $s ) {
 	$css = '';
 
 	// Mise en page : largeur du formulaire centrée.
@@ -37,7 +37,7 @@ function inls_build_login_css( $s ) {
 	);
 
 	// Éléments au-dessus des calques d'arrière-plan.
-	$css .= 'body.login #login,body.login .inls-social,body.login .inls-copyright{position:relative;z-index:1;}';
+	$css .= 'body.login #login,body.login .lnf-social,body.login .lnf-copyright{position:relative;z-index:1;}';
 
 	// ——— Arrière-plan ———.
 	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {
@@ -76,7 +76,7 @@ function inls_build_login_css( $s ) {
 	if ( (int) $s['bg_overlay_opacity'] > 0 ) {
 		$css .= sprintf(
 			'body.login::after{content:"";position:fixed;inset:0;z-index:0;background:%s;pointer-events:none;}',
-			inls_hex_to_rgba( $s['bg_overlay_color'], (int) $s['bg_overlay_opacity'] )
+			lnf_hex_to_rgba( $s['bg_overlay_color'], (int) $s['bg_overlay_opacity'] )
 		);
 	}
 
@@ -101,13 +101,13 @@ function inls_build_login_css( $s ) {
 	}
 
 	// ——— Formulaire (effet verre) ———.
-	$form_bg  = inls_hex_to_rgba( $s['form_bg'], (int) $s['form_opacity'] );
+	$form_bg  = lnf_hex_to_rgba( $s['form_bg'], (int) $s['form_opacity'] );
 	$css     .= sprintf(
 		'body.login #login form,body.login form{background:%1$s;-webkit-backdrop-filter:blur(%2$dpx);backdrop-filter:blur(%2$dpx);border-radius:%3$dpx;border:1px solid %4$s;padding:%5$dpx %5$dpx calc(%5$dpx - 6px);}',
 		$form_bg,
 		(int) $s['form_blur'],
 		(int) $s['form_radius'],
-		inls_hex_to_rgba( $s['input_border'], 35 ),
+		lnf_hex_to_rgba( $s['input_border'], 35 ),
 		(int) $s['form_padding']
 	);
 	if ( ! empty( $s['form_shadow'] ) ) {
@@ -128,7 +128,7 @@ function inls_build_login_css( $s ) {
 	$css .= sprintf(
 		'body.login form .input:focus{border-color:%1$s;box-shadow:0 0 0 3px %2$s;}',
 		$s['button_bg'],
-		inls_hex_to_rgba( $s['button_bg'], 30 )
+		lnf_hex_to_rgba( $s['button_bg'], 30 )
 	);
 	if ( (int) $s['input_height'] > 0 ) {
 		$css .= sprintf( 'body.login form .input{height:%dpx;}', (int) $s['input_height'] );
@@ -143,12 +143,12 @@ function inls_build_login_css( $s ) {
 	$css .= sprintf(
 		'body.login #wp-submit:hover,body.login #wp-submit:focus{background:%1$s;border-color:%1$s;box-shadow:0 0 0 3px %2$s;}',
 		$s['button_hover'],
-		inls_hex_to_rgba( $s['button_hover'], 35 )
+		lnf_hex_to_rgba( $s['button_hover'], 35 )
 	);
 
 	// Liens (nav, retour au site).
 	$css .= sprintf(
-		'body.login #nav a,body.login #backtoblog a,body.login .inls-copyright a{color:%s;}',
+		'body.login #nav a,body.login #backtoblog a,body.login .lnf-copyright a{color:%s;}',
 		$s['link_color']
 	);
 	$css .= sprintf( 'body.login #nav a:hover,body.login #backtoblog a:hover{color:%s;}', $s['button_bg'] );
@@ -173,24 +173,24 @@ function inls_build_login_css( $s ) {
 			$radius = '6px';
 		}
 		$css .= sprintf(
-			'.inls-social{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 0;}',
+			'.lnf-social{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 0;}',
 			(int) $s['social_size']
 		);
 		$css .= sprintf(
-			'.inls-social a.inls-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:%4$s;text-decoration:none;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;}',
+			'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:%4$s;text-decoration:none;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;}',
 			(int) $s['social_size'],
 			$radius,
 			$s['social_icon_color'],
-			inls_hex_to_rgba( $s['social_icon_bg'], (int) $s['social_icon_bg_opacity'] )
+			lnf_hex_to_rgba( $s['social_icon_bg'], (int) $s['social_icon_bg_opacity'] )
 		);
 		$css .= sprintf(
-			'.inls-social a.inls-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
+			'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
 			max( 14, (int) round( (int) $s['social_size'] * 0.55 ) )
 		);
 		$css .= sprintf(
-			'.inls-social a.inls-icon:hover{transform:translateY(-2px);background:%1$s;box-shadow:0 8px 20px -6px %2$s;color:%3$s;}',
+			'.lnf-social a.lnf-icon:hover{transform:translateY(-2px);background:%1$s;box-shadow:0 8px 20px -6px %2$s;color:%3$s;}',
 			$s['social_icon_bg'],
-			inls_hex_to_rgba( $s['social_icon_bg'], 60 ),
+			lnf_hex_to_rgba( $s['social_icon_bg'], 60 ),
 			$s['social_icon_color']
 		);
 
@@ -206,19 +206,19 @@ function inls_build_login_css( $s ) {
 			);
 			foreach ( $brands as $network => $color ) {
 				$css .= sprintf(
-					'.inls-social a.inls-icon[data-network="%1$s"],.inls-social a.inls-icon[data-network="%1$s"]:hover{background:%2$s !important;color:#fff !important;}',
+					'.lnf-social a.lnf-icon[data-network="%1$s"],.lnf-social a.lnf-icon[data-network="%1$s"]:hover{background:%2$s !important;color:#fff !important;}',
 					$network,
 					$color
 				);
 			}
 			// L'icône X est noire : un liseré discret la rend visible sur fond sombre.
-			$css .= '.inls-social a.inls-icon[data-network="twitter"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28) !important;}';
+			$css .= '.lnf-social a.lnf-icon[data-network="twitter"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28) !important;}';
 		}
 	}
 
 	// ——— Copyright ———.
 	$css .= sprintf(
-		'.inls-copyright{margin-top:14px;text-align:center;font-size:12.5px;opacity:.92;letter-spacing:.2px;}',
+		'.lnf-copyright{margin-top:14px;text-align:center;font-size:12.5px;opacity:.92;letter-spacing:.2px;}',
 		$s['link_color']
 	);
 
@@ -248,11 +248,11 @@ function inls_build_login_css( $s ) {
 
 	// ——— Extras : animation d'entrée ———.
 	if ( 'none' !== $s['anim'] ) {
-		$names = array( 'fade' => 'inls-fade', 'slide' => 'inls-slide', 'zoom' => 'inls-zoom' );
-		$name  = isset( $names[ $s['anim'] ] ) ? $names[ $s['anim'] ] : 'inls-fade';
-		$css  .= '@keyframes inls-fade{from{opacity:0}to{opacity:1}}'
-			. '@keyframes inls-slide{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}'
-			. '@keyframes inls-zoom{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}';
+		$names = array( 'fade' => 'lnf-fade', 'slide' => 'lnf-slide', 'zoom' => 'lnf-zoom' );
+		$name  = isset( $names[ $s['anim'] ] ) ? $names[ $s['anim'] ] : 'lnf-fade';
+		$css  .= '@keyframes lnf-fade{from{opacity:0}to{opacity:1}}'
+			. '@keyframes lnf-slide{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}'
+			. '@keyframes lnf-zoom{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}';
 		$css  .= sprintf(
 			'body.login #login h1 a{animation:%1$s .7s ease both;}body.login #login form{animation:%1$s .6s ease .05s both;}',
 			$name
@@ -262,13 +262,13 @@ function inls_build_login_css( $s ) {
 
 	// ——— Extras : message d'accueil ———.
 	if ( ! empty( $s['welcome_enable'] ) ) {
-		$css .= '.inls-welcome{margin:0 0 16px;text-align:center;}';
-		$css .= sprintf( '.inls-welcome h3{margin:0 0 6px;font-size:22px;line-height:1.25;color:%s;}', $s['text_color'] );
-		$css .= sprintf( '.inls-welcome p{margin:0;font-size:13.5px;color:%s;}', $s['label_color'] );
+		$css .= '.lnf-welcome{margin:0 0 16px;text-align:center;}';
+		$css .= sprintf( '.lnf-welcome h3{margin:0 0 6px;font-size:22px;line-height:1.25;color:%s;}', $s['text_color'] );
+		$css .= sprintf( '.lnf-welcome p{margin:0;font-size:13.5px;color:%s;}', $s['label_color'] );
 	}
 
 	// ——— Thème d'interface du formulaire ———.
-	$css .= inls_form_theme_css( $s );
+	$css .= lnf_form_theme_css( $s );
 
 	// ——— CSS personnalisé ———.
 	if ( '' !== trim( (string) $s['custom_css'] ) ) {
@@ -288,7 +288,7 @@ function inls_build_login_css( $s ) {
  * @param array $s Réglages.
  * @return string
  */
-function inls_form_theme_css( $s ) {
+function lnf_form_theme_css( $s ) {
 	$sel = 'body.login #login form,body.login form';
 	$in  = 'body.login form .input';
 	$btn = 'body.login #wp-submit';
@@ -299,7 +299,7 @@ function inls_form_theme_css( $s ) {
 				'%1$s{background:%2$s;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid %3$s;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.1);}%4$s{border-radius:4px;}',
 				$sel,
 				$s['form_bg'],
-				inls_hex_to_rgba( $s['input_border'], 30 ),
+				lnf_hex_to_rgba( $s['input_border'], 30 ),
 				$in
 			);
 		case 'outline':
@@ -308,7 +308,7 @@ function inls_form_theme_css( $s ) {
 				$sel,
 				$s['input_border'],
 				$in,
-				inls_hex_to_rgba( $s['input_bg'], 90 )
+				lnf_hex_to_rgba( $s['input_bg'], 90 )
 			);
 		case 'pill':
 			return sprintf(
@@ -355,14 +355,14 @@ function inls_form_theme_css( $s ) {
  * @param array $s Réglages.
  * @return array tableau libellé => [ 'url', 'icon' ].
  */
-function inls_get_social_networks( $s ) {
+function lnf_get_social_networks( $s ) {
 	$networks = array(
-		'facebook'  => array( 'icon' => 'dashicons-facebook-alt', 'label' => __( 'Facebook', 'infinity-loginshield' ) ),
-		'twitter'   => array( 'icon' => 'dashicons-twitter', 'label' => __( 'X (Twitter)', 'infinity-loginshield' ) ),
-		'instagram' => array( 'icon' => 'dashicons-instagram', 'label' => __( 'Instagram', 'infinity-loginshield' ) ),
-		'linkedin'  => array( 'icon' => 'dashicons-linkedin', 'label' => __( 'LinkedIn', 'infinity-loginshield' ) ),
-		'youtube'   => array( 'icon' => 'dashicons-youtube', 'label' => __( 'YouTube', 'infinity-loginshield' ) ),
-		'email'     => array( 'icon' => 'dashicons-email-alt', 'label' => __( 'E-mail', 'infinity-loginshield' ) ),
+		'facebook'  => array( 'icon' => 'dashicons-facebook-alt', 'label' => __( 'Facebook', 'loginfence' ) ),
+		'twitter'   => array( 'icon' => 'dashicons-twitter', 'label' => __( 'X (Twitter)', 'loginfence' ) ),
+		'instagram' => array( 'icon' => 'dashicons-instagram', 'label' => __( 'Instagram', 'loginfence' ) ),
+		'linkedin'  => array( 'icon' => 'dashicons-linkedin', 'label' => __( 'LinkedIn', 'loginfence' ) ),
+		'youtube'   => array( 'icon' => 'dashicons-youtube', 'label' => __( 'YouTube', 'loginfence' ) ),
+		'email'     => array( 'icon' => 'dashicons-email-alt', 'label' => __( 'E-mail', 'loginfence' ) ),
 	);
 
 	$active = array();
@@ -383,66 +383,66 @@ function inls_get_social_networks( $s ) {
 /**
  * Affiche le CSS personnalisé dans la page de connexion.
  */
-function inls_login_head() {
-	$s = inls_settings();
+function lnf_login_head() {
+	$s = lnf_settings();
 	// Rapidité : précharge l'image de fond avant le CSS (moins de flash visuel).
 	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {
 		printf( '<link rel="preload" as="image" href="%s">' . "\n", esc_url( $s['bg_image'] ) );
 	}
-	echo '<style id="infinity-loginshield">' . "\n";
-	echo "/* ∞ INFINITY CODER — style généré par Infinity LoginShield\n";
+	echo '<style id="loginfence">' . "\n";
+	echo "/* ∞ INFINITY CODER — style généré par LoginFence Pro\n";
 	echo ' * Création originale de Derouiche Oussama — https://www.derouicheoussama.com' . "\n */\n";
-	echo wp_strip_all_tags( inls_build_login_css( $s ) ) . "\n";
+	echo wp_strip_all_tags( lnf_build_login_css( $s ) ) . "\n";
 	echo "</style>\n";
 }
-add_action( 'login_head', 'inls_login_head', 30 );
+add_action( 'login_head', 'lnf_login_head', 30 );
 
 /**
  * Honeypot anti-robots : champ caché hors écran, rempli uniquement par les bots.
  */
-function inls_login_honeypot() {
-	$s = inls_settings();
+function lnf_login_honeypot() {
+	$s = lnf_settings();
 	if ( empty( $s['sec_honeypot'] ) ) {
 		return;
 	}
-	echo '<p class="inls-hp" style="position:absolute!important;left:-9999px!important;top:-9999px!important;margin:0;" aria-hidden="true">'
-		. '<label>' . esc_html__( 'Ne pas remplir ce champ', 'infinity-loginshield' )
-		. ' <input type="text" name="inls_hp" value="" tabindex="-1" autocomplete="off"></label></p>';
+	echo '<p class="lnf-hp" style="position:absolute!important;left:-9999px!important;top:-9999px!important;margin:0;" aria-hidden="true">'
+		. '<label>' . esc_html__( 'Ne pas remplir ce champ', 'loginfence' )
+		. ' <input type="text" name="lnf_hp" value="" tabindex="-1" autocomplete="off"></label></p>';
 }
-add_action( 'login_form', 'inls_login_honeypot' );
+add_action( 'login_form', 'lnf_login_honeypot' );
 
 /**
  * Charge Dashicons (icônes sociales) sur la page de connexion,
  * uniquement lorsque les icônes sont activées (performance).
  */
-function inls_login_enqueue() {
-	$s = inls_settings();
+function lnf_login_enqueue() {
+	$s = lnf_settings();
 	if ( ! empty( $s['social_enable'] ) ) {
 		wp_enqueue_style( 'dashicons' );
 	}
 }
-add_action( 'login_enqueue_scripts', 'inls_login_enqueue' );
+add_action( 'login_enqueue_scripts', 'lnf_login_enqueue' );
 
 /**
  * Lien du logo.
  *
  * @return string
  */
-function inls_logo_url() {
-	$s = inls_settings();
+function lnf_logo_url() {
+	$s = lnf_settings();
 	return ! empty( $s['logo_link'] ) ? $s['logo_link'] : home_url( '/' );
 }
-add_filter( 'login_headerurl', 'inls_logo_url', 100 );
+add_filter( 'login_headerurl', 'lnf_logo_url', 100 );
 
 /**
  * Texte alternatif du logo.
  *
  * @return string
  */
-function inls_logo_text() {
+function lnf_logo_text() {
 	return get_bloginfo( 'name' );
 }
-add_filter( 'login_headertext', 'inls_logo_text', 100 );
+add_filter( 'login_headertext', 'lnf_logo_text', 100 );
 
 /**
  * Message d'accueil personnalisé au-dessus du formulaire.
@@ -450,8 +450,8 @@ add_filter( 'login_headertext', 'inls_logo_text', 100 );
  * @param string $message Message courant.
  * @return string
  */
-function inls_welcome_message( $message ) {
-	$s = inls_settings();
+function lnf_welcome_message( $message ) {
+	$s = lnf_settings();
 	if ( empty( $s['welcome_enable'] ) ) {
 		return $message;
 	}
@@ -460,7 +460,7 @@ function inls_welcome_message( $message ) {
 	if ( '' === $title && '' === $subtitle ) {
 		return $message;
 	}
-	$html = '<div class="inls-welcome">';
+	$html = '<div class="lnf-welcome">';
 	if ( '' !== $title ) {
 		$html .= '<h3>' . esc_html( $title ) . '</h3>';
 	}
@@ -470,7 +470,7 @@ function inls_welcome_message( $message ) {
 	$html .= '</div>';
 	return $message . $html;
 }
-add_filter( 'login_message', 'inls_welcome_message', 5 );
+add_filter( 'login_message', 'lnf_welcome_message', 5 );
 
 /**
  * Redirection personnalisée après connexion (si configurée et si WordPress
@@ -481,18 +481,18 @@ add_filter( 'login_message', 'inls_welcome_message', 5 );
  * @param WP_User  $user                  Utilisateur connecté.
  * @return string
  */
-function inls_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
+function lnf_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
 	if ( ! $user instanceof WP_User ) {
 		return $redirect_to;
 	}
-	$s      = inls_settings();
+	$s      = lnf_settings();
 	$target = trim( (string) $s['login_redirect'] );
 	if ( '' !== $target && '' === trim( (string) $requested_redirect_to ) ) {
 		return $target;
 	}
 	return $redirect_to;
 }
-add_filter( 'login_redirect', 'inls_login_redirect', 20, 3 );
+add_filter( 'login_redirect', 'lnf_login_redirect', 20, 3 );
 
 /**
  * Message d'erreur générique (option « masquer les détails »).
@@ -500,45 +500,45 @@ add_filter( 'login_redirect', 'inls_login_redirect', 20, 3 );
  * @param string $error Message d'erreur.
  * @return string
  */
-function inls_generic_login_error( $error ) {
-	$s = inls_settings();
-	if ( empty( $s['sec_generic_error'] ) || Inls_Login_Security::$lock_triggered ) {
+function lnf_generic_login_error( $error ) {
+	$s = lnf_settings();
+	if ( empty( $s['sec_generic_error'] ) || Lnf_Login_Security::$lock_triggered ) {
 		return $error;
 	}
-	return '<strong>' . esc_html__( 'Erreur', 'infinity-loginshield' ) . '</strong> : '
-		. esc_html__( 'Identifiants incorrects. Veuillez réessayer.', 'infinity-loginshield' );
+	return '<strong>' . esc_html__( 'Erreur', 'loginfence' ) . '</strong> : '
+		. esc_html__( 'Identifiants incorrects. Veuillez réessayer.', 'loginfence' );
 }
-add_filter( 'login_errors', 'inls_generic_login_error', 100 );
+add_filter( 'login_errors', 'lnf_generic_login_error', 100 );
 
 /**
  * Masque le sélecteur de langue.
  *
  * @return bool
  */
-function inls_hide_language_switcher() {
-	$s = inls_settings();
+function lnf_hide_language_switcher() {
+	$s = lnf_settings();
 	return empty( $s['sec_hide_language_switcher'] );
 }
-add_filter( 'login_display_language_dropdown', 'inls_hide_language_switcher', 100 );
+add_filter( 'login_display_language_dropdown', 'lnf_hide_language_switcher', 100 );
 
 /**
  * Pied de page : réseaux sociaux, copyright, ajustements de liens.
  */
-function inls_login_footer() {
-	$s   = inls_settings();
+function lnf_login_footer() {
+	$s   = lnf_settings();
 	$js  = '';
 
 	// Signature visible dans le code source de la page.
-	echo '<!-- ∞ INFINITY CODER | Infinity LoginShield — création originale de Derouiche Oussama | https://www.derouicheoussama.com -->' . "\n";
+	echo '<!-- ∞ INFINITY CODER | LoginFence Pro — création originale de Derouiche Oussama | https://www.derouicheoussama.com -->' . "\n";
 
 	// ——— Réseaux sociaux ———.
 	if ( ! empty( $s['social_enable'] ) ) {
-		$networks = inls_get_social_networks( $s );
+		$networks = lnf_get_social_networks( $s );
 		if ( $networks ) {
-			echo '<div class="inls-social" aria-label="' . esc_attr__( 'Réseaux sociaux', 'infinity-loginshield' ) . '">';
+			echo '<div class="lnf-social" aria-label="' . esc_attr__( 'Réseaux sociaux', 'loginfence' ) . '">';
 			foreach ( $networks as $key => $data ) {
 				printf(
-					'<a class="inls-icon" data-network="%1$s" href="%2$s" target="_blank" rel="noopener noreferrer" aria-label="%3$s" title="%3$s"><span class="dashicons %4$s"></span></a>',
+					'<a class="lnf-icon" data-network="%1$s" href="%2$s" target="_blank" rel="noopener noreferrer" aria-label="%3$s" title="%3$s"><span class="dashicons %4$s"></span></a>',
 					esc_attr( $key ),
 					esc_url( $data['url'] ),
 					esc_attr( $data['label'] ),
@@ -548,15 +548,15 @@ function inls_login_footer() {
 			echo '</div>';
 
 			// Déplace les icônes juste sous le formulaire / les liens de nav.
-			$js .= 'var s=document.querySelector(".inls-social");if(s){var n=document.querySelector("#nav");if(n&&n.parentNode){n.parentNode.insertBefore(s,n.nextSibling);}}';
+			$js .= 'var s=document.querySelector(".lnf-social");if(s){var n=document.querySelector("#nav");if(n&&n.parentNode){n.parentNode.insertBefore(s,n.nextSibling);}}';
 		}
 	}
 
 	// ——— Copyright ———.
 	if ( ! empty( $s['copyright_enable'] ) && '' !== trim( (string) $s['copyright_text'] ) ) {
 		printf(
-			'<div class="inls-copyright">%s</div>',
-			wp_kses_post( inls_expand_copyright( $s['copyright_text'] ) )
+			'<div class="lnf-copyright">%s</div>',
+			wp_kses_post( lnf_expand_copyright( $s['copyright_text'] ) )
 		);
 	}
 
@@ -617,7 +617,7 @@ function inls_login_footer() {
 	// ——— JS personnalisé ———.
 	if ( '' !== trim( (string) $s['custom_js'] ) ) {
 		$custom_js = str_ireplace( '</script', '<\/script', (string) $s['custom_js'] );
-		echo '<script id="infinity-loginshield-custom">' . $custom_js . '</script>';
+		echo '<script id="loginfence-custom">' . $custom_js . '</script>';
 	}
 }
-add_action( 'login_footer', 'inls_login_footer', 20 );
+add_action( 'login_footer', 'lnf_login_footer', 20 );

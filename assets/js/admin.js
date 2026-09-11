@@ -1,21 +1,21 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
- * Plugin : Infinity LoginShield · https://www.derouicheoussama.com
+ * Plugin : LoginFence Pro · https://www.derouicheoussama.com
  * Copyright © 2026 Derouiche Oussama. Licence GPL v2+ —
  * toute copie ou modification doit conserver cette signature.
  */
 
 /**
- * Infinity LoginShield — dashboard.
+ * LoginFence Pro — dashboard.
  * Onglets, aperçu en direct (CSS injecté dans l'iframe), presets,
  * médiathèque, interrupteurs et curseurs.
  */
 (function ($) {
 	'use strict';
 
-	var cfg = window.INLS_ADMIN || {};
-	var $form = $('#inls-form');
-	var $frame = $('#inls-frame');
+	var cfg = window.LNF_ADMIN || {};
+	var $form = $('#lnf-form');
+	var $frame = $('#lnf-frame');
 	var debounceTimer = null;
 	var applyingPreset = false;
 
@@ -151,7 +151,7 @@
 		var data = { action: cfg.previewAction, nonce: cfg.nonce };
 		$form.find('input, select, textarea').each(function () {
 			var name = this.name;
-			if (!name || name.indexOf('inls[') !== 0) {
+			if (!name || name.indexOf('lnf[') !== 0) {
 				return;
 			}
 			if (this.type === 'checkbox') {
@@ -171,10 +171,10 @@
 		if (!doc || !doc.head) {
 			return;
 		}
-		var tag = doc.getElementById('inls-live');
+		var tag = doc.getElementById('lnf-live');
 		if (!tag) {
 			tag = doc.createElement('style');
-			tag.id = 'inls-live';
+			tag.id = 'lnf-live';
 			doc.head.appendChild(tag);
 		}
 		tag.textContent = css;
@@ -186,7 +186,7 @@
 			return;
 		}
 		function field(key) {
-			return $form.find('[name="inls[' + key + ']"]').first();
+			return $form.find('[name="lnf[' + key + ']"]').first();
 		}
 		function checked(key) {
 			var $el = field(key);
@@ -204,9 +204,9 @@
 		show('#backtoblog', !checked('hide_back_to'));
 
 		var socialOn = checked('social_enable');
-		show('.inls-social', !!socialOn);
+		show('.lnf-social', !!socialOn);
 
-		var cp = doc.querySelector('.inls-copyright');
+		var cp = doc.querySelector('.lnf-copyright');
 		if (cp) {
 			if (checked('copyright_enable')) {
 				var tpl = String(field('copyright_text').val() || '');
@@ -255,7 +255,7 @@
 			}
 			var visible = true;
 			$.each(cond, function (key, expected) {
-				var $el = $form.find('[name="inls[' + key + ']"]').first();
+				var $el = $form.find('[name="lnf[' + key + ']"]').first();
 				var current;
 				if (!$el.length) {
 					visible = false;
@@ -276,7 +276,7 @@
 
 	function refreshOutputs() {
 		$form.find('input[type=range]').each(function () {
-			var $out = $(this).closest('.inls-range-row').find('output');
+			var $out = $(this).closest('.lnf-range-row').find('output');
 			$out.text(this.value + ($out.data('unit') || ''));
 		});
 	}
@@ -286,33 +286,33 @@
 	 * ---------------------------------------------------------------- */
 
 	$form.on('input change', 'input, select, textarea', function () {
-		if (!applyingPreset && this.name && this.name !== 'inls[preset]') {
-			$('[name="inls[preset]"]').val('custom');
-			$('.inls-preset').removeClass('is-active');
+		if (!applyingPreset && this.name && this.name !== 'lnf[preset]') {
+			$('[name="lnf[preset]"]').val('custom');
+			$('.lnf-preset').removeClass('is-active');
 		}
 		refreshShowIf();
 		schedulePreview();
 	});
 
 	$form.on('input change', 'input[type=range]', function () {
-		var $out = $(this).closest('.inls-range-row').find('output');
+		var $out = $(this).closest('.lnf-range-row').find('output');
 		$out.text(this.value + ($out.data('unit') || ''));
 	});
 
 	/* Onglets */
-	$(document).on('click', '.inls-tab', function () {
+	$(document).on('click', '.lnf-tab', function () {
 		var tab = $(this).data('tab');
-		$('.inls-tab').removeClass('is-active');
+		$('.lnf-tab').removeClass('is-active');
 		$(this).addClass('is-active');
-		$('.inls-panel').removeClass('is-active');
-		$('.inls-panel[data-panel="' + tab + '"]').addClass('is-active');
+		$('.lnf-panel').removeClass('is-active');
+		$('.lnf-panel[data-panel="' + tab + '"]').addClass('is-active');
 		if (window.history && window.history.replaceState) {
 			window.history.replaceState(null, '', '#' + tab);
 		}
 	});
 
 	$(document).on('click', '[data-goto]', function () {
-		var $tab = $('.inls-tab[data-tab="' + $(this).data('goto') + '"]');
+		var $tab = $('.lnf-tab[data-tab="' + $(this).data('goto') + '"]');
 		if ($tab.length) {
 			$tab.trigger('click');
 			window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -321,39 +321,39 @@
 
 	/* Onglet initial (ancre) */
 	var initial = (window.location.hash || '#dashboard').slice(1);
-	var $initialTab = $('.inls-tab[data-tab="' + initial + '"]');
+	var $initialTab = $('.lnf-tab[data-tab="' + initial + '"]');
 	if ($initialTab.length) {
 		$initialTab.trigger('click');
 	}
 
 	/* Presets */
-	$(document).on('click', '.inls-preset', function () {
+	$(document).on('click', '.lnf-preset', function () {
 		var key = $(this).data('preset');
 		var values = PRESETS[key];
 		if (!values) {
 			// Style inconnu du navigateur : on active la carte sans écraser les couleurs.
-			$('.inls-preset').removeClass('is-active');
+			$('.lnf-preset').removeClass('is-active');
 			$(this).addClass('is-active');
-			$('[name="inls[preset]"]').val(key);
+			$('[name="lnf[preset]"]').val(key);
 			updatePreview();
 			return;
 		}
 		applyingPreset = true;
 		$.each(values, function (fieldKey, value) {
-			var $el = $form.find('[name="inls[' + fieldKey + ']"]').first();
+			var $el = $form.find('[name="lnf[' + fieldKey + ']"]').first();
 			if (!$el.length) {
 				return;
 			}
 			if ($el.is(':checkbox')) {
 				$el.prop('checked', value === 1 || value === true);
-			} else if ($el.hasClass('inls-color') && $.fn.wpColorPicker) {
+			} else if ($el.hasClass('lnf-color') && $.fn.wpColorPicker) {
 				$el.wpColorPicker('color', value);
 			} else {
 				$el.val(value);
 			}
 		});
-		$('[name="inls[preset]"]').val(key);
-		$('.inls-preset').removeClass('is-active');
+		$('[name="lnf[preset]"]').val(key);
+		$('.lnf-preset').removeClass('is-active');
 		$(this).addClass('is-active');
 		applyingPreset = false;
 
@@ -364,7 +364,7 @@
 
 	/* Sélecteur de couleur natif (iris) */
 	if ($.fn.wpColorPicker) {
-		$('.inls-color').wpColorPicker({
+		$('.lnf-color').wpColorPicker({
 			change: function () {
 				schedulePreview();
 			},
@@ -376,9 +376,9 @@
 
 	/* Médiathèque */
 	var mediaFrame = null;
-	$(document).on('click', '.inls-media-pick', function (e) {
+	$(document).on('click', '.lnf-media-pick', function (e) {
 		e.preventDefault();
-		var $wrap = $(this).closest('.inls-media');
+		var $wrap = $(this).closest('.lnf-media');
 		if (!mediaFrame) {
 			mediaFrame = window.wp.media({
 				title: 'Choisir une image',
@@ -390,42 +390,42 @@
 			var attachment = mediaFrame.state().get('selection').first().toJSON();
 			var url = (attachment.sizes && attachment.sizes.full) ? attachment.sizes.full.url : attachment.url;
 			$wrap.find('input[type=url]').val(url).trigger('change');
-			$wrap.find('.inls-media-thumb').attr('src', url).removeAttr('hidden');
+			$wrap.find('.lnf-media-thumb').attr('src', url).removeAttr('hidden');
 		});
 		mediaFrame.open();
 	});
 
-	$(document).on('click', '.inls-media-clear', function (e) {
+	$(document).on('click', '.lnf-media-clear', function (e) {
 		e.preventDefault();
-		var $wrap = $(this).closest('.inls-media');
+		var $wrap = $(this).closest('.lnf-media');
 		$wrap.find('input[type=url]').val('').trigger('change');
-		$wrap.find('.inls-media-thumb').attr('src', '').attr('hidden', '');
+		$wrap.find('.lnf-media-thumb').attr('src', '').attr('hidden', '');
 	});
 
 	/* Aperçu : appareils, rechargement */
-	$(document).on('click', '.inls-device', function () {
-		$('.inls-device').removeClass('is-active');
+	$(document).on('click', '.lnf-device', function () {
+		$('.lnf-device').removeClass('is-active');
 		$(this).addClass('is-active');
 		var width = parseInt($(this).data('width'), 10);
 		$frame.css('width', width > 0 ? width + 'px' : '100%');
 	});
 
-	$(document).on('click', '.inls-refresh', function () {
+	$(document).on('click', '.lnf-refresh', function () {
 		$frame[0].src = $frame[0].src;
 	});
 
 	/* Aperçu plein écran */
 	function exitFullscreenPreview() {
-		$('.inls-preview').removeClass('is-fullscreen');
-		$('.inls-expand').removeClass('is-active');
-		$('body').removeClass('inls-preview-lock');
+		$('.lnf-preview').removeClass('is-fullscreen');
+		$('.lnf-expand').removeClass('is-active');
+		$('body').removeClass('lnf-preview-lock');
 	}
 
-	$(document).on('click', '.inls-expand', function () {
-		var $preview = $('.inls-preview');
+	$(document).on('click', '.lnf-expand', function () {
+		var $preview = $('.lnf-preview');
 		var fullscreen = $preview.toggleClass('is-fullscreen').hasClass('is-fullscreen');
 		$(this).toggleClass('is-active', fullscreen);
-		$('body').toggleClass('inls-preview-lock', fullscreen);
+		$('body').toggleClass('lnf-preview-lock', fullscreen);
 	});
 
 	$(document).on('keydown', function (e) {
@@ -435,18 +435,18 @@
 	});
 
 	/* Thèmes d'interface du formulaire */
-	$(document).on('click', '.inls-theme-card', function () {
-		$('.inls-theme-card').removeClass('is-active');
+	$(document).on('click', '.lnf-theme-card', function () {
+		$('.lnf-theme-card').removeClass('is-active');
 		$(this).addClass('is-active');
-		$('[name="inls[form_theme]"]').val($(this).data('theme'));
+		$('[name="lnf[form_theme]"]').val($(this).data('theme'));
 		schedulePreview();
 	});
 
 	/* Pack recommandé : active les 5 protections d'un coup */
-	$(document).on('click', '.inls-recommended', function () {
+	$(document).on('click', '.lnf-recommended', function () {
 		var $btn = $(this);
 		$btn.prop('disabled', true).text('…');
-		$.post(cfg.ajaxUrl, { action: 'inls_enable_recommended', nonce: cfg.nonce })
+		$.post(cfg.ajaxUrl, { action: 'lnf_enable_recommended', nonce: cfg.nonce })
 			.done(function (res) {
 				if (res && res.success) {
 					window.location.reload();
@@ -461,17 +461,17 @@
 
 	/* Paiement intégré : modale de checkout */
 	function closeCheckoutModal() {
-		var $modal = $('#inls-checkout-modal');
+		var $modal = $('#lnf-checkout-modal');
 		if ($modal.length) {
 			$modal.attr('hidden', '');
 			$modal.find('iframe').attr('src', 'about:blank');
 		}
 	}
 
-	$(document).on('click', '.inls-open-checkout', function (e) {
+	$(document).on('click', '.lnf-open-checkout', function (e) {
 		e.preventDefault();
 		var url = $(this).data('checkout');
-		var $modal = $('#inls-checkout-modal');
+		var $modal = $('#lnf-checkout-modal');
 		if (!url || !$modal.length) {
 			return;
 		}
@@ -479,7 +479,7 @@
 		$modal.removeAttr('hidden');
 	});
 
-	$(document).on('click', '#inls-checkout-modal [data-close]', closeCheckoutModal);
+	$(document).on('click', '#lnf-checkout-modal [data-close]', closeCheckoutModal);
 
 	$(document).on('keydown', function (e) {
 		if (e.key === 'Escape') {
@@ -488,10 +488,10 @@
 	});
 
 	/* Activation / désactivation de la licence Pro */
-	$(document).on('click', '.inls-activate-license', function () {
+	$(document).on('click', '.lnf-activate-license', function () {
 		var $btn = $(this);
-		var $key = $('#inls-license-key');
-		var $out = $('.inls-license-status');
+		var $key = $('#lnf-license-key');
+		var $out = $('.lnf-license-status');
 		var key = $.trim($key.val());
 		if (!key) {
 			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
@@ -499,7 +499,7 @@
 		}
 		$btn.prop('disabled', true);
 		$out.text('…').removeClass('is-err is-ok');
-		$.post(cfg.ajaxUrl, { action: 'inls_activate_license', nonce: cfg.nonce, license_key: key })
+		$.post(cfg.ajaxUrl, { action: 'lnf_activate_license', nonce: cfg.nonce, license_key: key })
 			.done(function (res) {
 				if (res && res.success) {
 					$out.text('✓ ' + res.data.message).addClass('is-ok').removeClass('is-err');
@@ -516,11 +516,11 @@
 			});
 	});
 
-	$(document).on('click', '.inls-deactivate-license', function () {
+	$(document).on('click', '.lnf-deactivate-license', function () {
 		if (!window.confirm('Désactiver la licence sur ce site ?')) {
 			return;
 		}
-		$.post(cfg.ajaxUrl, { action: 'inls_deactivate_license', nonce: cfg.nonce })
+		$.post(cfg.ajaxUrl, { action: 'lnf_deactivate_license', nonce: cfg.nonce })
 			.done(function (res) {
 				if (res && res.success) {
 					window.location.reload();
@@ -529,90 +529,90 @@
 	});
 
 	/* Vider le journal de sécurité */
-	$(document).on('click', '.inls-purge-log', function () {
+	$(document).on('click', '.lnf-purge-log', function () {
 		var $btn = $(this);
-		var $out = $btn.closest('.inls-journal').find('.inls-purge-status');
+		var $out = $btn.closest('.lnf-journal').find('.lnf-purge-status');
 		if (!window.confirm('Vider le journal de sécurité ?')) {
 			return;
 		}
 		$btn.prop('disabled', true);
-		$.post(cfg.ajaxUrl, { action: 'inls_purge_log', nonce: cfg.nonce })
+		$.post(cfg.ajaxUrl, { action: 'lnf_purge_log', nonce: cfg.nonce })
 			.always(function () {
 				$btn.prop('disabled', false);
 			})
 			.done(function (res) {
 				if (res && res.success) {
-					var $journal = $('.inls-journal');
-					$journal.find('table, p.inls-desc, .inls-purge-log').remove();
-					$journal.append('<p class="inls-desc">Aucun événement enregistré pour le moment.</p>');
+					var $journal = $('.lnf-journal');
+					$journal.find('table, p.lnf-desc, .lnf-purge-log').remove();
+					$journal.append('<p class="lnf-desc">Aucun événement enregistré pour le moment.</p>');
 					$out.text('✓ Journal vidé');
 				}
 			});
 	});
 
 	/* Vérifier les mises à jour */
-	$(document).on('click', '.inls-check-updates', function () {
+	$(document).on('click', '.lnf-check-updates', function () {
 		var $btn = $(this);
 		if ($btn.prop('disabled')) {
 			return;
 		}
-		var $out = $btn.closest('.inls-card, .inls-about-card, .inls-installer').find('.inls-update-status').first();
+		var $out = $btn.closest('.lnf-card, .lnf-about-card, .lnf-installer').find('.lnf-update-status').first();
 		$btn.prop('disabled', true).addClass('is-loading');
-		$out.html('<span class="inls-update-msg">…</span>');
+		$out.html('<span class="lnf-update-msg">…</span>');
 
-		$.post(cfg.ajaxUrl, { action: 'inls_check_updates', nonce: cfg.nonce })
+		$.post(cfg.ajaxUrl, { action: 'lnf_check_updates', nonce: cfg.nonce })
 			.always(function () {
 				$btn.prop('disabled', false).removeClass('is-loading');
 			})
 			.done(function (res) {
 				if (!res || !res.success) {
 					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
-					$out.html('<span class="inls-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
+					$out.html('<span class="lnf-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
 					return;
 				}
 				if (res.data.status === 'up_to_date') {
-					$out.html('<span class="inls-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
+					$out.html('<span class="lnf-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
 				} else {
-					$out.html('<span class="inls-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="inls-update-link" href="' + res.data.url + '">Mettre à jour</a>');
+					$out.html('<span class="lnf-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="lnf-update-link" href="' + res.data.url + '">Mettre à jour</a>');
 				}
 			})
 			.fail(function () {
-				$out.html('<span class="inls-update-msg is-err">Erreur réseau</span>');
+				$out.html('<span class="lnf-update-msg is-err">Erreur réseau</span>');
 			});
 	});
 
 	/* Installateur : navigation entre les étapes */
 	var wizardStep = 1;
-	var wizardTotal = $('.inls-wstep').length || 3;
+	var wizardTotal = $('.lnf-wstep').length || 3;
 
 	function wizardShow(n) {
 		wizardStep = Math.max(1, Math.min(wizardTotal, n));
-		$('.inls-wstep').removeClass('is-active');
-		$('.inls-wstep[data-step="' + wizardStep + '"]').addClass('is-active');
-		$('.inls-inst-steps li').removeClass('is-active is-done');
-		$('.inls-inst-steps li').each(function () {
+		$('.lnf-wstep').removeClass('is-active');
+		$('.lnf-wstep[data-step="' + wizardStep + '"]').addClass('is-active');
+		$('.lnf-inst-steps li').removeClass('is-active is-done');
+		$('.lnf-inst-steps li').each(function () {
 			var dot = parseInt($(this).data('step-dot'), 10);
 			if (dot < wizardStep) $(this).addClass('is-done');
 			if (dot === wizardStep) $(this).addClass('is-active');
 		});
-		$('.inls-step-prev').toggle(wizardStep > 1);
-		$('.inls-step-next').toggle(wizardStep < wizardTotal);
-		$('.inls-step-finish').toggle(wizardStep === wizardTotal);
+		$('.lnf-step-prev').toggle(wizardStep > 1);
+		$('.lnf-step-next').toggle(wizardStep < wizardTotal);
+		$('.lnf-step-finish').toggle(wizardStep === wizardTotal);
 	}
 
-	$(document).on('click', '.inls-step-next', function () {
+	$(document).on('click', '.lnf-step-next', function () {
 		wizardShow(wizardStep + 1);
 	});
-	$(document).on('click', '.inls-step-prev', function () {
+	$(document).on('click', '.lnf-step-prev', function () {
 		wizardShow(wizardStep - 1);
 	});
 
-	if ($('.inls-installer').length) {
+	if ($('.lnf-installer').length) {
 		wizardShow(1);
 	}
 
 	/* Réinitialisation : confirmation */
-	$(document).on('click', '#inls-reset', function (e) {
+	$(document).on('click', '#lnf-reset', function (e) {
 		if (!window.confirm('Réinitialiser tous les réglages aux valeurs par défaut ?')) {
 			e.preventDefault();
 		}

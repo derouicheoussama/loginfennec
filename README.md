@@ -1,4 +1,4 @@
-# Infinity LoginShield – Login Customizer & Security
+# LoginFence Pro – Login Customizer & Security
 
 Plugin WordPress : personnalisation complète de la page de connexion avec aperçu en direct et protection contre les tentatives de mot de passe.
 
@@ -23,16 +23,16 @@ Plugin WordPress : personnalisation complète de la page de connexion avec aper�
 
 ## Installation
 
-1. Copiez le dossier `infinity-loginshield/` dans `wp-content/plugins/`.
+1. Copiez le dossier `loginfence/` dans `wp-content/plugins/`.
 2. Activez l'extension dans **Extensions**.
-3. Ouvrez le menu **Infinity LoginShield** (icône pinceau) et personnalisez — l'aperçu réagit en direct.
+3. Ouvrez le menu **LoginFence Pro** (icône pinceau) et personnalisez — l'aperçu réagit en direct.
 4. Cliquez sur **Enregistrer**.
 
 ## Structure du code
 
 ```
-infinity-loginshield/
-├── infinity-loginshield.php      # Bootstrap, constantes, hooks
+loginfence/
+├── loginfence.php      # Bootstrap, constantes, hooks
 ├── includes/
 │   ├── settings.php             # Défauts, accesseurs, assainissement
 │   ├── login-appearance.php     # CSS dynamique, logo, liens, social, copyright
@@ -50,43 +50,43 @@ infinity-loginshield/
 
 ## Avant de publier sur GitHub — 3 endroits à adapter
 
-Le dépôt est préconfiguré sur `derouicheoussama/infinity-loginshield`. Si vous publiez sous un autre compte, remplacez-le dans :
+Le dépôt est préconfiguré sur `derouicheoussama/loginfence`. Si vous publiez sous un autre compte, remplacez-le dans :
 
-1. `infinity-loginshield.php` — en-têtes `Plugin URI`, `Author URI`, `Update URI` et la constante `INFINITY_LOGINSHIELD_GITHUB_REPO`.
+1. `loginfence.php` — en-têtes `Plugin URI`, `Author URI`, `Update URI` et la constante `LOGINFENCE_GITHUB_REPO`.
 2. `includes/github-updater.php` — profil GitHub dans `plugin_info()`.
 3. `includes/admin.php` — liens de la page « À propos ».
 
 Le lien du bouton de don est personnalisable sans toucher au code :
 
 ```php
-add_filter( 'infinity_loginshield_donate_url', fn() => 'https://www.paypal.com/donate?business=votre-email' );
+add_filter( 'loginfence_donate_url', fn() => 'https://www.paypal.com/donate?business=votre-email' );
 ```
 
 ## Publier sur GitHub (active les mises à jour)
 
 ```bash
-cd infinity-loginshield
-git init && git add -A && git commit -m "Infinity LoginShield 1.0.0"
+cd loginfence
+git init && git add -A && git commit -m "LoginFence Pro 1.0.0"
 
 # Avec GitHub CLI :
-gh repo create infinity-loginshield --public --source=. --push
+gh repo create loginfence --public --source=. --push
 
 # Sans GitHub CLI : créez le dépôt vide sur github.com puis :
-git remote add origin https://github.com/VOTRE-COMPTE/infinity-loginshield.git
+git remote add origin https://github.com/VOTRE-COMPTE/loginfence.git
 git branch -M main && git push -u origin main
 
 # Publier une version (le zip est construit automatiquement par l'action) :
 git tag v1.0.0 && git push origin v1.0.0
 ```
 
-Le zip `infinity-loginshield.zip` est alors attaché à la release : c'est lui que le module de mise à jour télécharge sur tous vos sites.
+Le zip `loginfence.zip` est alors attaché à la release : c'est lui que le module de mise à jour télécharge sur tous vos sites.
 
 ## Publier sur WordPress.org — checklist complète
 
 Le plugin est préparé conformément aux [règles du répertoire officiel](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/) :
 
 - [x] `readme.txt` au format officiel (donate link, tags, Tested up to, FAQ, changelog, licence)
-- [x] Text domain `infinity-loginshield` + fichier `.pot` à jour dans `languages/`
+- [x] Text domain `loginfence` + fichier `.pot` à jour dans `languages/`
 - [x] Sécurité : nonces, capabilities, échappement des sorties, assainissement des entrées
 - [x] Données supprimées à la désinstallation (options + transients, multisite inclus)
 - [x] Pas d'en-tête `Update URI` : l'updater utilise GitHub automatiquement **puis bascule seul vers WordPress.org** dès que le plugin y est détecté (vérification toutes les 12 h) — aucune action requise après l'acceptation
@@ -95,22 +95,22 @@ Le plugin est préparé conformément aux [règles du répertoire officiel](http
 **Avant de soumettre, à votre charge :**
 
 1. Créez votre compte [WordPress.org](https://login.wordpress.org/register) et notez votre identifiant : remplacez `Contributors: derouicheoussama` dans `readme.txt` par votre pseudo exact.
-2. Mettez votre vraie URL PayPal dans `Donate link:` (readme.txt) et dans le filtre `infinity_loginshield_donate_url`.
+2. Mettez votre vraie URL PayPal dans `Donate link:` (readme.txt) et dans le filtre `loginfence_donate_url`.
 3. Capturez 4 à 6 **captures d'écran** réelles du dashboard et de la page de connexion personnalisée : PNG 1200×900 nommés `screenshot-1.png` … `screenshot-6.png`, à déposer dans le dossier `assets/` du dépôt SVN (pas dans le plugin).
 4. (Conseillé) Installez l'outil officiel [Plugin Check](https://wordpress.org/plugins/plugin-check/) sur un site de test et lancez-le contre le plugin : il détecte les derniers détails exigés par l'équipe de revue.
 
 **Soumission :**
 
 1. Uploadez le zip sur [wordpress.org/plugins/developers/add](https://wordpress.org/plugins/developers/add/).
-2. Après la revue (quelques jours), vous recevez un dépôt SVN : `https://plugins.svn.wordpress.org/infinity-loginshield/`.
+2. Après la revue (quelques jours), vous recevez un dépôt SVN : `https://plugins.svn.wordpress.org/loginfence/`.
 3. Publiez le code + les assets :
 
 ```bash
-svn co https://plugins.svn.wordpress.org/infinity-loginshield/ infinity-loginshield-svn
-cd infinity-loginshield-svn
+svn co https://plugins.svn.wordpress.org/loginfence/ loginfence-svn
+cd loginfence-svn
 # trunk = code du plugin (sans .git, tools, wporg-assets)
 # assets = wporg-assets/* + vos captures screenshot-N.png
-svn add . --force && svn ci -m "Infinity LoginShield 1.2.0"
+svn add . --force && svn ci -m "LoginFence Pro 1.2.0"
 # tag de la version :
 svn cp trunk tags/1.2.0 && svn ci -m "Tag 1.2.0"
 ```
@@ -119,7 +119,7 @@ Dès que la version existe sur WordPress.org, l'updater intégré s'efface autom
 
 ## Notes techniques
 
-- Text domain : `infinity-loginshield` (traductions dans `languages/`).
+- Text domain : `loginfence` (traductions dans `languages/`).
 - Les données stockées : une option de réglages, le journal des tentatives (purge auto à 24 h), un transient de cache GitHub (6 h). Tout est supprimé à la désinstallation.
 - La sécurité utilise `REMOTE_ADDR` ; derrière un reverse proxy, configurez votre serveur pour exposer la vraie IP.
 - Aucune dépendance externe, aucune requête de télémétrie.

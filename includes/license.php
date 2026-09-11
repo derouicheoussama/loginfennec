@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -16,8 +16,8 @@
  *
  * Pour activer le paiement intégré, définissez dans wp-config.php :
  *
- *   define( 'INFINITY_LOGINSHIELD_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…" );
- *   define( 'INFINITY_LOGINSHIELD_LICENSE_API', 'https://votre-serveur.com/api/licence' );
+ *   define( 'LOGINFENCE_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…" );
+ *   define( 'LOGINFENCE_LICENSE_API', 'https://votre-serveur.com/api/licence' );
  *
  * - CHECKOUT_URL : lien de paiement (Lemon Squeezy, Stripe Payment Link,
  *   Gumroad…) affiché dans une fenêtre intégrée au plugin.
@@ -25,29 +25,29 @@
  *   { license_key, site_url } en POST et attend { valid: true } en JSON.
  *   Sans endpoint, l'activation est acceptée localement (mode développement).
  *
- * @package InfinityLoginShield
+ * @package LoginFencePro
  *
  * @license GPL-2.0-or-later
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'INFINITY_LOGINSHIELD_CHECKOUT_URL' ) ) {
-	define( 'INFINITY_LOGINSHIELD_CHECKOUT_URL', '' );
+if ( ! defined( 'LOGINFENCE_CHECKOUT_URL' ) ) {
+	define( 'LOGINFENCE_CHECKOUT_URL', '' );
 }
 
-if ( ! defined( 'INFINITY_LOGINSHIELD_LICENSE_API' ) ) {
-	define( 'INFINITY_LOGINSHIELD_LICENSE_API', '' );
+if ( ! defined( 'LOGINFENCE_LICENSE_API' ) ) {
+	define( 'LOGINFENCE_LICENSE_API', '' );
 }
 
 /** Page « protection / signalement DMCA » (filtrable). */
-if ( ! defined( 'INFINITY_LOGINSHIELD_DMCA_URL' ) ) {
-	define( 'INFINITY_LOGINSHIELD_DMCA_URL', 'https://www.dmca.com/' );
+if ( ! defined( 'LOGINFENCE_DMCA_URL' ) ) {
+	define( 'LOGINFENCE_DMCA_URL', 'https://www.dmca.com/' );
 }
 
 /** URL du badge DMCA (optionnel, ex. badge DMCA.com Protection Pro). */
-if ( ! defined( 'INFINITY_LOGINSHIELD_DMCA_BADGE' ) ) {
-	define( 'INFINITY_LOGINSHIELD_DMCA_BADGE', '' );
+if ( ! defined( 'LOGINFENCE_DMCA_BADGE' ) ) {
+	define( 'LOGINFENCE_DMCA_BADGE', '' );
 }
 
 /**
@@ -55,8 +55,8 @@ if ( ! defined( 'INFINITY_LOGINSHIELD_DMCA_BADGE' ) ) {
  *
  * @return string
  */
-function inls_dmca_url() {
-	return apply_filters( 'infinity_loginshield_dmca_url', INFINITY_LOGINSHIELD_DMCA_URL );
+function lnf_dmca_url() {
+	return apply_filters( 'loginfence_dmca_url', LOGINFENCE_DMCA_URL );
 }
 
 /**
@@ -64,8 +64,8 @@ function inls_dmca_url() {
  *
  * @return string
  */
-function inls_dmca_badge() {
-	return apply_filters( 'infinity_loginshield_dmca_badge', INFINITY_LOGINSHIELD_DMCA_BADGE );
+function lnf_dmca_badge() {
+	return apply_filters( 'loginfence_dmca_badge', LOGINFENCE_DMCA_BADGE );
 }
 
 /**
@@ -73,8 +73,8 @@ function inls_dmca_badge() {
  *
  * @return string
  */
-function inls_checkout_url() {
-	return apply_filters( 'infinity_loginshield_checkout_url', INFINITY_LOGINSHIELD_CHECKOUT_URL );
+function lnf_checkout_url() {
+	return apply_filters( 'loginfence_checkout_url', LOGINFENCE_CHECKOUT_URL );
 }
 
 /**
@@ -82,8 +82,8 @@ function inls_checkout_url() {
  *
  * @return string
  */
-function inls_license_api() {
-	return apply_filters( 'infinity_loginshield_license_api', INFINITY_LOGINSHIELD_LICENSE_API );
+function lnf_license_api() {
+	return apply_filters( 'loginfence_license_api', LOGINFENCE_LICENSE_API );
 }
 
 /**
@@ -91,8 +91,8 @@ function inls_license_api() {
  *
  * @return array { key, email, status, checked }
  */
-function inls_license_get() {
-	$license = get_option( 'inls_license', array() );
+function lnf_license_get() {
+	$license = get_option( 'lnf_license', array() );
 	return wp_parse_args(
 		is_array( $license ) ? $license : array(),
 		array(
@@ -109,43 +109,43 @@ function inls_license_get() {
  *
  * @return bool
  */
-function inls_is_pro() {
-	$license = inls_license_get();
+function lnf_is_pro() {
+	$license = lnf_license_get();
 	return 'active' === $license['status'] && '' !== $license['key'];
 }
 
 /**
  * Gestion des requêtes AJAX de licence.
  */
-class Inls_License {
+class Lnf_License {
 
 	/**
 	 * Déclare les hooks.
 	 */
 	public static function init() {
-		add_action( 'wp_ajax_inls_activate_license', array( __CLASS__, 'ajax_activate' ) );
-		add_action( 'wp_ajax_inls_deactivate_license', array( __CLASS__, 'ajax_deactivate' ) );
+		add_action( 'wp_ajax_lnf_activate_license', array( __CLASS__, 'ajax_activate' ) );
+		add_action( 'wp_ajax_lnf_deactivate_license', array( __CLASS__, 'ajax_deactivate' ) );
 	}
 
 	/**
 	 * Active une clé de licence.
 	 */
 	public static function ajax_activate() {
-		check_ajax_referer( 'inls_admin', 'nonce' );
+		check_ajax_referer( 'lnf_admin', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
 
 		$key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 		if ( '' === $key || strlen( $key ) < 8 ) {
-			wp_send_json_error( array( 'message' => __( 'Veuillez saisir une clé de licence valide.', 'infinity-loginshield' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Veuillez saisir une clé de licence valide.', 'loginfence' ) ) );
 		}
 
-		$api = inls_license_api();
+		$api = lnf_license_api();
 		if ( '' === $api ) {
 			// Mode développement : aucun serveur de licences configuré, activation locale.
 			update_option(
-				'inls_license',
+				'lnf_license',
 				array(
 					'key'     => $key,
 					'email'   => '',
@@ -155,7 +155,7 @@ class Inls_License {
 				false
 			);
 			wp_send_json_success(
-				array( 'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'infinity-loginshield' ) )
+				array( 'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'loginfence' ) )
 			);
 		}
 
@@ -170,15 +170,15 @@ class Inls_License {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( array( 'message' => __( 'Serveur de licences injoignable. Réessayez dans un instant.', 'infinity-loginshield' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Serveur de licences injoignable. Réessayez dans un instant.', 'loginfence' ) ) );
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( empty( $data['valid'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'infinity-loginshield' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'loginfence' ) ) );
 		}
 
 		update_option(
-			'inls_license',
+			'lnf_license',
 			array(
 				'key'     => $key,
 				'email'   => isset( $data['email'] ) ? sanitize_email( (string) $data['email'] ) : '',
@@ -187,20 +187,20 @@ class Inls_License {
 			),
 			false
 		);
-		wp_send_json_success( array( 'message' => __( 'Pro activé. Merci pour votre soutien !', 'infinity-loginshield' ) ) );
+		wp_send_json_success( array( 'message' => __( 'Pro activé. Merci pour votre soutien !', 'loginfence' ) ) );
 	}
 
 	/**
 	 * Désactive la licence locale (et prévient le serveur si configuré).
 	 */
 	public static function ajax_deactivate() {
-		check_ajax_referer( 'inls_admin', 'nonce' );
+		check_ajax_referer( 'lnf_admin', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
 
-		$license = inls_license_get();
-		$api     = inls_license_api();
+		$license = lnf_license_get();
+		$api     = lnf_license_api();
 		if ( '' !== $api && '' !== $license['key'] ) {
 			wp_remote_post(
 				$api,
@@ -214,9 +214,9 @@ class Inls_License {
 				)
 			);
 		}
-		delete_option( 'inls_license' );
+		delete_option( 'lnf_license' );
 		wp_send_json_success();
 	}
 }
 
-Inls_License::init();
+Lnf_License::init();

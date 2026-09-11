@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -14,12 +14,12 @@
 /**
  * Réglages : valeurs par défaut, accès et assainissement.
  *
- * @package InfinityCustomizer
+ * @package LoginFencePro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-const INFINITY_LOGINSHIELD_OPTION = 'infinity_loginshield_settings';
+const LOGINFENCE_OPTION = 'loginfence_settings';
 
 // Disponible nativement depuis WP 5.4 ; fallback pour la compatibilité 5.2+.
 if ( ! function_exists( 'sanitize_hex_color' ) ) {
@@ -45,7 +45,7 @@ if ( ! function_exists( 'sanitize_hex_color' ) ) {
  *
  * @return array
  */
-function inls_get_defaults() {
+function lnf_get_defaults() {
 	return array(
 		// Style actif (informatif, appliqué par le dashboard).
 		'preset' => 'glass',
@@ -155,11 +155,11 @@ function inls_get_defaults() {
  *
  * @return array
  */
-function inls_settings() {
+function lnf_settings() {
 	static $cache = null;
 	if ( null === $cache ) {
-		$saved = get_option( INFINITY_LOGINSHIELD_OPTION, array() );
-		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), inls_get_defaults() );
+		$saved = get_option( LOGINFENCE_OPTION, array() );
+		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), lnf_get_defaults() );
 	}
 	return $cache;
 }
@@ -170,8 +170,8 @@ function inls_settings() {
  * @param string $key Clé.
  * @return mixed
  */
-function inls_get_option( $key ) {
-	$s = inls_settings();
+function lnf_get_option( $key ) {
+	$s = lnf_settings();
 	return isset( $s[ $key ] ) ? $s[ $key ] : null;
 }
 
@@ -180,7 +180,7 @@ function inls_get_option( $key ) {
  *
  * @return array type => array( champ, champ... ) — bornes éventuelles [min, max].
  */
-function inls_field_spec() {
+function lnf_field_spec() {
 	return array(
 		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim' ),
 		'bool'   => array(
@@ -228,15 +228,15 @@ function inls_field_spec() {
 /**
  * Assainit un tableau d'options entrant.
  *
- * @param array     $input    Données brutes (souvent $_POST['inls']).
+ * @param array     $input    Données brutes (souvent $_POST['lnf']).
  * @param array|null $base    Base de fusion ; null = enregistrement complet.
  * @return array Réglages assainis.
  */
-function inls_sanitize_settings( $input, $base = null ) {
-	$defaults = inls_get_defaults();
+function lnf_sanitize_settings( $input, $base = null ) {
+	$defaults = lnf_get_defaults();
 	$out      = ( null === $base ) ? $defaults : $base;
 	$input    = is_array( $input ) ? $input : array();
-	$spec     = inls_field_spec();
+	$spec     = lnf_field_spec();
 
 	foreach ( $spec['key'] as $key ) {
 		if ( null !== $base && ! array_key_exists( $key, $input ) ) {
@@ -304,7 +304,7 @@ function inls_sanitize_settings( $input, $base = null ) {
  * @param int    $opacity Opacité en pourcentage (0-100).
  * @return string
  */
-function inls_hex_to_rgba( $hex, $opacity = 100 ) {
+function lnf_hex_to_rgba( $hex, $opacity = 100 ) {
 	$hex = ltrim( (string) $hex, '#' );
 	if ( 3 === strlen( $hex ) ) {
 		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
@@ -325,7 +325,7 @@ function inls_hex_to_rgba( $hex, $opacity = 100 ) {
  * @param string $text Texte brut.
  * @return string
  */
-function inls_expand_copyright( $text ) {
+function lnf_expand_copyright( $text ) {
 	$replacements = array(
 		'{year}'     => gmdate( 'Y' ),
 		'{sitename}' => get_bloginfo( 'name' ),

@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Plugin   : LoginFence Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -16,18 +16,18 @@
  *
  * Cherche la dernière release du dépôt configuré et la propose dans
  * l'écran « Extensions » de WordPress. Le fichier zip doit idéalement
- * s'appeler infinity-loginshield.zip (voir .github/workflows/release.yml).
+ * s'appeler loginfence.zip (voir .github/workflows/release.yml).
  *
- * @package InfinityCustomizer
+ * @package LoginFencePro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class Inls_GitHub_Updater {
+class Lnf_GitHub_Updater {
 
-	const SLUG           = 'infinity-loginshield/infinity-loginshield.php';
-	const CACHE_KEY      = 'inls_gh_release';
-	const WPORG_CHECK_KEY = 'inls_wporg_check';
+	const SLUG           = 'loginfence/loginfence.php';
+	const CACHE_KEY      = 'lnf_gh_release';
+	const WPORG_CHECK_KEY = 'lnf_wporg_check';
 
 	/**
 	 * Dépôt GitHub « utilisateur/depot ».
@@ -41,11 +41,11 @@ class Inls_GitHub_Updater {
 	 * n'est pas hébergé sur WordPress.org (détection automatique, cache 12 h).
 	 */
 	public static function init() {
-		$source = apply_filters( 'infinity_loginshield_update_source', self::detect_source() );
+		$source = apply_filters( 'loginfence_update_source', self::detect_source() );
 		if ( 'github' !== $source ) {
 			return; // WordPress.org (ou forçage manuel) gère les mises à jour.
 		}
-		self::$repo = apply_filters( 'infinity_loginshield_github_repo', INFINITY_LOGINSHIELD_GITHUB_REPO );
+		self::$repo = apply_filters( 'loginfence_github_repo', LOGINFENCE_GITHUB_REPO );
 		if ( '' === trim( (string) self::$repo ) ) {
 			return;
 		}
@@ -73,7 +73,7 @@ class Inls_GitHub_Updater {
 			$info = plugins_api(
 				'plugin_information',
 				array(
-					'slug'   => 'infinity-loginshield',
+					'slug'   => 'loginfence',
 					'fields' => array(
 						'download_link'  => true,
 						'version'        => true,
@@ -134,14 +134,14 @@ class Inls_GitHub_Updater {
 				'timeout' => 10,
 				'headers' => array(
 					'Accept'     => 'application/vnd.github+json',
-					'User-Agent' => 'Infinity-LoginShield-Updater/' . INFINITY_LOGINSHIELD_VERSION,
+					'User-Agent' => 'LoginFence-Updater/' . LOGINFENCE_VERSION,
 				),
 			)
 		);
 
 		if ( is_wp_error( $results ) || 200 !== wp_remote_retrieve_response_code( $results ) ) {
 			// Nouvel essai dans 15 minutes en cas d'échec réseau ou de quota.
-			set_transient( self::CACHE_KEY, array( 'version' => INFINITY_LOGINSHIELD_VERSION ), 15 * MINUTE_IN_SECONDS );
+			set_transient( self::CACHE_KEY, array( 'version' => LOGINFENCE_VERSION ), 15 * MINUTE_IN_SECONDS );
 			return false;
 		}
 
@@ -158,13 +158,13 @@ class Inls_GitHub_Updater {
 			'download'  => '',
 		);
 
-		// Asset zip préféré : infinity-loginshield.zip (sinon le premier zip).
+		// Asset zip préféré : loginfence.zip (sinon le premier zip).
 		if ( ! empty( $data['assets'] ) && is_array( $data['assets'] ) ) {
 			foreach ( $data['assets'] as $asset ) {
 				$name = isset( $asset['name'] ) ? strtolower( (string) $asset['name'] ) : '';
 				$url2 = isset( $asset['browser_download_url'] ) ? (string) $asset['browser_download_url'] : '';
 				if ( $url2 && '.zip' === substr( $name, -4 ) ) {
-					if ( 'infinity-loginshield.zip' === $name ) {
+					if ( 'loginfence.zip' === $name ) {
 						$release['download'] = $url2;
 						break;
 					}
@@ -198,7 +198,7 @@ class Inls_GitHub_Updater {
 			return $transient;
 		}
 
-		if ( version_compare( INFINITY_LOGINSHIELD_VERSION, $release['version'], '<' ) ) {
+		if ( version_compare( LOGINFENCE_VERSION, $release['version'], '<' ) ) {
 			$transient->response[ self::SLUG ] = self::to_update_object( $release );
 		} else {
 			$transient->no_update[ self::SLUG ] = self::to_update_object( $release );
@@ -214,7 +214,7 @@ class Inls_GitHub_Updater {
 	 */
 	protected static function to_update_object( $release ) {
 		$obj           = new stdClass();
-		$obj->slug     = 'infinity-loginshield';
+		$obj->slug     = 'loginfence';
 		$obj->plugin   = self::SLUG;
 		$obj->new_version = $release['version'];
 		$obj->url      = $release['url'] ? $release['url'] : 'https://github.com/' . self::$repo;
@@ -233,7 +233,7 @@ class Inls_GitHub_Updater {
 	 * @return false|object
 	 */
 	public static function plugin_info( $result, $action, $args ) {
-		if ( 'plugin_information' !== $action || empty( $args->slug ) || 'infinity-loginshield' !== $args->slug ) {
+		if ( 'plugin_information' !== $action || empty( $args->slug ) || 'loginfence' !== $args->slug ) {
 			return $result;
 		}
 		$release = self::fetch_latest_release();
@@ -242,8 +242,8 @@ class Inls_GitHub_Updater {
 		}
 
 		$info             = new stdClass();
-		$info->name       = 'Infinity LoginShield – Login Customizer & Security';
-		$info->slug       = 'infinity-loginshield';
+		$info->name       = 'LoginFence Pro – Login Customizer & Security';
+		$info->slug       = 'loginfence';
 		$info->version    = $release['version'];
 		$info->author     = '<a href="https://github.com/derouicheoussama" target="_blank" rel="noopener">Derouiche Oussama</a>';
 		$info->homepage   = $release['url'] ? $release['url'] : 'https://github.com/' . self::$repo;
@@ -253,7 +253,7 @@ class Inls_GitHub_Updater {
 		$info->sections   = array(
 			'description' => '<p>' . sprintf(
 				/* translators: %s : nom du dépôt GitHub. */
-				esc_html__( 'Personnalisez votre page de connexion (logo, arrière-plan, flou, opacité, styles modernes, liens, réseaux sociaux, copyright) et protégez-la contre les tentatives de mot de passe. Mises à jour via le dépôt GitHub %s.', 'infinity-loginshield' ),
+				esc_html__( 'Personnalisez votre page de connexion (logo, arrière-plan, flou, opacité, styles modernes, liens, réseaux sociaux, copyright) et protégez-la contre les tentatives de mot de passe. Mises à jour via le dépôt GitHub %s.', 'loginfence' ),
 				'<strong>' . esc_html( self::$repo ) . '</strong>'
 			) . '</p>',
 			'changelog'   => '<pre>' . esc_html( $release['changelog'] ) . '</pre>',
@@ -263,7 +263,7 @@ class Inls_GitHub_Updater {
 
 	/**
 	 * Renomme le dossier extrait si l'archive ne s'appelle pas
-	 * « infinity-loginshield » (archives de source GitHub : repo-tag).
+	 * « loginfence » (archives de source GitHub : repo-tag).
 	 *
 	 * @param string     $source        Chemin source.
 	 * @param string     $remote_source Chemin distant.
@@ -276,14 +276,14 @@ class Inls_GitHub_Updater {
 			return $source;
 		}
 		$basename = basename( untrailingslashit( $source ) );
-		if ( 'infinity-loginshield' === $basename ) {
+		if ( 'loginfence' === $basename ) {
 			return $source;
 		}
 		// Ne s'applique qu'à nos propres paquets.
-		if ( 0 !== strpos( $basename, 'infinity-loginshield' ) ) {
+		if ( 0 !== strpos( $basename, 'loginfence' ) ) {
 			return $source;
 		}
-		$target = dirname( untrailingslashit( $source ) ) . '/infinity-loginshield';
+		$target = dirname( untrailingslashit( $source ) ) . '/loginfence';
 		if ( $wp_filesystem->move( $source, $target ) ) {
 			return $target;
 		}
@@ -299,7 +299,7 @@ class Inls_GitHub_Updater {
 	public static function update_notice( $data, $release ) {
 		if ( ! empty( $release->url ) ) {
 			echo ' <a href="' . esc_url( $release->url ) . '" target="_blank" rel="noopener">'
-				. esc_html__( 'Voir les notes de version sur GitHub', 'infinity-loginshield' )
+				. esc_html__( 'Voir les notes de version sur GitHub', 'loginfence' )
 				. '</a>.';
 		}
 	}

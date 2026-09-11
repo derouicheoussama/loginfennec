@@ -1,11 +1,11 @@
-=== Infinity LoginShield – Login Customizer & Security ===
+=== LoginFence Pro – Login Customizer & Security ===
 Contributors: derouicheoussama
 Donate link: https://www.paypal.com/donate
 Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.9.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Make the WordPress login page yours: logo, background (blur, opacity, gradients)
 
 == Description ==
 
-Infinity LoginShield redesigns your WordPress login page AND protects it, from one elegant dashboard with a live preview. No code needed — and unlike most login customizers, security is built in, not an afterthought.
+LoginFence Pro redesigns your WordPress login page AND protects it, from one elegant dashboard with a live preview. No code needed — and unlike most login customizers, security is built in, not an afterthought.
 
 <strong>🎨 Design &amp; Branding</strong>
 
@@ -64,9 +64,9 @@ Infinity LoginShield redesigns your WordPress login page AND protects it, from o
 
 == Installation ==
 
-1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `infinity-loginshield.zip`.
+1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `loginfence.zip`.
 2. Activate the plugin.
-3. Open the new **Infinity LoginShield** menu and start customizing — the live preview updates as you type.
+3. Open the new **LoginFence Pro** menu and start customizing — the live preview updates as you type.
 4. Click **Save** to apply your design to the real login page.
 
 == Frequently Asked Questions ==
@@ -82,7 +82,7 @@ The plugin checks the latest GitHub release of its repository every 6 hours and 
 = I published the plugin on WordPress.org, how do I switch updates? =
 
 Add this to your site (or a small companion plugin):
-`add_filter( 'infinity_loginshield_update_source', fn() => 'wordpress' );`
+`add_filter( 'loginfence_update_source', fn() => 'wordpress' );`
 
 = Can I reset everything? =
 
@@ -90,7 +90,7 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 
 = Can I buy Pro without leaving WordPress? =
 
-Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payment link (Lemon Squeezy, Stripe Payment Link, Gumroad…) and the checkout opens in an overlay inside the plugin. Add `INFINITY_LOGINSHIELD_LICENSE_API` to validate license keys against your own server.
+Yes. Define `LOGINFENCE_CHECKOUT_URL` in wp-config.php with your payment link (Lemon Squeezy, Stripe Payment Link, Gumroad…) and the checkout opens in an overlay inside the plugin. Add `LOGINFENCE_LICENSE_API` to validate license keys against your own server.
 
 == Screenshots ==
 
@@ -102,6 +102,11 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.0.0 =
+* Important: the plugin is now called **LoginFence Pro** — your settings are migrated automatically
+* Everything from 1.x is included: design customizer, security suite, journal, stats, in-plugin purchase and license activation
+
 
 = 1.9.2 =
 * Improved: developer social icons now use the original brand logos (Facebook, X, Instagram, LinkedIn, YouTube, TikTok, GitHub) with their official colors
@@ -122,7 +127,7 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 = 1.8.1 =
 * Fixed: official brand colors of social icons now always win over any other CSS
 * New: "Protection & DMCA" card on the About page — copyright, license terms and violation reporting
-* New: optional DMCA badge via INFINITY_LOGINSHIELD_DMCA_BADGE / INFINITY_LOGINSHIELD_DMCA_URL
+* New: optional DMCA badge via LOGINFENCE_DMCA_BADGE / LOGINFENCE_DMCA_URL
 
 = 1.8.0 =
 * New: "∞ Infinity Coder" signature in every source file (PHP, JS, CSS) and in the generated login-page HTML
@@ -132,7 +137,7 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 = 1.7.0 =
 * New: in-plugin purchase — the checkout opens in a secure overlay inside wp-admin (Lemon Squeezy, Stripe Payment Link, Gumroad…)
 * New: license key activation and deactivation from the Pro page, with optional license-server validation
-* New: one `inls_is_pro()` helper for add-ons and the upcoming Pro module
+* New: one `lnf_is_pro()` helper for add-ons and the upcoming Pro module
 
 = 1.6.1 =
 * Improved: Pro page redesign — benefits cards, comparison table grouped by category (Protection / Surveillance / Contrôle) with a highlighted Pro column
@@ -164,7 +169,7 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 * Dev: CI workflow with PHP syntax checks and PHPCS configuration
 
 = 1.3.0 =
-* Important: the plugin is now called **Infinity LoginShield**
+* Important: the plugin is now called **LoginFence Pro**
 * New: 7 form UI themes (glass, classic, outline, pill, elevated, accent, minimal) — independent from colors
 * New: 4 color styles (Neon, Sakura, Monochrome, Royal) — 10 presets total
 * New: custom CSS field for the login page

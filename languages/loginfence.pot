@@ -2,17 +2,20 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.9.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
+"Project-Id-Version: LoginFence Pro 2.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfence\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: infinity-loginshield\n"
+"X-Domain: loginfence\n"
 
 msgid "%d événements enregistrés (50 maximum)."
 msgstr ""
 
 msgid "0 = hauteur WordPress par défaut."
+msgstr ""
+
+msgid "10 styles & 7 thèmes"
 msgstr ""
 
 msgid "2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse."
@@ -22,9 +25,6 @@ msgid "2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail."
 msgstr ""
 
 msgid "2FA, reCAPTCHA, URL de connexion personnalisée…"
-msgstr ""
-
-msgid "6 styles modernes"
 msgstr ""
 
 msgid "6 styles modernes (effet verre, sombre…)"
@@ -162,16 +162,16 @@ msgstr ""
 msgid "Bienvenue"
 msgstr ""
 
-msgid "Bienvenue dans Infinity LoginShield"
+msgid "Bienvenue dans LoginFence Pro"
 msgstr ""
 
-msgid "Bienvenue dans Infinity LoginShield !"
+msgid "Bienvenue dans LoginFence Pro !"
 msgstr ""
 
-msgid "Bienvenue — Infinity LoginShield"
+msgid "Bienvenue — LoginFence Pro"
 msgstr ""
 
-msgid "Blocage automatique des tentatives de mot de passe."
+msgid "Blocage (minutes)"
 msgstr ""
 
 msgid "Blocage des tentatives de mot de passe"
@@ -204,16 +204,25 @@ msgstr ""
 msgid "Bureau"
 msgstr ""
 
+msgid "Bureau, tablette et mobile — chaque changement se voit instantanément."
+msgstr ""
+
 msgid "CSS brut pour la page de connexion"
 msgstr ""
 
 msgid "CSS personnalisé"
 msgstr ""
 
+msgid "Cache du plugin vidé : vérifications de mises à jour réinitialisées et assets rafraîchis."
+msgstr ""
+
 msgid "Carré"
 msgstr ""
 
 msgid "Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :"
+msgstr ""
+
+msgid "Ce que vous allez obtenir"
 msgstr ""
 
 msgid "Centrée"
@@ -255,7 +264,10 @@ msgstr ""
 msgid "Compatible multisite"
 msgstr ""
 
-msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez INFINITY_LOGINSHIELD_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et INFINITY_LOGINSHIELD_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
+msgid "Configuration guidée"
+msgstr ""
+
+msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENCE_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENCE_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
 msgstr ""
 
 msgid "Configurer"
@@ -333,6 +345,9 @@ msgstr ""
 msgid "Créateur du plugin, passionné par WordPress et les interfaces modernes."
 msgstr ""
 
+msgid "Création de Derouiche Oussama — sans publicité, sans collecte de données."
+msgstr ""
+
 msgid "C’est noté"
 msgstr ""
 
@@ -390,7 +405,7 @@ msgstr ""
 msgid "Effet verre, couleurs des champs, bouton et liens."
 msgstr ""
 
-msgid "Effet verre, sombre, coucher de soleil… un clic, tout est prêt."
+msgid "Effet verre, sombre, néon, sakura… combinés à 7 designs de formulaire."
 msgstr ""
 
 msgid "Effet à l’ouverture de la page"
@@ -417,6 +432,9 @@ msgstr ""
 msgid "Espacement intérieur"
 msgstr ""
 
+msgid "Et le design du formulaire"
+msgstr ""
+
 msgid "Export / import des réglages (JSON)"
 msgstr ""
 
@@ -436,6 +454,9 @@ msgid "Faire un don"
 msgstr ""
 
 msgid "Faire un don via PayPal"
+msgstr ""
+
+msgid "Ferme une porte d’entrée classique des attaques."
 msgstr ""
 
 msgid "Fermer"
@@ -510,10 +531,13 @@ msgstr ""
 msgid "Honeypot anti-robots et anti-énumération des auteurs"
 msgstr ""
 
-msgid "Icônes de réseaux sociaux"
+msgid "Honeypot anti-robots, blocage IP + identifiant et liste blanche de confiance."
 msgstr ""
 
-msgid "Icônes de réseaux sociaux et votre mention de copyright."
+msgid "Icônes aux couleurs officielles des marques et mention de copyright."
+msgstr ""
+
+msgid "Icônes de réseaux sociaux"
 msgstr ""
 
 msgid "Identifiant"
@@ -541,18 +565,6 @@ msgid "Importer"
 msgstr ""
 
 msgid "Impossible de joindre GitHub pour le moment. Réessayez plus tard."
-msgstr ""
-
-msgid "Infinity LoginShield"
-msgstr ""
-
-msgid "Infinity LoginShield Pro"
-msgstr ""
-
-msgid "Infinity LoginShield est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
-msgstr ""
-
-msgid "Infinity LoginShield est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
 msgstr ""
 
 msgid "Injecté après tous les réglages du plugin — les balises sont retirées automatiquement."
@@ -585,6 +597,9 @@ msgstr ""
 msgid "La page de connexion de WordPress, enfin à votre image."
 msgstr ""
 
+msgid "La silhouette du formulaire, indépendante des couleurs."
+msgstr ""
+
 msgid "Laisser un avis"
 msgstr ""
 
@@ -606,7 +621,7 @@ msgstr ""
 msgid "Le design général du formulaire, indépendant des couleurs."
 msgstr ""
 
-msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_loginshield_pro_url)."
+msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfence_pro_url)."
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
@@ -669,6 +684,15 @@ msgstr ""
 msgid "Liste blanche d’IP (jamais verrouillées)"
 msgstr ""
 
+msgid "LoginFence Pro"
+msgstr ""
+
+msgid "LoginFence Pro est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgstr ""
+
+msgid "LoginFence Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
+msgstr ""
+
 msgid "Logo"
 msgstr ""
 
@@ -676,6 +700,9 @@ msgid "Logo & arrière-plan"
 msgstr ""
 
 msgid "Logo WordPress par défaut"
+msgstr ""
+
+msgid "Logo image ou texte, image de fond avec flou, luminosité et voile coloré réglables."
 msgstr ""
 
 msgid "Logo personnalisé + lien du logo"
@@ -750,7 +777,7 @@ msgstr ""
 msgid "Ne pas remplir ce champ"
 msgstr ""
 
-msgid "Niveaux de sécurité avancés — Infinity LoginShield Pro"
+msgid "Niveaux de sécurité avancés — LoginFence Pro"
 msgstr ""
 
 msgid "Notes de version"
@@ -792,7 +819,7 @@ msgstr ""
 msgid "Paiement sécurisé"
 msgstr ""
 
-msgid "Paiement sécurisé — Infinity LoginShield Pro"
+msgid "Paiement sécurisé — LoginFence Pro"
 msgstr ""
 
 msgid "Passer en Pro"
@@ -861,7 +888,7 @@ msgstr ""
 msgid "Recharger l’aperçu"
 msgstr ""
 
-msgid "Recommandé : bloquez les attaques par force brute dès maintenant."
+msgid "Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité."
 msgstr ""
 
 msgid "Redirection après connexion"
@@ -933,6 +960,9 @@ msgstr ""
 msgid "Score de sécurité"
 msgstr ""
 
+msgid "Score de sécurité et journal des 50 derniers événements de connexion."
+msgstr ""
+
 msgid "Sections de personnalisation"
 msgstr ""
 
@@ -969,10 +999,13 @@ msgstr ""
 msgid "Soutenir le projet"
 msgstr ""
 
+msgid "Statistiques"
+msgstr ""
+
 msgid "Statistiques, score de sécurité et accès rapide à tous vos réglages."
 msgstr ""
 
-msgid "Style"
+msgid "Style & thème"
 msgstr ""
 
 msgid "Style actif"
@@ -1053,7 +1086,7 @@ msgstr ""
 msgid "Titre et sous-titre affichés au-dessus du formulaire."
 msgstr ""
 
-msgid "Transformez votre page de connexion en 3 étapes : choisissez un style moderne, activez la protection anti force brute, et c’est parti."
+msgid "Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite."
 msgstr ""
 
 msgid "Type de fond"
@@ -1065,7 +1098,16 @@ msgstr ""
 msgid "URL de connexion personnalisée"
 msgstr ""
 
+msgid "Un aperçu de tout ce que couvre LoginFence Pro."
+msgstr ""
+
 msgid "Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !"
+msgstr ""
+
+msgid "Un champ caché piège les bots avant même la connexion."
+msgstr ""
+
+msgid "Un style définit les couleurs d’ambiance. Vous pourrez tout affiner plus tard (flou, opacité, typographie…)."
 msgstr ""
 
 msgid "Une IP par ligne ou séparées par des virgules. Le joker * est accepté (ex. 192.168.1.*). Vos IP de confiance ne seront jamais bloquées — utile pour éviter de vous verrouiller vous-même."
@@ -1101,6 +1143,9 @@ msgstr ""
 msgid "Veuillez saisir une clé de licence valide."
 msgstr ""
 
+msgid "Vider le cache du plugin"
+msgstr ""
+
 msgid "Vider le journal"
 msgstr ""
 
@@ -1113,7 +1158,7 @@ msgstr ""
 msgid "Voir sur GitHub"
 msgstr ""
 
-msgid "Votre logo, votre image de fond, flou et voile réglables."
+msgid "Vos identifiants restent invisibles aux scanners."
 msgstr ""
 
 msgid "Votre page de connexion est prête — explorez les onglets pour la personnaliser."
@@ -1122,10 +1167,7 @@ msgstr ""
 msgid "Votre page de connexion est à jour."
 msgstr ""
 
-msgid "Vous aimez Infinity LoginShield ?"
-msgstr ""
-
-msgid "Vous pourrez tout affiner plus tard (couleurs, flou, opacité…)."
+msgid "Vous aimez LoginFence Pro ?"
 msgstr ""
 
 msgid "Vérifier les mises à jour"
@@ -1212,7 +1254,7 @@ msgstr ""
 msgid "À propos & don"
 msgstr ""
 
-msgid "À propos d’Infinity LoginShield"
+msgid "À propos d’LoginFence Pro"
 msgstr ""
 
 msgid "Échec"
