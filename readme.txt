@@ -1,8 +1,9 @@
 === Infinity Customizer – Login Customizer & Security ===
 Contributors: derouicheoussama
+Donate link: https://www.paypal.com/donate
 Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.2
 Stable tag: 1.2.0
 License: GPLv2 or later

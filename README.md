@@ -81,26 +81,41 @@ git tag v1.0.0 && git push origin v1.0.0
 
 Le zip `infinity-customizer.zip` est alors attaché à la release : c'est lui que le module de mise à jour télécharge sur tous vos sites.
 
-## Publier sur WordPress.org
+## Publier sur WordPress.org — checklist complète
 
-1. Créez un compte sur [wordpress.org](https://login.wordpress.org/register) puis [soumettez le plugin](https://wordpress.org/plugins/developers/add/) (uploadez le zip).
-2. Après validation, vous recevez un dépôt SVN : `https://plugins.svn.wordpress.org/infinity-customizer/`.
-3. Publiez :
+Le plugin est préparé conformément aux [règles du répertoire officiel](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/) :
+
+- [x] `readme.txt` au format officiel (donate link, tags, Tested up to, FAQ, changelog, licence)
+- [x] Text domain `infinity-customizer` + fichier `.pot` à jour dans `languages/`
+- [x] Sécurité : nonces, capabilities, échappement des sorties, assainissement des entrées
+- [x] Données supprimées à la désinstallation (options + transients, multisite inclus)
+- [x] Pas d'en-tête `Update URI` : l'updater utilise GitHub automatiquement **puis bascule seul vers WordPress.org** dès que le plugin y est détecté (vérification toutes les 12 h) — aucune action requise après l'acceptation
+- [x] Bannières et icônes générées dans `wporg-assets/` (banner-772x250, banner-1544x500, icon-128x128, icon-256x256)
+
+**Avant de soumettre, à votre charge :**
+
+1. Créez votre compte [WordPress.org](https://login.wordpress.org/register) et notez votre identifiant : remplacez `Contributors: derouicheoussama` dans `readme.txt` par votre pseudo exact.
+2. Mettez votre vraie URL PayPal dans `Donate link:` (readme.txt) et dans le filtre `infinity_customizer_donate_url`.
+3. Capturez 4 à 6 **captures d'écran** réelles du dashboard et de la page de connexion personnalisée : PNG 1200×900 nommés `screenshot-1.png` … `screenshot-6.png`, à déposer dans le dossier `assets/` du dépôt SVN (pas dans le plugin).
+4. (Conseillé) Installez l'outil officiel [Plugin Check](https://wordpress.org/plugins/plugin-check/) sur un site de test et lancez-le contre le plugin : il détecte les derniers détails exigés par l'équipe de revue.
+
+**Soumission :**
+
+1. Uploadez le zip sur [wordpress.org/plugins/developers/add](https://wordpress.org/plugins/developers/add/).
+2. Après la revue (quelques jours), vous recevez un dépôt SVN : `https://plugins.svn.wordpress.org/infinity-customizer/`.
+3. Publiez le code + les assets :
 
 ```bash
 svn co https://plugins.svn.wordpress.org/infinity-customizer/ infinity-customizer-svn
-# copiez trunk/ (code), assets/ (bannières + captures d'écran 1280x900),
-# tags/1.0.0/ (copie du code de la version)
-svn add . --force && svn ci -m "Infinity Customizer 1.0.0"
+cd infinity-customizer-svn
+# trunk = code du plugin (sans .git, tools, wporg-assets)
+# assets = wporg-assets/* + vos captures screenshot-N.png
+svn add . --force && svn ci -m "Infinity Customizer 1.2.0"
+# tag de la version :
+svn cp trunk tags/1.2.0 && svn ci -m "Tag 1.2.0"
 ```
 
-4. Une fois publié sur WordPress.org, basculez les mises à jour vers le référentiel officiel :
-
-```php
-add_filter( 'infinity_customizer_update_source', fn() => 'wordpress' );
-```
-
-(ou supprimez l'en-tête `Update URI` du fichier principal).
+Dès que la version existe sur WordPress.org, l'updater intégré s'efface automatiquement : le bouton « Installer » de `wp-admin/plugin-install.php` et les mises à jour viennent du référentiel officiel, sans conflit avec GitHub.
 
 ## Notes techniques
 

@@ -13,8 +13,9 @@ defined( 'ABSPATH' ) || exit;
 
 class Infcl_GitHub_Updater {
 
-	const SLUG      = 'infinity-customizer/infinity-customizer.php';
-	const CACHE_KEY = 'infcl_gh_release';
+	const SLUG           = 'infinity-customizer/infinity-customizer.php';
+	const CACHE_KEY      = 'infcl_gh_release';
+	const WPORG_CHECK_KEY = 'infcl_wporg_check';
 
 	/**
 	 * Dépôt GitHub « utilisateur/depot ».
@@ -24,12 +25,13 @@ class Infcl_GitHub_Updater {
 	protected static $repo = '';
 
 	/**
-	 * Déclare les hooks de mise à jour (source GitHub uniquement).
+	 * Déclare les hooks de mise à jour. Source : GitHub tant que le plugin
+	 * n'est pas hébergé sur WordPress.org (détection automatique, cache 12 h).
 	 */
 	public static function init() {
-		$source = apply_filters( 'infinity_customizer_update_source', 'github' );
+		$source = apply_filters( 'infinity_customizer_update_source', self::detect_source() );
 		if ( 'github' !== $source ) {
-			return; // Laisser WordPress.org gérer les mises à jour.
+			return; // WordPress.org (ou forçage manuel) gère les mises à jour.
 		}
 		self::$repo = apply_filters( 'infinity_customizer_github_repo', INFINITY_CUSTOMIZER_GITHUB_REPO );
 		if ( '' === trim( (string) self::$repo ) ) {
@@ -40,6 +42,61 @@ class Infcl_GitHub_Updater {
 		add_filter( 'plugins_api', array( __CLASS__, 'plugin_info' ), 20, 3 );
 		add_filter( 'upgrader_source_selection', array( __CLASS__, 'fix_source_folder' ), 10, 3 );
 		add_action( 'in_plugin_update_message-' . self::SLUG, array( __CLASS__, 'update_notice' ), 10, 2 );
+	}
+
+	/**
+	 * Détecte si le plugin est hébergé sur WordPress.org : si oui, le
+	 * référentiel officiel doit servir les mises à jour (exigence du répertoire).
+	 *
+	 * @return string 'github' ou 'wordpress'.
+	 */
+	protected static function detect_source() {
+		$cached = get_transient( self::WPORG_CHECK_KEY );
+		if ( is_string( $cached ) && '' !== $cached ) {
+			return $cached;
+		}
+
+		$on_wporg = false;
+		if ( function_exists( 'plugins_api' ) ) {
+			$info = plugins_api(
+				'plugin_information',
+				array(
+					'slug'   => 'infinity-customizer',
+					'fields' => array(
+						'download_link'  => true,
+						'version'        => true,
+						'sections'       => false,
+						'description'    => false,
+						'screenshots'    => false,
+						'changelog'      => false,
+						'tags'           => false,
+						'banners'        => false,
+						'icons'          => false,
+						'rating'         => false,
+						'ratings'        => false,
+						'num_ratings'    => false,
+						'contributors'   => false,
+						'author'         => false,
+						'homepage'       => false,
+						'added'          => false,
+						'last_updated'   => false,
+						'active_installs' => false,
+						'donate_link'    => false,
+						'requires'       => false,
+						'tested'         => false,
+						'short_description' => false,
+					),
+				)
+			);
+			if ( ! is_wp_error( $info ) && ! empty( $info->download_link )
+				&& false !== strpos( (string) $info->download_link, 'downloads.wordpress.org' ) ) {
+				$on_wporg = true;
+			}
+		}
+
+		$source = $on_wporg ? 'wordpress' : 'github';
+		set_transient( self::WPORG_CHECK_KEY, $source, 12 * HOUR_IN_SECONDS );
+		return $source;
 	}
 
 	/**

@@ -9,6 +9,25 @@ defined( 'ABSPATH' ) || exit;
 
 const INFINITY_CUSTOMIZER_OPTION = 'infinity_customizer_settings';
 
+// Disponible nativement depuis WP 5.4 ; fallback pour la compatibilité 5.2+.
+if ( ! function_exists( 'sanitize_hex_color' ) ) {
+	/**
+	 * Assainit une couleur hexadécimale.
+	 *
+	 * @param string $color Couleur.
+	 * @return string|null
+	 */
+	function sanitize_hex_color( $color ) {
+		if ( '' === $color ) {
+			return '';
+		}
+		if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+			return $color;
+		}
+		return null;
+	}
+}
+
 /**
  * Valeurs par défaut (correspondent au preset « Effet verre »).
  *

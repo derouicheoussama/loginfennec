@@ -6,13 +6,17 @@
  * Version:           1.2.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
+ * Tested up to:      7.1
  * Author:            Derouiche Oussama
  * Author URI:        https://github.com/derouiche-oussama
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       infinity-customizer
  * Domain Path:       /languages
- * Update URI:        https://github.com/derouiche-oussama/infinity-customizer
+ *
+ * Pas d'en-tête « Update URI » volontairement : une fois le plugin accepté
+ * sur WordPress.org, c'est le référentiel officiel qui sert les mises à jour.
+ * En attendant, l'updater intégré utilise GitHub (voir includes/github-updater.php).
  *
  * @package InfinityCustomizer
  */
@@ -25,11 +29,10 @@ define( 'INFINITY_CUSTOMIZER_DIR', plugin_dir_path( __FILE__ ) );
 define( 'INFINITY_CUSTOMIZER_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Dépôt GitHub utilisé pour les mises à jour automatiques.
- * À adapter si vous publiez sous un autre compte : "utilisateur/depot".
- * Une fois le plugin accepté sur WordPress.org, vous pouvez basculer
- * les mises à jour vers le référentiel officiel avec :
- * add_filter( 'infinity_customizer_update_source', fn() => 'wordpress' );
+ * Dépôt GitHub utilisé pour les mises à jour automatiques tant que le plugin
+ * n'est pas hébergé sur WordPress.org. L'updater bascule automatiquement vers
+ * le référentiel officiel dès que le plugin y est détecté. Forçage manuel :
+ * add_filter( 'infinity_customizer_update_source', function () { return 'github'; } );
  */
 if ( ! defined( 'INFINITY_CUSTOMIZER_GITHUB_REPO' ) ) {
 	define( 'INFINITY_CUSTOMIZER_GITHUB_REPO', 'derouiche-oussama/infinity-customizer' );
