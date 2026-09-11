@@ -465,6 +465,79 @@
 			var url = $(this).data('url-' + currentBilling);
 			if (url) { $(this).attr('data-checkout', url); }
 		});
+		updatePaySummary();
+	});
+
+	/* Packs : choix du pack → tunnel de paiement */
+	var selectedPack = null;
+
+	function fmtDA(n) {
+		return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+	}
+	function payAmountDA() {
+		return (cfg.prices && cfg.prices[selectedPack]) ? cfg.prices[selectedPack][currentBilling] : 0;
+	}
+	function payLabel() {
+		return (cfg.planLabels && cfg.planLabels[selectedPack]) ? cfg.planLabels[selectedPack] : 'Pro';
+	}
+	function payBillingLabel() {
+		return currentBilling === 'lifetime' ? 'À vie' : 'Annuelle';
+	}
+	function updatePaySummary() {
+		if (!selectedPack) {
+			return;
+		}
+		var amount = payAmountDA();
+		$('#lnf-pay-pack-label').text(payLabel());
+		$('#lnf-pay-billing-label').text(payBillingLabel());
+		$('#lnf-pay-amount').text(fmtDA(amount) + ' DA');
+		$('#lnf-ccp-amount').text(fmtDA(amount) + ' DA');
+		var usd = Math.round(amount * (parseFloat(cfg.paypalRate) || 0) * 100) / 100;
+		$('#lnf-paypal-amount').text(usd + ' ' + cfg.paypalCurrency);
+		if (cfg.paypalMe) {
+			$('#lnf-paypal-link').attr('href', 'https://www.paypal.me/' + cfg.paypalMe + '/' + usd + cfg.paypalCurrency);
+		}
+		var cardUrl = cfg.checkoutUrl + (cfg.checkoutUrl.indexOf('?') > -1 ? '&' : '?') + 'pack=' + selectedPack + '&billing=' + currentBilling + '&site=' + encodeURIComponent(cfg.siteUrl || '');
+		$('#lnf-card-open').attr('data-checkout', cardUrl);
+		var proof = 'Bonjour,\n\nJe viens de payer ' + fmtDA(amount) + ' DA pour ' + payLabel() + ' (' + payBillingLabel() + ') sur le site ' + (cfg.siteUrl || '') + '.\n\nVoici ma capture de reçu BaridiMob/CCP :\n';
+		$('.lnf-proof-mailto').attr('href', 'mailto:' + (cfg.contactEmail || '') + '?subject=' + encodeURIComponent('Preuve de paiement LoginFennec Pro — ' + payLabel()) + '&body=' + encodeURIComponent(proof));
+	}
+
+	$(document).on('click', '.lnf-choose-pack', function () {
+		selectedPack = $(this).data('pack');
+		$('.lnf-pack').removeClass('is-selected');
+		$(this).closest('.lnf-pack').addClass('is-selected');
+		$('#lnf-license-pack').val(selectedPack);
+		updatePaySummary();
+		$('#lnf-pay').removeAttr('hidden');
+		if ($('#lnf-pay')[0].scrollIntoView) {
+			$('#lnf-pay')[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	});
+
+	$(document).on('click', '.lnf-pay-tile', function () {
+		$('.lnf-pay-tile').removeClass('is-active');
+		$(this).addClass('is-active');
+		$('.lnf-pay-panel').attr('hidden', '');
+		$('.lnf-pay-panel[data-panel="' + $(this).data('method') + '"]').removeAttr('hidden');
+	});
+
+	$(document).on('click', '.lnf-copy', function () {
+		var text = $.trim($($(this).data('copy')).text());
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(text);
+		}
+		var $btn = $(this);
+		$btn.text('✓');
+		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
+	});
+
+	$(document).on('click', '.lnf-goto-activate', function () {
+		var el = $('#lnf-license-key')[0];
+		if (el && el.scrollIntoView) {
+			el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+		$('#lnf-license-key').trigger('focus');
 	});
 
 	/* Activer une licence (avec pack et type) */

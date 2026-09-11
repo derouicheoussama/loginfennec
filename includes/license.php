@@ -54,6 +54,36 @@ if ( ! defined( 'LOGINFENNEC_DMCA_BADGE' ) ) {
 	define( 'LOGINFENNEC_DMCA_BADGE', '' );
 }
 
+/** Pseudo PayPal.me (sans https) — ex. 'derouicheoussama'. Vide = PayPal masqué. */
+if ( ! defined( 'LOGINFENNEC_PAYPAL_ME' ) ) {
+	define( 'LOGINFENNEC_PAYPAL_ME', '' );
+}
+
+/** Devise PayPal (USD, EUR…). */
+if ( ! defined( 'LOGINFENNEC_PAYPAL_CURRENCY' ) ) {
+	define( 'LOGINFENNEC_PAYPAL_CURRENCY', 'USD' );
+}
+
+/** Taux de conversion DA → devise PayPal (ex. 0.0075 pour ≈135 DA/USD). */
+if ( ! defined( 'LOGINFENNEC_PAYPAL_RATE' ) ) {
+	define( 'LOGINFENNEC_PAYPAL_RATE', '0.008' );
+}
+
+/** Compte CCP complet avec clé — ex. '0021456789 clé 45'. Vide = CCP masqué. */
+if ( ! defined( 'LOGINFENNEC_CCP_RIP' ) ) {
+	define( 'LOGINFENNEC_CCP_RIP', '' );
+}
+
+/** Nom du titulaire du compte CCP. */
+if ( ! defined( 'LOGINFENNEC_CCP_NAME' ) ) {
+	define( 'LOGINFENNEC_CCP_NAME', '' );
+}
+
+/** E-mail de contact pour les preuves de paiement (vide = e-mail admin du site). */
+if ( ! defined( 'LOGINFENNEC_CONTACT_EMAIL' ) ) {
+	define( 'LOGINFENNEC_CONTACT_EMAIL', '' );
+}
+
 /**
  * Lien de signalement DMCA (filtrable).
  *
@@ -70,6 +100,62 @@ function lnf_dmca_url() {
  */
 function lnf_dmca_badge() {
 	return apply_filters( 'loginfennec_dmca_badge', LOGINFENNEC_DMCA_BADGE );
+}
+
+/**
+ * Pseudo PayPal.me (filtrable).
+ *
+ * @return string
+ */
+function lnf_paypal_me() {
+	return apply_filters( 'loginfennec_paypal_me', LOGINFENNEC_PAYPAL_ME );
+}
+
+/**
+ * Devise PayPal (filtrable).
+ *
+ * @return string
+ */
+function lnf_paypal_currency() {
+	return apply_filters( 'loginfennec_paypal_currency', LOGINFENNEC_PAYPAL_CURRENCY );
+}
+
+/**
+ * Taux DA → devise PayPal (filtrable).
+ *
+ * @return float
+ */
+function lnf_paypal_rate() {
+	return (float) apply_filters( 'loginfennec_paypal_rate', (float) LOGINFENNEC_PAYPAL_RATE );
+}
+
+/**
+ * Compte CCP complet (filtrable).
+ *
+ * @return string
+ */
+function lnf_ccp_rip() {
+	return apply_filters( 'loginfennec_ccp_rip', LOGINFENNEC_CCP_RIP );
+}
+
+/**
+ * Titulaire du compte CCP (filtrable).
+ *
+ * @return string
+ */
+function lnf_ccp_name() {
+	return apply_filters( 'loginfennec_ccp_name', LOGINFENNEC_CCP_NAME );
+}
+
+/**
+ * E-mail de contact pour les preuves de paiement (filtrable,
+ * e-mail admin du site par défaut).
+ *
+ * @return string
+ */
+function lnf_contact_email() {
+	$default = get_option( 'admin_email' );
+	return apply_filters( 'loginfennec_contact_email', $default ? $default : LOGINFENNEC_CONTACT_EMAIL );
 }
 
 /**

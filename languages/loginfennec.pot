@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LoginFennec Pro 2.1.0\n"
+"Project-Id-Version: LoginFennec Pro 2.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfennec\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,22 @@ msgstr ""
 msgid "2FA, reCAPTCHA, URL de connexion personnalisée…"
 msgstr ""
 
+msgid "2FA, reCAPTCHA, URL personnalisée*"
+msgstr ""
+
+msgid "3 900 DA / an"
+msgstr ""
+
+msgid "6 800 DA / an"
+msgstr ""
+
+msgid "6 800 DA à vie"
+msgstr ""
+
 msgid "6 styles modernes (effet verre, sombre…)"
+msgstr ""
+
+msgid "7 600 DA à vie"
 msgstr ""
 
 msgid "Accent"
@@ -43,6 +58,9 @@ msgid "Acheter Pro — paiement intégré"
 msgstr ""
 
 msgid "Action"
+msgstr ""
+
+msgid "Active"
 msgstr ""
 
 msgid "Activer Pro"
@@ -78,16 +96,28 @@ msgstr ""
 msgid "Affiché"
 msgstr ""
 
+msgid "Agences & multi-sites"
+msgstr ""
+
 msgid "Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal."
 msgstr ""
 
+msgid "Alerte e-mail en cas de blocage"
+msgstr ""
+
 msgid "Alertes e-mail après chaque blocage"
+msgstr ""
+
+msgid "Alertes e-mail de blocage"
 msgstr ""
 
 msgid "Angle du dégradé"
 msgstr ""
 
 msgid "Animation d’entrée"
+msgstr ""
+
+msgid "Annuelle"
 msgstr ""
 
 msgid "Anti force brute"
@@ -118,6 +148,9 @@ msgid "Après N échecs, l’adresse IP et l’identifiant sont bloqués tempora
 msgstr ""
 
 msgid "Après connexion"
+msgstr ""
+
+msgid "Après le paiement, collez la clé reçue par e-mail dans le formulaire « Débloquer Pro » ci-dessus."
 msgstr ""
 
 msgid "Après l’achat, vous recevez votre clé de licence par e-mail."
@@ -156,10 +189,19 @@ msgstr ""
 msgid "Aucune donnée collectée"
 msgstr ""
 
+msgid "Aucune licence"
+msgstr ""
+
+msgid "BaridiMob / CCP"
+msgstr ""
+
 msgid "Bas droit"
 msgstr ""
 
 msgid "Bas gauche"
+msgstr ""
+
+msgid "Bientôt disponible"
 msgstr ""
 
 msgid "Bienvenue"
@@ -222,6 +264,9 @@ msgstr ""
 msgid "Carré"
 msgstr ""
 
+msgid "Carte bancaire"
+msgstr ""
+
 msgid "Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :"
 msgstr ""
 
@@ -243,6 +288,15 @@ msgstr ""
 msgid "Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge."
 msgstr ""
 
+msgid "Choisir ce pack"
+msgstr ""
+
+msgid "Choisissez votre pack"
+msgstr ""
+
+msgid "Choisissez votre pack ci-dessous (annuelle ou à vie) et achetez : le paiement s’ouvre ici même."
+msgstr ""
+
 msgid "Choisissez votre style"
 msgstr ""
 
@@ -252,13 +306,10 @@ msgstr ""
 msgid "Classique"
 msgstr ""
 
-msgid "Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même."
-msgstr ""
-
 msgid "Cliquez sur « Terminer » pour appliquer et ouvrir votre tableau de bord."
 msgstr ""
 
-msgid "Clé de licence"
+msgid "Clé"
 msgstr ""
 
 msgid "Collez la clé ci-dessous : Pro est activé instantanément."
@@ -270,10 +321,13 @@ msgstr ""
 msgid "Compatible multisite"
 msgstr ""
 
+msgid "Compte CCP"
+msgstr ""
+
 msgid "Configuration guidée"
 msgstr ""
 
-msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
+msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, l’activation est acceptée localement pour vos tests."
 msgstr ""
 
 msgid "Configurer"
@@ -304,6 +358,9 @@ msgid "Contrôle du flou (backdrop)."
 msgstr ""
 
 msgid "Contrôles de flou et d’opacité"
+msgstr ""
+
+msgid "Copier"
 msgstr ""
 
 msgid "Copies illégales"
@@ -361,6 +418,9 @@ msgid "C’est noté"
 msgstr ""
 
 msgid "Date"
+msgstr ""
+
+msgid "Dernière vérification"
 msgstr ""
 
 msgid "Derouiche Oussama"
@@ -435,6 +495,12 @@ msgstr ""
 msgid "Enregistrer"
 msgstr ""
 
+msgid "Envoyer ma preuve de paiement"
+msgstr ""
+
+msgid "Envoyez la capture du reçu par e-mail avec le bouton ci-dessous."
+msgstr ""
+
 msgid "Erreur"
 msgstr ""
 
@@ -445,6 +511,12 @@ msgid "Espacement intérieur"
 msgstr ""
 
 msgid "Et le design du formulaire"
+msgstr ""
+
+msgid "Expiration"
+msgstr ""
+
+msgid "Expirée"
 msgstr ""
 
 msgid "Export / import des réglages (JSON)"
@@ -489,6 +561,9 @@ msgstr ""
 msgid "Fonctionnalités"
 msgstr ""
 
+msgid "Fonctionnalités livrées par le module Pro en préparation — votre licence les débloquera automatiquement dès leur sortie."
+msgstr ""
+
 msgid "Fond de l’icône"
 msgstr ""
 
@@ -519,6 +594,9 @@ msgstr ""
 msgid "Gratuit"
 msgstr ""
 
+msgid "Gérer ma licence"
+msgstr ""
+
 msgid "Haut droit"
 msgstr ""
 
@@ -535,6 +613,9 @@ msgid "Historique complet sur GitHub"
 msgstr ""
 
 msgid "Historique disponible sur GitHub."
+msgstr ""
+
+msgid "Honeypot + anti-énumération"
 msgstr ""
 
 msgid "Honeypot anti-robots"
@@ -556,6 +637,9 @@ msgid "Identifiant"
 msgstr ""
 
 msgid "Identifiants incorrects. Veuillez réessayer."
+msgstr ""
+
+msgid "Idéal pour agences et clients"
 msgstr ""
 
 msgid "Image"
@@ -591,10 +675,16 @@ msgstr ""
 msgid "Installateur"
 msgstr ""
 
+msgid "Jamais — licence à vie"
+msgstr ""
+
 msgid "JavaScript personnalisé"
 msgstr ""
 
 msgid "Journal de sécurité"
+msgstr ""
+
+msgid "Journal de sécurité (50 événements)"
 msgstr ""
 
 msgid "Journal de sécurité des 50 derniers événements"
@@ -604,6 +694,9 @@ msgid "Journal des tentatives (audit complet)"
 msgstr ""
 
 msgid "Journal étendu, alertes e-mail immédiates et détection des comportements suspects."
+msgstr ""
+
+msgid "J’ai ma clé — activer maintenant"
 msgstr ""
 
 msgid "La durée double automatiquement à chaque récidive (jusqu’à ×8), pour user la patience des bots."
@@ -639,6 +732,9 @@ msgstr ""
 msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfennec_pro_url)."
 msgstr ""
 
+msgid "Le paiement s’ouvre dans une fenêtre sécurisée."
+msgstr ""
+
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
 msgstr ""
 
@@ -651,16 +747,19 @@ msgstr ""
 msgid "Libellés"
 msgstr ""
 
-msgid "Licence :"
+msgid "Licence GPL v2+"
 msgstr ""
 
-msgid "Licence GPL v2+"
+msgid "Licence active : "
 msgstr ""
 
 msgid "Licence enregistrée. (Serveur de licences non configuré : validation locale.)"
 msgstr ""
 
 msgid "Licence invalide ou expirée."
+msgstr ""
+
+msgid "Licence pour 5 sites"
 msgstr ""
 
 msgid "Lien du logo"
@@ -706,6 +805,12 @@ msgid "LoginFennec Pro est développé sur le temps personnel. Si ce plugin vous
 msgstr ""
 
 msgid "LoginFennec Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
+msgstr ""
+
+msgid "LoginFennec Pro — 1 site"
+msgstr ""
+
+msgid "LoginFennec Pro — 5 sites"
 msgstr ""
 
 msgid "Logo"
@@ -774,6 +879,12 @@ msgstr ""
 msgid "Mises à jour automatiques via GitHub"
 msgstr ""
 
+msgid "Mises à jour pendant 1 an"
+msgstr ""
+
+msgid "Mises à jour à vie ♾️"
+msgstr ""
+
 msgid "Mobile"
 msgstr ""
 
@@ -784,6 +895,12 @@ msgid "Monochrome"
 msgstr ""
 
 msgid "Monospace"
+msgstr ""
+
+msgid "Montant exact"
+msgstr ""
+
+msgid "Montant à payer :"
 msgstr ""
 
 msgid "Médiathèque"
@@ -819,16 +936,34 @@ msgstr ""
 msgid "Ou logo en texte"
 msgstr ""
 
+msgid "Ouvrir PayPal"
+msgstr ""
+
 msgid "Ouvrir dans un onglet"
 msgstr ""
 
 msgid "Ouvrir le journal complet"
 msgstr ""
 
+msgid "Ouvrir le paiement par carte"
+msgstr ""
+
+msgid "Pack"
+msgstr ""
+
+msgid "Pack sélectionné :"
+msgstr ""
+
 msgid "Paiement"
 msgstr ""
 
-msgid "Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous."
+msgid "Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessus."
+msgstr ""
+
+msgid "Paiement international"
+msgstr ""
+
+msgid "Paiement intégré"
 msgstr ""
 
 msgid "Paiement sécurisé"
@@ -843,7 +978,22 @@ msgstr ""
 msgid "Passer l’assistant et aller au dashboard →"
 msgstr ""
 
+msgid "Payer avec PayPal"
+msgstr ""
+
+msgid "Payer par BaridiMob ou virement CCP"
+msgstr ""
+
+msgid "Payer par carte bancaire"
+msgstr ""
+
+msgid "Payez le montant exact via l’application BaridiMob (virement vers le compte CCP ci-dessus)."
+msgstr ""
+
 msgid "Personnalisation"
+msgstr ""
+
+msgid "Personnalisation complète de la page de connexion"
 msgstr ""
 
 msgid "Personnalisation de la connexion"
@@ -876,10 +1026,13 @@ msgstr ""
 msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total."
 msgstr ""
 
-msgid "Pro actif — merci pour votre soutien !"
+msgid "Pro activé. Merci pour votre soutien !"
 msgstr ""
 
-msgid "Pro activé. Merci pour votre soutien !"
+msgid "Pro — 1 site"
+msgstr ""
+
+msgid "Pro — 5 sites"
 msgstr ""
 
 msgid "Protection"
@@ -903,7 +1056,13 @@ msgstr ""
 msgid "Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
 msgstr ""
 
+msgid "Recevez votre clé de licence, puis activez-la dans le formulaire « Débloquer Pro »."
+msgstr ""
+
 msgid "Recharger l’aperçu"
+msgstr ""
+
+msgid "Recommandé"
 msgstr ""
 
 msgid "Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité."
@@ -919,6 +1078,9 @@ msgid "Remplacez le logo WordPress par le vôtre."
 msgstr ""
 
 msgid "Renforcer la sécurité"
+msgstr ""
+
+msgid "Renouvelez votre pack pour réactiver les fonctionnalités Pro."
 msgstr ""
 
 msgid "Renseignez une URL pour afficher l’icône — laissez vide pour la masquer."
@@ -960,6 +1122,9 @@ msgstr ""
 msgid "Réseaux sociaux"
 msgstr ""
 
+msgid "Réservé Pro — activez votre licence (page Passer en Pro) pour recevoir les alertes."
+msgstr ""
+
 msgid "SVG ou PNG transparent recommandé."
 msgstr ""
 
@@ -976,6 +1141,9 @@ msgid "Sauvegarde des réglages"
 msgstr ""
 
 msgid "Score de sécurité"
+msgstr ""
+
+msgid "Score de sécurité et aperçu en direct"
 msgstr ""
 
 msgid "Score de sécurité et journal des 50 derniers événements de connexion."
@@ -1003,6 +1171,9 @@ msgid "Site"
 msgstr ""
 
 msgid "Site web"
+msgstr ""
+
+msgid "Sites autorisés"
 msgstr ""
 
 msgid "Social & copyright"
@@ -1113,13 +1284,28 @@ msgstr ""
 msgid "Titre et sous-titre affichés au-dessus du formulaire."
 msgstr ""
 
+msgid "Titulaire"
+msgstr ""
+
 msgid "Tout est prêt !"
+msgstr ""
+
+msgid "Tout le gratuit, plus :"
+msgstr ""
+
+msgid "Tout le pack 1 site, plus :"
 msgstr ""
 
 msgid "Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite."
 msgstr ""
 
+msgid "Type"
+msgstr ""
+
 msgid "Type de fond"
+msgstr ""
+
+msgid "Type de licence"
 msgstr ""
 
 msgid "Typographie"
@@ -1135,6 +1321,9 @@ msgid "Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votr
 msgstr ""
 
 msgid "Un champ caché piège les bots avant même la connexion."
+msgstr ""
+
+msgid "Un e-mail vous est envoyé à chaque nouvelle IP bloquée."
 msgstr ""
 
 msgid "Un style définit les couleurs d’ambiance. Vous pourrez tout affiner plus tard (flou, opacité, typographie…)."
@@ -1179,6 +1368,9 @@ msgstr ""
 msgid "Vider le journal"
 msgstr ""
 
+msgid "Virement local en DA"
+msgstr ""
+
 msgid "Voici votre configuration de départ — tout reste modifiable dans le dashboard."
 msgstr ""
 
@@ -1197,6 +1389,12 @@ msgstr ""
 msgid "Votre IP actuelle"
 msgstr ""
 
+msgid "Votre licence Pro"
+msgstr ""
+
+msgid "Votre licence a expiré."
+msgstr ""
+
 msgid "Votre page de connexion est prête — explorez les onglets pour la personnaliser."
 msgstr ""
 
@@ -1206,7 +1404,13 @@ msgstr ""
 msgid "Vous aimez LoginFennec Pro ?"
 msgstr ""
 
+msgid "Vous y êtes déjà"
+msgstr ""
+
 msgid "Vérifier les mises à jour"
+msgstr ""
+
+msgid "Vérifier maintenant"
 msgstr ""
 
 msgid "X (Twitter)"
@@ -1260,10 +1464,16 @@ msgstr ""
 msgid "libre d’utilisation sous licence GPL, avec signature intacte."
 msgstr ""
 
+msgid "l’ancienne copie du plugin a été désactivée automatiquement pour éviter tout conflit. Vous pouvez maintenant la supprimer dans Extensions."
+msgstr ""
+
 msgid "ouverture d’un ticket en un clic"
 msgstr ""
 
 msgid "poser une question"
+msgstr ""
+
+msgid "pour toujours"
 msgstr ""
 
 msgid "reCAPTCHA v3 / hCaptcha sur la connexion"
@@ -1297,6 +1507,12 @@ msgid "À propos & don"
 msgstr ""
 
 msgid "À propos d’LoginFennec Pro"
+msgstr ""
+
+msgid "À vie"
+msgstr ""
+
+msgid "À vie — mises à jour pour toujours"
 msgstr ""
 
 msgid "Échec"

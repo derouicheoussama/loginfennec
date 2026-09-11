@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,12 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.3.0 =
+* New: in-plugin checkout with 3 payment methods — BaridiMob/CCP (account details + copy + proof email), PayPal.me link, and embedded card checkout
+* New: pack chooser feeds the payment flow (1 site / 5 sites × yearly / lifetime)
+* Security: lockout duration now doubles on repeat offenses (escalation, up to ×8)
+
 
 = 2.2.0 =
 * New: full licensing system — packs for 1 site and 5 sites, yearly or lifetime, priced in DA
