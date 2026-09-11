@@ -1552,6 +1552,13 @@ body.inls-preview-lock {
 	margin-bottom: 10px;
 }
 
+.inls-score-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	align-items: center;
+}
+
 /* ---------- Tableau de bord : activité récente ---------- */
 
 .inls-activity {

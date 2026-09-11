@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.5.0\n"
+"Project-Id-Version: Infinity LoginShield 1.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,9 @@ msgid "Accès refusé."
 msgstr ""
 
 msgid "Action"
+msgstr ""
+
+msgid "Activer le pack recommandé (5/5)"
 msgstr ""
 
 msgid "Activité récente"
@@ -94,6 +97,9 @@ msgid "Appliquez un style et un thème d’interface en un clic, puis affinez-le
 msgstr ""
 
 msgid "Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement."
+msgstr ""
+
+msgid "Après connexion"
 msgstr ""
 
 msgid "Arrière-plan"
@@ -363,6 +369,9 @@ msgstr ""
 msgid "Export / import des réglages (JSON)"
 msgstr ""
 
+msgid "Exporter (CSV)"
+msgstr ""
+
 msgid "Exporter (JSON)"
 msgstr ""
 
@@ -513,6 +522,9 @@ msgstr ""
 msgid "Laisser un avis ★"
 msgstr ""
 
+msgid "Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée)."
+msgstr ""
+
 msgid "Laisser vide pour pointer vers l’accueil du site."
 msgstr ""
 
@@ -568,6 +580,9 @@ msgid "Limiter les tentatives de connexion"
 msgstr ""
 
 msgid "LinkedIn"
+msgstr ""
+
+msgid "Liste blanche d’IP (jamais verrouillées)"
 msgstr ""
 
 msgid "Logo"
@@ -733,6 +748,9 @@ msgid "Recharger l’aperçu"
 msgstr ""
 
 msgid "Recommandé : bloquez les attaques par force brute dès maintenant."
+msgstr ""
+
+msgid "Redirection après connexion"
 msgstr ""
 
 msgid "Remplacez le logo WordPress par le vôtre."
@@ -913,6 +931,9 @@ msgid "URL de connexion personnalisée"
 msgstr ""
 
 msgid "Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !"
+msgstr ""
+
+msgid "Une IP par ligne ou séparées par des virgules. Le joker * est accepté (ex. 192.168.1.*). Vos IP de confiance ne seront jamais bloquées — utile pour éviter de vous verrouiller vous-même."
 msgstr ""
 
 msgid "Utilisez %%d pour la durée restante en minutes."

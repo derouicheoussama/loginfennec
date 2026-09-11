@@ -115,6 +115,7 @@ function inls_get_defaults() {
 		'font_size'        => 13,
 		'anim'             => 'none', // none | fade | slide | zoom.
 		'custom_css'       => '',
+		'login_redirect'   => '',
 
 		// Sécurité.
 		'sec_enable'               => true,
@@ -126,6 +127,7 @@ function inls_get_defaults() {
 		'sec_disable_xmlrpc'       => false,
 		'sec_honeypot'             => true,
 		'sec_disable_authors'      => true,
+		'sec_whitelist'            => '',
 	);
 }
 
@@ -171,9 +173,9 @@ function inls_field_spec() {
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
 			'social_facebook', 'social_twitter', 'social_instagram',
-			'social_linkedin', 'social_youtube',
+			'social_linkedin', 'social_youtube', 'login_redirect',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',

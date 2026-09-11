@@ -22,10 +22,12 @@ class Inls_Admin {
 		add_action( 'admin_post_inls_reset', array( __CLASS__, 'reset' ) );
 		add_action( 'admin_post_inls_export', array( __CLASS__, 'export_settings' ) );
 		add_action( 'admin_post_inls_import', array( __CLASS__, 'import_settings' ) );
+		add_action( 'admin_post_inls_export_log', array( __CLASS__, 'export_log_csv' ) );
 		add_action( 'admin_post_inls_dismiss_review', array( __CLASS__, 'dismiss_review' ) );
 		add_action( 'wp_ajax_inls_preview_css', array( __CLASS__, 'ajax_preview_css' ) );
 		add_action( 'wp_ajax_inls_check_updates', array( __CLASS__, 'ajax_check_updates' ) );
 		add_action( 'wp_ajax_inls_purge_log', array( __CLASS__, 'ajax_purge_log' ) );
+		add_action( 'wp_ajax_inls_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( INFINITY_LOGINSHIELD_FILE ), array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -340,6 +342,54 @@ class Inls_Admin {
 		update_option( INFINITY_LOGINSHIELD_OPTION, inls_sanitize_settings( $data, null ), 'yes' );
 		wp_safe_redirect( $redirect_ok );
 		exit;
+	}
+
+	/**
+	 * Exporte le journal de sécurité en CSV.
+	 */
+	public static function export_log_csv() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Accès refusé.', 'infinity-loginshield' ) );
+		}
+		check_admin_referer( 'inls_export_log' );
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=infinity-loginshield-journal-' . gmdate( 'Ymd-Hi' ) . '.csv' );
+
+		$out = fopen( 'php://output', 'w' );
+		if ( $out ) {
+			fputcsv( $out, array( 'date_utc', 'ip', 'username', 'action' ) );
+			foreach ( Inls_Login_Security::get_log() as $event ) {
+				fputcsv(
+					$out,
+					array(
+						gmdate( 'Y-m-d H:i:s', (int) $event['t'] ),
+						$event['ip'],
+						$event['u'],
+						$event['a'],
+					)
+				);
+			}
+			fclose( $out );
+		}
+		exit;
+	}
+
+	/**
+	 * Active le pack de sécurité recommandé (score 5/5) en un clic.
+	 */
+	public static function ajax_enable_recommended() {
+		check_ajax_referer( 'inls_admin', 'nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
+		$s = inls_settings();
+		foreach ( array( 'sec_enable', 'sec_honeypot', 'sec_disable_authors', 'sec_disable_xmlrpc', 'sec_generic_error' ) as $key ) {
+			$s[ $key ] = true;
+		}
+		update_option( INFINITY_LOGINSHIELD_OPTION, $s, 'yes' );
+		wp_send_json_success();
 	}
 
 	/**
@@ -785,7 +835,12 @@ class Inls_Admin {
 			);
 		}
 		echo '</div>';
+		echo '<div class="inls-score-actions">';
 		echo '<button type="button" class="inls-card-link" data-goto="security">' . esc_html__( 'Renforcer la sécurité', 'infinity-loginshield' ) . '</button>';
+		if ( $score < 5 ) {
+			echo '<button type="button" class="inls-card-link inls-recommended">⚡ ' . esc_html__( 'Activer le pack recommandé (5/5)', 'infinity-loginshield' ) . '</button>';
+		}
+		echo '</div>';
 		echo '</div>';
 
 		// ——— Activité récente ———.
@@ -1207,6 +1262,16 @@ class Inls_Admin {
 			__( 'Désactivée automatiquement si l’utilisateur demande moins d’animations.', 'infinity-loginshield' )
 		);
 
+		echo '<h3 class="inls-group-title">' . esc_html__( 'Après connexion', 'infinity-loginshield' ) . '</h3>';
+		self::field_text(
+			$s,
+			'login_redirect',
+			__( 'Redirection après connexion', 'infinity-loginshield' ),
+			'url',
+			'https://exemple.com/espace-client',
+			__( 'Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée).', 'infinity-loginshield' )
+		);
+
 		echo '<h3 class="inls-group-title">' . esc_html__( 'CSS personnalisé', 'infinity-loginshield' ) . '</h3>';
 		self::field_textarea(
 			$s,
@@ -1233,6 +1298,12 @@ class Inls_Admin {
 		self::field_toggle( $s, 'sec_disable_xmlrpc', __( 'Désactiver XML-RPC', 'infinity-loginshield' ), __( 'Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress).', 'infinity-loginshield' ) );
 		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'infinity-loginshield' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'infinity-loginshield' ) );
 		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'infinity-loginshield' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'infinity-loginshield' ) );
+		self::field_textarea(
+			$s,
+			'sec_whitelist',
+			__( 'Liste blanche d’IP (jamais verrouillées)', 'infinity-loginshield' ),
+			__( 'Une IP par ligne ou séparées par des virgules. Le joker * est accepté (ex. 192.168.1.*). Vos IP de confiance ne seront jamais bloquées — utile pour éviter de vous verrouiller vous-même.', 'infinity-loginshield' )
+		);
 
 		// ——— Journal de sécurité ———.
 		$log = Inls_Login_Security::get_log();
@@ -1267,7 +1338,8 @@ class Inls_Admin {
 					)
 				)
 			);
-			echo '<button type="button" class="button inls-purge-log">' . esc_html__( 'Vider le journal', 'infinity-loginshield' ) . '</button> <span class="inls-purge-status"></span>';
+			echo '<button type="button" class="button inls-purge-log">' . esc_html__( 'Vider le journal', 'infinity-loginshield' ) . '</button> ';
+			echo '<a class="button" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=inls_export_log' ), 'inls_export_log' ) ) . '">' . esc_html__( 'Exporter (CSV)', 'infinity-loginshield' ) . '</a> <span class="inls-purge-status"></span>';
 		} else {
 			echo '<p class="inls-desc">' . esc_html__( 'Aucun événement enregistré pour le moment.', 'infinity-loginshield' ) . '</p>';
 		}

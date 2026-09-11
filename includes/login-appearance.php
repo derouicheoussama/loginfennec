@@ -362,6 +362,10 @@ function inls_get_social_networks( $s ) {
  */
 function inls_login_head() {
 	$s = inls_settings();
+	// Rapidité : précharge l'image de fond avant le CSS (moins de flash visuel).
+	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {
+		printf( '<link rel="preload" as="image" href="%s">' . "\n", esc_url( $s['bg_image'] ) );
+	}
 	echo '<style id="infinity-loginshield">' . "\n";
 	echo wp_strip_all_tags( inls_build_login_css( $s ) ) . "\n";
 	echo "</style>\n";
@@ -442,6 +446,28 @@ function inls_welcome_message( $message ) {
 	return $message . $html;
 }
 add_filter( 'login_message', 'inls_welcome_message', 5 );
+
+/**
+ * Redirection personnalisée après connexion (si configurée et si WordPress
+ * n'a pas déjà une destination explicite).
+ *
+ * @param string   $redirect_to           Destination calculée par WordPress.
+ * @param string   $requested_redirect_to Destination demandée (paramètre redirect_to).
+ * @param WP_User  $user                  Utilisateur connecté.
+ * @return string
+ */
+function inls_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
+	if ( ! $user instanceof WP_User ) {
+		return $redirect_to;
+	}
+	$s      = inls_settings();
+	$target = trim( (string) $s['login_redirect'] );
+	if ( '' !== $target && '' === trim( (string) $requested_redirect_to ) ) {
+		return $target;
+	}
+	return $redirect_to;
+}
+add_filter( 'login_redirect', 'inls_login_redirect', 20, 3 );
 
 /**
  * Message d'erreur générique (option « masquer les détails »).

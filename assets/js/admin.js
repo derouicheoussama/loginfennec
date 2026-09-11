@@ -435,6 +435,23 @@
 		schedulePreview();
 	});
 
+	/* Pack recommandé : active les 5 protections d'un coup */
+	$(document).on('click', '.inls-recommended', function () {
+		var $btn = $(this);
+		$btn.prop('disabled', true).text('…');
+		$.post(cfg.ajaxUrl, { action: 'inls_enable_recommended', nonce: cfg.nonce })
+			.done(function (res) {
+				if (res && res.success) {
+					window.location.reload();
+				} else {
+					$btn.prop('disabled', false);
+				}
+			})
+			.fail(function () {
+				$btn.prop('disabled', false);
+			});
+	});
+
 	/* Vider le journal de sécurité */
 	$(document).on('click', '.inls-purge-log', function () {
 		var $btn = $(this);

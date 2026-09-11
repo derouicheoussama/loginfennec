@@ -294,6 +294,36 @@ class Inls_Login_Security {
 	}
 
 	/**
+	 * Vérifie si une IP est dans la liste blanche (exempte de verrouillage).
+	 * Une entrée peut finir par « * » (ex. 192.168.1.*).
+	 *
+	 * @param string $ip IP à tester (vide = IP courante).
+	 * @return bool
+	 */
+	public static function is_whitelisted( $ip = '' ) {
+		$ip  = '' !== $ip ? $ip : self::client_ip();
+		$s   = inls_settings();
+		$raw = trim( (string) $s['sec_whitelist'] );
+		if ( '' === $raw || '' === $ip ) {
+			return false;
+		}
+		foreach ( preg_split( '/\s*,\s*|\s*\n\s*/', $raw ) as $allowed ) {
+			$allowed = trim( (string) $allowed );
+			if ( '' === $allowed ) {
+				continue;
+			}
+			if ( '*' === substr( $allowed, -1 ) ) {
+				if ( 0 === strncmp( $ip, rtrim( $allowed, '*' ), strlen( rtrim( $allowed, '*' ) ) ) ) {
+					return true;
+				}
+			} elseif ( $allowed === $ip ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Bloque l'authentification pendant un verrouillage.
 	 *
 	 * @param WP_User|WP_Error|null $user     Utilisateur ou erreur.
@@ -303,6 +333,9 @@ class Inls_Login_Security {
 	 */
 	public static function authenticate( $user, $username, $password ) {
 		if ( empty( $username ) ) {
+			return $user;
+		}
+		if ( self::is_whitelisted() ) {
 			return $user;
 		}
 		$s = inls_settings();
@@ -330,6 +363,9 @@ class Inls_Login_Security {
 		$s = inls_settings();
 		if ( empty( $s['sec_enable'] ) ) {
 			return;
+		}
+		if ( self::is_whitelisted() ) {
+			return; // IP de confiance : jamais comptée, jamais verrouillée.
 		}
 
 		$data = self::get_data();
