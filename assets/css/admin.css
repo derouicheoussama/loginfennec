@@ -1025,19 +1025,8 @@ body.lnf-preview-lock {
 }
 
 .lnf-pro .lnf-hero .lnf-version {
-	background: rgba(36, 23, 3, .15);
-	color: #241703;
-}
-
-.lnf-pro .lnf-hero h1,
-.lnf-pro .lnf-hero p {
-	color: #241703;
-}
-
-.lnf-pro .lnf-hero p {
-	opacity: .85;
-	margin-left: auto;
-	margin-right: auto;
+	background: rgba(255, 255, 255, .22);
+	color: #fff;
 }
 
 .lnf-about-actions {
@@ -1051,19 +1040,19 @@ body.lnf-preview-lock {
 /* ---------- Passer en Pro ---------- */
 
 .lnf-btn-pro {
-	background: linear-gradient(120deg, #e08c00, #f5c33b);
-	color: #241703;
-	box-shadow: 0 10px 24px -10px #e08c00;
+	background: linear-gradient(120deg, #1d4ed8, #3b82f6);
+	color: #fff;
+	box-shadow: 0 10px 24px -10px #1d4ed8;
 }
 
 .lnf-btn-pro:hover {
-	color: #241703;
+	color: #fff;
 	transform: translateY(-1px);
-	box-shadow: 0 14px 28px -10px #e08c00;
+	box-shadow: 0 14px 28px -10px #1d4ed8;
 }
 
 .lnf-btn-pro .dashicons {
-	color: #241703;
+	color: #fff;
 }
 
 .lnf-pro-teaser {
@@ -1076,8 +1065,8 @@ body.lnf-preview-lock {
 	margin-top: 10px;
 	padding: 18px 20px;
 	border-radius: 14px;
-	background: linear-gradient(120deg, rgba(224, 140, 0, .1), rgba(245, 195, 59, .18));
-	border: 1px solid rgba(224, 140, 0, .4);
+	background: linear-gradient(120deg, rgba(29, 78, 216, .08), rgba(59, 130, 246, .15));
+	border: 1px solid rgba(29, 78, 216, .35);
 }
 
 .lnf-pro-teaser-text {
@@ -1099,23 +1088,23 @@ body.lnf-preview-lock {
 	background:
 		radial-gradient(circle at 12% 18%, rgba(255, 255, 255, .2), transparent 40%),
 		radial-gradient(circle at 88% 82%, rgba(255, 255, 255, .12), transparent 40%),
-		linear-gradient(120deg, #9a6200, #f5c33b);
-	color: #241703;
-	box-shadow: 0 24px 60px -24px #9a6200;
+		linear-gradient(120deg, #1e3a8a, #2563eb);
+	color: #fff;
+	box-shadow: 0 24px 60px -24px #1e3a8a;
 }
 
 .lnf-pro-hero h1 {
-	color: #241703;
+	color: #fff;
 }
 
 .lnf-pro-hero p {
-	color: #241703;
-	opacity: .85;
+	color: #fff;
+	opacity: .88;
 }
 
 .lnf-pro-hero .lnf-version {
-	background: rgba(36, 23, 3, .15);
-	color: #241703;
+	background: rgba(255, 255, 255, .2);
+	color: #fff;
 }
 
 .lnf-pro-table {
@@ -1332,7 +1321,7 @@ body.lnf-preview-lock {
 }
 
 .lnf-inst-pro-note a {
-	color: #9a6200;
+	color: #1d4ed8;
 	font-weight: 700;
 	text-decoration: none;
 }
@@ -1756,14 +1745,14 @@ body.lnf-preview-lock {
 	border-radius: var(--lnf-radius);
 	padding: 20px 22px;
 	box-shadow: var(--lnf-shadow);
-	border-top: 4px solid #e08c00;
+	border-top: 4px solid #2563eb;
 }
 
 .lnf-pro-benefit .dashicons {
 	font-size: 26px;
 	width: 26px;
 	height: 26px;
-	color: #e08c00;
+	color: #2563eb;
 }
 
 .lnf-pro-benefit h3 {
@@ -1778,7 +1767,7 @@ body.lnf-preview-lock {
 }
 
 .lnf-pro-table .lnf-pro-col {
-	background: rgba(224, 140, 0, .07);
+	background: rgba(37, 99, 235, .07);
 }
 
 .lnf-pro-table .lnf-pro-group td {
