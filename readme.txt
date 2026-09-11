@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,10 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.6.1 =
+* Improved: Pro page redesign — benefits cards, comparison table grouped by category (Protection / Surveillance / Contrôle) with a highlighted Pro column
+* Removed: the AI-style sparkle decorations on the Pro page, menu and dashboard
 
 = 1.6.0 =
 * New: IP whitelist — trusted IPs (exact or wildcard) are never locked out

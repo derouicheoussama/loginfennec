@@ -1684,3 +1684,58 @@ body.inls-preview-lock {
 	color: var(--inls-accent);
 	font-weight: 700;
 }
+
+/* ---------- Page Pro : bénéfices et comparatif ---------- */
+
+.inls-pro-benefits {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+	margin: 0 0 20px;
+}
+
+.inls-pro-benefit {
+	background: var(--inls-panel);
+	border: 1px solid var(--inls-line);
+	border-radius: var(--inls-radius);
+	padding: 20px 22px;
+	box-shadow: var(--inls-shadow);
+	border-top: 4px solid #e08c00;
+}
+
+.inls-pro-benefit .dashicons {
+	font-size: 26px;
+	width: 26px;
+	height: 26px;
+	color: #e08c00;
+}
+
+.inls-pro-benefit h3 {
+	margin: 8px 0 6px;
+	font-size: 15px;
+}
+
+.inls-pro-benefit p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--inls-muted);
+}
+
+.inls-pro-table .inls-pro-col {
+	background: rgba(224, 140, 0, .07);
+}
+
+.inls-pro-table .inls-pro-group td {
+	background: #fafaff;
+	font-size: 11.5px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .8px;
+	color: var(--inls-accent);
+	padding: 8px 12px 4px;
+	border-bottom: none;
+}
+
+.inls-pro-table-card .inls-hero-actions {
+	margin-top: 16px;
+}

@@ -57,7 +57,7 @@ class Inls_Admin {
 		add_submenu_page(
 			'infinity-loginshield',
 			__( 'Passer en Pro', 'infinity-loginshield' ),
-			__( 'Passer en Pro ✦', 'infinity-loginshield' ),
+			__( 'Passer en Pro', 'infinity-loginshield' ),
 			'manage_options',
 			'infinity-loginshield-pro',
 			array( __CLASS__, 'render_pro' )
@@ -961,7 +961,7 @@ class Inls_Admin {
 				'ok'     => false,
 				'goto'   => '',
 				'link'   => admin_url( 'admin.php?page=infinity-loginshield-pro' ),
-				'button' => __( 'Passer en Pro ✦', 'infinity-loginshield' ),
+				'button' => __( 'Passer en Pro', 'infinity-loginshield' ),
 			),
 		);
 
@@ -1346,7 +1346,7 @@ class Inls_Admin {
 		echo '</div>';
 
 		echo '<div class="inls-pro-teaser">';
-		echo '<div class="inls-pro-teaser-text"><h4>✦ ' . esc_html__( 'Niveaux de sécurité avancés — Infinity LoginShield Pro', 'infinity-loginshield' ) . '</h4><p>'
+		echo '<div class="inls-pro-teaser-text"><h4>' . esc_html__( 'Niveaux de sécurité avancés — Infinity LoginShield Pro', 'infinity-loginshield' ) . '</h4><p>'
 			. esc_html__( 'Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique.', 'infinity-loginshield' )
 			. '</p></div>';
 		echo '<a class="inls-btn inls-btn-pro" href="' . esc_url( admin_url( 'admin.php?page=infinity-loginshield-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'infinity-loginshield' ) . '</a>';
@@ -1690,7 +1690,7 @@ class Inls_Admin {
 							<input type="number" id="inls-wizard-attempts" class="inls-input" name="inls[sec_max_attempts]" min="1" max="20" value="<?php echo esc_attr( $s['sec_max_attempts'] ); ?>">
 						</div>
 					</div>
-					<p class="inls-inst-pro-note">✦ <a href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-loginshield-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'infinity-loginshield' ); ?></p>
+					<p class="inls-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-loginshield-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'infinity-loginshield' ); ?></p>
 				</section>
 
 				<footer class="inls-inst-footer">
@@ -1707,25 +1707,49 @@ class Inls_Admin {
 	 * Page « Passer en Pro » : niveaux de sécurité avancés.
 	 */
 	public static function render_pro() {
-		$rows = array(
-			array( __( 'Limitation des tentatives + blocage IP', 'infinity-loginshield' ), true, true ),
-			array( __( 'Messages de sécurité personnalisés', 'infinity-loginshield' ), true, true ),
-			array( __( 'Journal des tentatives (audit complet)', 'infinity-loginshield' ), false, true ),
-			array( __( 'Alertes e-mail après chaque blocage', 'infinity-loginshield' ), false, true ),
-			array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'infinity-loginshield' ), false, true ),
-			array( __( 'Double authentification (2FA)', 'infinity-loginshield' ), false, true ),
-			array( __( 'URL de connexion personnalisée', 'infinity-loginshield' ), false, true ),
-			array( __( 'Blocage géographique (pays)', 'infinity-loginshield' ), false, true ),
-			array( __( 'Protection dédiée de /wp-admin (liste blanche IP)', 'infinity-loginshield' ), false, true ),
-			array( __( 'Détection avancée des activités suspectes', 'infinity-loginshield' ), false, true ),
-			array( __( 'Sessions & appareils de confiance', 'infinity-loginshield' ), false, true ),
+		$groups = array(
+			__( 'Protection', 'infinity-loginshield' )        => array(
+				array( __( 'Limitation des tentatives + blocage IP', 'infinity-loginshield' ), true, true ),
+				array( __( 'Messages de sécurité personnalisés', 'infinity-loginshield' ), true, true ),
+				array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'infinity-loginshield' ), false, true ),
+				array( __( 'Double authentification (2FA)', 'infinity-loginshield' ), false, true ),
+				array( __( 'URL de connexion personnalisée', 'infinity-loginshield' ), false, true ),
+				array( __( 'Protection dédiée de /wp-admin (liste blanche IP)', 'infinity-loginshield' ), false, true ),
+			),
+			__( 'Surveillance', 'infinity-loginshield' )      => array(
+				array( __( 'Journal des tentatives (audit complet)', 'infinity-loginshield' ), false, true ),
+				array( __( 'Alertes e-mail après chaque blocage', 'infinity-loginshield' ), false, true ),
+				array( __( 'Détection avancée des activités suspectes', 'infinity-loginshield' ), false, true ),
+			),
+			__( 'Contrôle', 'infinity-loginshield' )          => array(
+				array( __( 'Blocage géographique (pays)', 'infinity-loginshield' ), false, true ),
+				array( __( 'Sessions & appareils de confiance', 'infinity-loginshield' ), false, true ),
+			),
+		);
+
+		$benefits = array(
+			array(
+				'icon'  => 'dashicons-shield-alt',
+				'title' => __( 'Sécurité maximale', 'infinity-loginshield' ),
+				'text'  => __( '2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse.', 'infinity-loginshield' ),
+			),
+			array(
+				'icon'  => 'dashicons-chart-line',
+				'title' => __( 'Surveillance complète', 'infinity-loginshield' ),
+				'text'  => __( 'Journal étendu, alertes e-mail immédiates et détection des comportements suspects.', 'infinity-loginshield' ),
+			),
+			array(
+				'icon'  => 'dashicons-superhero-alt',
+				'title' => __( 'Sérénité totale', 'infinity-loginshield' ),
+				'text'  => __( 'Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle.', 'infinity-loginshield' ),
+			),
 		);
 		?>
 		<div class="wrap inls-wrap inls-pro">
 			<div class="inls-hero inls-pro-hero">
-				<span class="inls-hero-mark" aria-hidden="true">&#10022;</span>
+				<span class="inls-hero-mark" aria-hidden="true">&#8734;</span>
 				<h1><?php esc_html_e( 'Infinity LoginShield Pro', 'infinity-loginshield' ); ?></h1>
-				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance et contrôle total.', 'infinity-loginshield' ); ?></p>
+				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'infinity-loginshield' ); ?></p>
 				<div class="inls-hero-actions">
 					<a class="inls-btn inls-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
 						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?>
@@ -1736,23 +1760,45 @@ class Inls_Admin {
 				</div>
 			</div>
 
+			<div class="inls-pro-benefits">
+				<?php foreach ( $benefits as $benefit ) : ?>
+					<div class="inls-pro-benefit">
+						<span class="dashicons <?php echo esc_attr( $benefit['icon'] ); ?>"></span>
+						<h3><?php echo esc_html( $benefit['title'] ); ?></h3>
+						<p><?php echo esc_html( $benefit['text'] ); ?></p>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
 			<div class="inls-about-card inls-pro-table-card">
-				<h2><span class="dashicons dashicons-shield-alt"></span> <?php esc_html_e( 'Niveaux de sécurité : Gratuit vs Pro', 'infinity-loginshield' ); ?></h2>
+				<h2><span class="dashicons dashicons-shield-alt"></span> <?php esc_html_e( 'Comparatif détaillé : Gratuit vs Pro', 'infinity-loginshield' ); ?></h2>
 				<table class="inls-pro-table">
 					<thead>
-						<tr><th><?php esc_html_e( 'Fonctionnalité', 'infinity-loginshield' ); ?></th><th><?php esc_html_e( 'Gratuit', 'infinity-loginshield' ); ?></th><th>Pro ✦</th></tr>
+						<tr>
+							<th><?php esc_html_e( 'Fonctionnalité', 'infinity-loginshield' ); ?></th>
+							<th><?php esc_html_e( 'Gratuit', 'infinity-loginshield' ); ?></th>
+							<th class="inls-pro-col">Pro</th>
+						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ( $rows as $row ) : ?>
-							<tr>
-								<td><?php echo esc_html( $row[0] ); ?></td>
-								<td><?php echo $row[1] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-no-alt is-no"></span>'; ?></td>
-								<td><span class="dashicons dashicons-yes-alt is-yes"></span></td>
-							</tr>
+						<?php foreach ( $groups as $group_label => $group_rows ) : ?>
+							<tr class="inls-pro-group"><td colspan="3"><?php echo esc_html( $group_label ); ?></td></tr>
+							<?php foreach ( $group_rows as $row ) : ?>
+								<tr>
+									<td><?php echo esc_html( $row[0] ); ?></td>
+									<td><?php echo $row[1] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-no-alt is-no"></span>'; ?></td>
+									<td class="inls-pro-col"><span class="dashicons dashicons-yes-alt is-yes"></span></td>
+								</tr>
+							<?php endforeach; ?>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
 				<p class="inls-pro-note"><?php esc_html_e( 'Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre infinity_loginshield_pro_url).', 'infinity-loginshield' ); ?></p>
+				<div class="inls-hero-actions">
+					<a class="inls-btn inls-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
+						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?>
+					</a>
+				</div>
 			</div>
 		</div>
 		<?php

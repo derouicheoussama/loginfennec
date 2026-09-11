@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.6.0\n"
+"Project-Id-Version: Infinity LoginShield 1.6.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,6 +10,9 @@ msgstr ""
 "X-Domain: infinity-loginshield\n"
 
 msgid "%d événements enregistrés (50 maximum)."
+msgstr ""
+
+msgid "2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse."
 msgstr ""
 
 msgid "2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail."
@@ -162,6 +165,9 @@ msgstr ""
 msgid "Blocage géographique (pays)"
 msgstr ""
 
+msgid "Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle."
+msgstr ""
+
 msgid "Blocages (7 jours)"
 msgstr ""
 
@@ -216,6 +222,9 @@ msgstr ""
 msgid "Classique"
 msgstr ""
 
+msgid "Comparatif détaillé : Gratuit vs Pro"
+msgstr ""
+
 msgid "Compatible multisite"
 msgstr ""
 
@@ -238,6 +247,9 @@ msgid "Continuer"
 msgstr ""
 
 msgid "Contour"
+msgstr ""
+
+msgid "Contrôle"
 msgstr ""
 
 msgid "Contrôle du flou (backdrop)."
@@ -513,6 +525,9 @@ msgstr ""
 msgid "Journal des tentatives (audit complet)"
 msgstr ""
 
+msgid "Journal étendu, alertes e-mail immédiates et détection des comportements suspects."
+msgstr ""
+
 msgid "La page de connexion de WordPress, enfin à votre image."
 msgstr ""
 
@@ -666,9 +681,6 @@ msgstr ""
 msgid "Ne pas remplir ce champ"
 msgstr ""
 
-msgid "Niveaux de sécurité : Gratuit vs Pro"
-msgstr ""
-
 msgid "Niveaux de sécurité avancés — Infinity LoginShield Pro"
 msgstr ""
 
@@ -702,9 +714,6 @@ msgstr ""
 msgid "Passer en Pro"
 msgstr ""
 
-msgid "Passer en Pro ✦"
-msgstr ""
-
 msgid "Personnalisation"
 msgstr ""
 
@@ -729,7 +738,10 @@ msgstr ""
 msgid "Position de l’image"
 msgstr ""
 
-msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance et contrôle total."
+msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total."
+msgstr ""
+
+msgid "Protection"
 msgstr ""
 
 msgid "Protection dédiée de /wp-admin (liste blanche IP)"
@@ -861,6 +873,12 @@ msgstr ""
 msgid "Styles modernes"
 msgstr ""
 
+msgid "Surveillance"
+msgstr ""
+
+msgid "Surveillance complète"
+msgstr ""
+
 msgid "Surélevé"
 msgstr ""
 
@@ -871,6 +889,12 @@ msgid "Sécurité"
 msgstr ""
 
 msgid "Sécurité de la connexion"
+msgstr ""
+
+msgid "Sécurité maximale"
+msgstr ""
+
+msgid "Sérénité totale"
 msgstr ""
 
 msgid "Tableau de bord"
