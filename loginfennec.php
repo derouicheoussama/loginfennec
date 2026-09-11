@@ -35,7 +35,30 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOGINFENNEC_VERSION', '2.1.0' );
+/**
+ * Garde anti-doublon : si une autre génération du plugin (ancien dossier
+ * « loginfence » ou « infinity-loginshield ») est encore active, ses
+ * fonctions existent déjà — on stoppe cette copie proprement avec un
+ * avertissement clair au lieu d'une erreur critique.
+ */
+if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || function_exists( 'infcl_settings' ) ) {
+	if ( is_admin() ) {
+		add_action(
+			'admin_notices',
+			function () {
+				if ( ! current_user_can( 'manage_options' ) ) {
+					return;
+				}
+				echo '<div class="notice notice-error"><p><strong>LoginFennec Pro :</strong> '
+					. esc_html__( 'une autre copie du plugin est encore active sur ce site (ancien dossier « loginfence » ou « infinity-loginshield »). Désactivez puis supprimez l’ancienne copie dans Extensions — cette nouvelle version fonctionnera immédiatement.', 'loginfennec' )
+					. '</p></div>';
+			}
+		);
+	}
+	return;
+}
+
+define( 'LOGINFENNEC_VERSION', '2.1.1' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
