@@ -2,12 +2,12 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LoginFence Pro 2.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfence\n"
+"Project-Id-Version: LoginFennec Pro 2.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfennec\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Domain: loginfence\n"
+"X-Domain: loginfennec\n"
 
 msgid "%d événements enregistrés (50 maximum)."
 msgstr ""
@@ -162,13 +162,13 @@ msgstr ""
 msgid "Bienvenue"
 msgstr ""
 
-msgid "Bienvenue dans LoginFence Pro"
+msgid "Bienvenue dans LoginFennec Pro"
 msgstr ""
 
-msgid "Bienvenue dans LoginFence Pro !"
+msgid "Bienvenue dans LoginFennec Pro !"
 msgstr ""
 
-msgid "Bienvenue — LoginFence Pro"
+msgid "Bienvenue — LoginFennec Pro"
 msgstr ""
 
 msgid "Blocage (minutes)"
@@ -267,7 +267,7 @@ msgstr ""
 msgid "Configuration guidée"
 msgstr ""
 
-msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENCE_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENCE_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
+msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
 msgstr ""
 
 msgid "Configurer"
@@ -621,7 +621,7 @@ msgstr ""
 msgid "Le design général du formulaire, indépendant des couleurs."
 msgstr ""
 
-msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfence_pro_url)."
+msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfennec_pro_url)."
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
@@ -684,13 +684,13 @@ msgstr ""
 msgid "Liste blanche d’IP (jamais verrouillées)"
 msgstr ""
 
-msgid "LoginFence Pro"
+msgid "LoginFennec Pro"
 msgstr ""
 
-msgid "LoginFence Pro est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
+msgid "LoginFennec Pro est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit."
 msgstr ""
 
-msgid "LoginFence Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
+msgid "LoginFennec Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée."
 msgstr ""
 
 msgid "Logo"
@@ -777,7 +777,7 @@ msgstr ""
 msgid "Ne pas remplir ce champ"
 msgstr ""
 
-msgid "Niveaux de sécurité avancés — LoginFence Pro"
+msgid "Niveaux de sécurité avancés — LoginFennec Pro"
 msgstr ""
 
 msgid "Notes de version"
@@ -819,7 +819,7 @@ msgstr ""
 msgid "Paiement sécurisé"
 msgstr ""
 
-msgid "Paiement sécurisé — LoginFence Pro"
+msgid "Paiement sécurisé — LoginFennec Pro"
 msgstr ""
 
 msgid "Passer en Pro"
@@ -1098,7 +1098,7 @@ msgstr ""
 msgid "URL de connexion personnalisée"
 msgstr ""
 
-msgid "Un aperçu de tout ce que couvre LoginFence Pro."
+msgid "Un aperçu de tout ce que couvre LoginFennec Pro."
 msgstr ""
 
 msgid "Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !"
@@ -1167,7 +1167,7 @@ msgstr ""
 msgid "Votre page de connexion est à jour."
 msgstr ""
 
-msgid "Vous aimez LoginFence Pro ?"
+msgid "Vous aimez LoginFennec Pro ?"
 msgstr ""
 
 msgid "Vérifier les mises à jour"
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "À propos & don"
 msgstr ""
 
-msgid "À propos d’LoginFence Pro"
+msgid "À propos d’LoginFennec Pro"
 msgstr ""
 
 msgid "Échec"

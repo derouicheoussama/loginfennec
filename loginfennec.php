@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Personnalisation page login et Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -12,9 +12,9 @@
  *            de licence et d'attribution (article 2(c) de la GPL).
  */
 /**
- * Plugin Name:       LoginFence Pro – Login Customizer & Security
- * Plugin URI:        https://github.com/derouicheoussama/loginfence
- * Description:       Personnalisez votre page de connexion : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS personnalisé — et bloquez les tentatives de mot de passe avec journal de sécurité. Interface moderne avec aperçu en direct.
+ * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
+ * Plugin URI:        https://github.com/derouicheoussama/loginfennec
+ * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
  * Version:           2.0.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
@@ -23,41 +23,41 @@
  * Author URI:        https://github.com/derouicheoussama
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       loginfence
+ * Text Domain:       loginfennec
  * Domain Path:       /languages
  *
  * Pas d'en-tête « Update URI » volontairement : une fois le plugin accepté
  * sur WordPress.org, c'est le référentiel officiel qui sert les mises à jour.
  * En attendant, l'updater intégré utilise GitHub (voir includes/github-updater.php).
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'LOGINFENCE_VERSION', '2.0.0' );
-define( 'LOGINFENCE_FILE', __FILE__ );
-define( 'LOGINFENCE_DIR', plugin_dir_path( __FILE__ ) );
-define( 'LOGINFENCE_URL', plugin_dir_url( __FILE__ ) );
+define( 'LOGINFENNEC_VERSION', '2.0.0' );
+define( 'LOGINFENNEC_FILE', __FILE__ );
+define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
+define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
 
 /**
  * Dépôt GitHub utilisé pour les mises à jour automatiques tant que le plugin
  * n'est pas hébergé sur WordPress.org. L'updater bascule automatiquement vers
  * le référentiel officiel dès que le plugin y est détecté. Forçage manuel :
- * add_filter( 'loginfence_update_source', function () { return 'github'; } );
+ * add_filter( 'loginfennec_update_source', function () { return 'github'; } );
  */
-if ( ! defined( 'LOGINFENCE_GITHUB_REPO' ) ) {
-	define( 'LOGINFENCE_GITHUB_REPO', 'derouicheoussama/loginfence' );
+if ( ! defined( 'LOGINFENNEC_GITHUB_REPO' ) ) {
+	define( 'LOGINFENNEC_GITHUB_REPO', 'derouicheoussama/loginfennec' );
 }
 
-require_once LOGINFENCE_DIR . 'includes/settings.php';
-require_once LOGINFENCE_DIR . 'includes/login-appearance.php';
-require_once LOGINFENCE_DIR . 'includes/login-security.php';
-require_once LOGINFENCE_DIR . 'includes/github-updater.php';
-require_once LOGINFENCE_DIR . 'includes/license.php';
+require_once LOGINFENNEC_DIR . 'includes/settings.php';
+require_once LOGINFENNEC_DIR . 'includes/login-appearance.php';
+require_once LOGINFENNEC_DIR . 'includes/login-security.php';
+require_once LOGINFENNEC_DIR . 'includes/github-updater.php';
+require_once LOGINFENNEC_DIR . 'includes/license.php';
 
 if ( is_admin() ) {
-	require_once LOGINFENCE_DIR . 'includes/admin.php';
+	require_once LOGINFENNEC_DIR . 'includes/admin.php';
 }
 
 /**
@@ -65,9 +65,9 @@ if ( is_admin() ) {
  */
 function lnf_load_textdomain() {
 	load_plugin_textdomain(
-		'loginfence',
+		'loginfennec',
 		false,
-		dirname( plugin_basename( LOGINFENCE_FILE ) ) . '/languages'
+		dirname( plugin_basename( LOGINFENNEC_FILE ) ) . '/languages'
 	);
 }
 add_action( 'init', 'lnf_load_textdomain' );
@@ -77,14 +77,14 @@ add_action( 'init', 'lnf_load_textdomain' );
  * l'ouverture de l'installateur personnalisé.
  */
 function lnf_activate() {
-	add_option( 'loginfence_settings', lnf_get_defaults(), '', 'yes' );
+	add_option( 'loginfennec_settings', lnf_get_defaults(), '', 'yes' );
 	update_option( 'lnf_pending_installer', 1, false );
 	add_option( 'lnf_first_activated', time(), '', false );
 }
 register_activation_hook( __FILE__, 'lnf_activate' );
 
 /**
- * Migration des anciens noms vers « LoginFence Pro » :
+ * Migration des anciens noms vers « LoginFennec Pro » :
  * - Infinity Customizer (< 1.3.0) : infinity_customizer_* / infcl_*
  * - Infinity LoginShield (1.3.0 → 1.9.2) : infinity_loginshield_* / inls_*
  * Les options « legacy » ci-dessous gardent volontairement les anciens préfixes.
@@ -102,8 +102,8 @@ function lnf_migrate_legacy() {
 			$settings = $value;
 		}
 	}
-	if ( false !== $settings && false === get_option( 'loginfence_settings' ) ) {
-		update_option( 'loginfence_settings', $settings, 'yes' );
+	if ( false !== $settings && false === get_option( 'loginfennec_settings' ) ) {
+		update_option( 'loginfennec_settings', $settings, 'yes' );
 	}
 
 	// Journal des tentatives (depuis 1.3.0) et journal de sécurité (1.6.0).
@@ -181,13 +181,13 @@ add_action( 'plugins_loaded', 'lnf_migrate_legacy', 12 );
  */
 function lnf_maybe_upgrade() {
 	$stored = get_option( 'lnf_stored_version', '0' );
-	if ( version_compare( $stored, LOGINFENCE_VERSION, '>=' ) ) {
+	if ( version_compare( $stored, LOGINFENNEC_VERSION, '>=' ) ) {
 		return;
 	}
 	if ( version_compare( $stored, '1.1.0', '<' ) ) {
 		update_option( 'lnf_pending_installer', 1, false );
 	}
-	update_option( 'lnf_stored_version', LOGINFENCE_VERSION );
+	update_option( 'lnf_stored_version', LOGINFENNEC_VERSION );
 }
 add_action( 'plugins_loaded', 'lnf_maybe_upgrade', 20 );
 

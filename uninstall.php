@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -15,27 +15,27 @@
  * Désinstallation : suppression de toutes les données du plugin
  * (options, transients), multisite inclus.
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  *
  * @license GPL-2.0-or-later
  */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-const LOGINFENCE_OPTION      = 'loginfence_settings';
-const LOGINFENCE_ATTEMPTS    = 'lnf_login_attempts';
-const LOGINFENCE_TRANSIENT   = 'lnf_gh_release';
-const LOGINFENCE_WPORG_CHECK = 'lnf_wporg_check';
-const LOGINFENCE_PENDING     = 'lnf_pending_installer';
-const LOGINFENCE_VERSION_KEY = 'lnf_stored_version';
+const LOGINFENNEC_OPTION      = 'loginfennec_settings';
+const LOGINFENNEC_ATTEMPTS    = 'lnf_login_attempts';
+const LOGINFENNEC_TRANSIENT   = 'lnf_gh_release';
+const LOGINFENNEC_WPORG_CHECK = 'lnf_wporg_check';
+const LOGINFENNEC_PENDING     = 'lnf_pending_installer';
+const LOGINFENNEC_VERSION_KEY = 'lnf_stored_version';
 
 function lnf_uninstall_site() {
-	delete_option( LOGINFENCE_OPTION );
-	delete_option( LOGINFENCE_ATTEMPTS );
-	delete_option( LOGINFENCE_PENDING );
-	delete_option( LOGINFENCE_VERSION_KEY );
-	delete_transient( LOGINFENCE_TRANSIENT );
-	delete_transient( LOGINFENCE_WPORG_CHECK );
+	delete_option( LOGINFENNEC_OPTION );
+	delete_option( LOGINFENNEC_ATTEMPTS );
+	delete_option( LOGINFENNEC_PENDING );
+	delete_option( LOGINFENNEC_VERSION_KEY );
+	delete_transient( LOGINFENNEC_TRANSIENT );
+	delete_transient( LOGINFENNEC_WPORG_CHECK );
 }
 
 lnf_uninstall_site();

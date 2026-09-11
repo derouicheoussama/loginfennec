@@ -1,12 +1,12 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
- * Plugin : LoginFence Pro · https://www.derouicheoussama.com
+ * Plugin : LoginFennec Pro · https://www.derouicheoussama.com
  * Copyright © 2026 Derouiche Oussama. Licence GPL v2+ —
  * toute copie ou modification doit conserver cette signature.
  */
 
 /**
- * LoginFence Pro — dashboard.
+ * LoginFennec Pro — dashboard.
  * Onglets, aperçu en direct (CSS injecté dans l'iframe), presets,
  * médiathèque, interrupteurs et curseurs.
  */

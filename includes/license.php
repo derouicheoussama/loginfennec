@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -16,8 +16,8 @@
  *
  * Pour activer le paiement intégré, définissez dans wp-config.php :
  *
- *   define( 'LOGINFENCE_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…" );
- *   define( 'LOGINFENCE_LICENSE_API', 'https://votre-serveur.com/api/licence' );
+ *   define( 'LOGINFENNEC_CHECKOUT_URL', 'https://votre-boutique.lemonsqueezy.com/checkout/…" );
+ *   define( 'LOGINFENNEC_LICENSE_API', 'https://votre-serveur.com/api/licence' );
  *
  * - CHECKOUT_URL : lien de paiement (Lemon Squeezy, Stripe Payment Link,
  *   Gumroad…) affiché dans une fenêtre intégrée au plugin.
@@ -25,29 +25,29 @@
  *   { license_key, site_url } en POST et attend { valid: true } en JSON.
  *   Sans endpoint, l'activation est acceptée localement (mode développement).
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  *
  * @license GPL-2.0-or-later
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'LOGINFENCE_CHECKOUT_URL' ) ) {
-	define( 'LOGINFENCE_CHECKOUT_URL', '' );
+if ( ! defined( 'LOGINFENNEC_CHECKOUT_URL' ) ) {
+	define( 'LOGINFENNEC_CHECKOUT_URL', '' );
 }
 
-if ( ! defined( 'LOGINFENCE_LICENSE_API' ) ) {
-	define( 'LOGINFENCE_LICENSE_API', '' );
+if ( ! defined( 'LOGINFENNEC_LICENSE_API' ) ) {
+	define( 'LOGINFENNEC_LICENSE_API', '' );
 }
 
 /** Page « protection / signalement DMCA » (filtrable). */
-if ( ! defined( 'LOGINFENCE_DMCA_URL' ) ) {
-	define( 'LOGINFENCE_DMCA_URL', 'https://www.dmca.com/' );
+if ( ! defined( 'LOGINFENNEC_DMCA_URL' ) ) {
+	define( 'LOGINFENNEC_DMCA_URL', 'https://www.dmca.com/' );
 }
 
 /** URL du badge DMCA (optionnel, ex. badge DMCA.com Protection Pro). */
-if ( ! defined( 'LOGINFENCE_DMCA_BADGE' ) ) {
-	define( 'LOGINFENCE_DMCA_BADGE', '' );
+if ( ! defined( 'LOGINFENNEC_DMCA_BADGE' ) ) {
+	define( 'LOGINFENNEC_DMCA_BADGE', '' );
 }
 
 /**
@@ -56,7 +56,7 @@ if ( ! defined( 'LOGINFENCE_DMCA_BADGE' ) ) {
  * @return string
  */
 function lnf_dmca_url() {
-	return apply_filters( 'loginfence_dmca_url', LOGINFENCE_DMCA_URL );
+	return apply_filters( 'loginfennec_dmca_url', LOGINFENNEC_DMCA_URL );
 }
 
 /**
@@ -65,7 +65,7 @@ function lnf_dmca_url() {
  * @return string
  */
 function lnf_dmca_badge() {
-	return apply_filters( 'loginfence_dmca_badge', LOGINFENCE_DMCA_BADGE );
+	return apply_filters( 'loginfennec_dmca_badge', LOGINFENNEC_DMCA_BADGE );
 }
 
 /**
@@ -74,7 +74,7 @@ function lnf_dmca_badge() {
  * @return string
  */
 function lnf_checkout_url() {
-	return apply_filters( 'loginfence_checkout_url', LOGINFENCE_CHECKOUT_URL );
+	return apply_filters( 'loginfennec_checkout_url', LOGINFENNEC_CHECKOUT_URL );
 }
 
 /**
@@ -83,7 +83,7 @@ function lnf_checkout_url() {
  * @return string
  */
 function lnf_license_api() {
-	return apply_filters( 'loginfence_license_api', LOGINFENCE_LICENSE_API );
+	return apply_filters( 'loginfennec_license_api', LOGINFENNEC_LICENSE_API );
 }
 
 /**
@@ -138,7 +138,7 @@ class Lnf_License {
 
 		$key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 		if ( '' === $key || strlen( $key ) < 8 ) {
-			wp_send_json_error( array( 'message' => __( 'Veuillez saisir une clé de licence valide.', 'loginfence' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Veuillez saisir une clé de licence valide.', 'loginfennec' ) ) );
 		}
 
 		$api = lnf_license_api();
@@ -155,7 +155,7 @@ class Lnf_License {
 				false
 			);
 			wp_send_json_success(
-				array( 'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'loginfence' ) )
+				array( 'message' => __( 'Licence enregistrée. (Serveur de licences non configuré : validation locale.)', 'loginfennec' ) )
 			);
 		}
 
@@ -170,11 +170,11 @@ class Lnf_License {
 			)
 		);
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error( array( 'message' => __( 'Serveur de licences injoignable. Réessayez dans un instant.', 'loginfence' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Serveur de licences injoignable. Réessayez dans un instant.', 'loginfennec' ) ) );
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( empty( $data['valid'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'loginfence' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'loginfennec' ) ) );
 		}
 
 		update_option(
@@ -187,7 +187,7 @@ class Lnf_License {
 			),
 			false
 		);
-		wp_send_json_success( array( 'message' => __( 'Pro activé. Merci pour votre soutien !', 'loginfence' ) ) );
+		wp_send_json_success( array( 'message' => __( 'Pro activé. Merci pour votre soutien !', 'loginfennec' ) ) );
 	}
 
 	/**

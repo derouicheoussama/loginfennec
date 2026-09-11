@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -15,7 +15,7 @@
  * Dashboard d'administration : menu, onglets, aperçu en direct,
  * page « À propos » et bouton de don.
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -43,7 +43,7 @@ class Lnf_Admin {
 		add_action( 'wp_ajax_lnf_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_filter( 'admin_footer_text', array( __CLASS__, 'footer_signature' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( LOGINFENCE_FILE ), array( __CLASS__, 'plugin_action_links' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( LOGINFENNEC_FILE ), array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 	}
 
@@ -56,7 +56,7 @@ class Lnf_Admin {
 	 */
 	public static function footer_signature( $text ) {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( $screen && false !== strpos( (string) $screen->id, 'loginfence' ) ) {
+		if ( $screen && false !== strpos( (string) $screen->id, 'loginfennec' ) ) {
 			return '∞ <strong>Infinity Coder</strong> — conçu par Derouiche Oussama · '
 				. '<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener noreferrer">derouicheoussama.com</a>';
 		}
@@ -68,44 +68,44 @@ class Lnf_Admin {
 	 */
 	public static function menu() {
 		add_menu_page(
-			__( 'LoginFence Pro', 'loginfence' ),
-			__( 'LoginFence Pro', 'loginfence' ),
+			__( 'LoginFennec Pro', 'loginfennec' ),
+			__( 'LoginFennec Pro', 'loginfennec' ),
 			'manage_options',
-			'loginfence',
+			'loginfennec',
 			array( __CLASS__, 'render_page' ),
 			'dashicons-admin-customizer',
 			3
 		);
 		add_submenu_page(
-			'loginfence',
-			__( 'Personnalisation de la connexion', 'loginfence' ),
-			__( 'Personnalisation', 'loginfence' ),
+			'loginfennec',
+			__( 'Personnalisation de la connexion', 'loginfennec' ),
+			__( 'Personnalisation', 'loginfennec' ),
 			'manage_options',
-			'loginfence',
+			'loginfennec',
 			array( __CLASS__, 'render_page' )
 		);
 		add_submenu_page(
-			'loginfence',
-			__( 'Passer en Pro', 'loginfence' ),
-			__( 'Passer en Pro', 'loginfence' ),
+			'loginfennec',
+			__( 'Passer en Pro', 'loginfennec' ),
+			__( 'Passer en Pro', 'loginfennec' ),
 			'manage_options',
-			'loginfence-pro',
+			'loginfennec-pro',
 			array( __CLASS__, 'render_pro' )
 		);
 		add_submenu_page(
-			'loginfence',
-			__( 'À propos d’LoginFence Pro', 'loginfence' ),
-			__( 'À propos', 'loginfence' ),
+			'loginfennec',
+			__( 'À propos d’LoginFennec Pro', 'loginfennec' ),
+			__( 'À propos', 'loginfennec' ),
 			'manage_options',
-			'loginfence-about',
+			'loginfennec-about',
 			array( __CLASS__, 'render_about' )
 		);
 		add_submenu_page(
 			null,
-			__( 'Bienvenue — LoginFence Pro', 'loginfence' ),
-			__( 'Installateur', 'loginfence' ),
+			__( 'Bienvenue — LoginFennec Pro', 'loginfennec' ),
+			__( 'Installateur', 'loginfennec' ),
 			'manage_options',
-			'loginfence-installer',
+			'loginfennec-installer',
 			array( __CLASS__, 'render_installer' )
 		);
 	}
@@ -128,7 +128,7 @@ class Lnf_Admin {
 			return;
 		}
 		delete_option( 'lnf_pending_installer' );
-		wp_safe_redirect( admin_url( 'admin.php?page=loginfence-installer' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=loginfennec-installer' ) );
 		exit;
 	}
 
@@ -138,17 +138,17 @@ class Lnf_Admin {
 	 * @param string $hook Page courante.
 	 */
 	public static function assets( $hook ) {
-		if ( false === strpos( (string) $hook, 'loginfence' ) ) {
+		if ( false === strpos( (string) $hook, 'loginfennec' ) ) {
 			return;
 		}
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_media();
 
 		// Cache-busting : la version intègre la date de modification des fichiers.
-		$css_ver = LOGINFENCE_VERSION;
-		$js_ver  = LOGINFENCE_VERSION;
-		$css_file = LOGINFENCE_DIR . 'assets/css/admin.css';
-		$js_file  = LOGINFENCE_DIR . 'assets/js/admin.js';
+		$css_ver = LOGINFENNEC_VERSION;
+		$js_ver  = LOGINFENNEC_VERSION;
+		$css_file = LOGINFENNEC_DIR . 'assets/css/admin.css';
+		$js_file  = LOGINFENNEC_DIR . 'assets/js/admin.js';
 		if ( file_exists( $css_file ) ) {
 			$css_ver .= '.' . (string) filemtime( $css_file );
 		}
@@ -158,13 +158,13 @@ class Lnf_Admin {
 
 		wp_enqueue_style(
 			'lnf-admin',
-			LOGINFENCE_URL . 'assets/css/admin.css',
+			LOGINFENNEC_URL . 'assets/css/admin.css',
 			array(),
 			$css_ver
 		);
 		wp_enqueue_script(
 			'lnf-admin',
-			LOGINFENCE_URL . 'assets/js/admin.js',
+			LOGINFENNEC_URL . 'assets/js/admin.js',
 			array( 'jquery', 'wp-color-picker' ),
 			$js_ver,
 			true
@@ -186,17 +186,17 @@ class Lnf_Admin {
 	 */
 	public static function save() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_save', 'lnf_nonce' );
 
 		$input = isset( $_POST['lnf'] ) && is_array( $_POST['lnf'] ) ? wp_unslash( $_POST['lnf'] ) : array();
-		update_option( LOGINFENCE_OPTION, lnf_sanitize_settings( $input, null ), 'yes' );
+		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $input, null ), 'yes' );
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'        => 'loginfence',
+					'page'        => 'loginfennec',
 					'lnf-saved' => 1,
 				),
 				admin_url( 'admin.php' )
@@ -210,17 +210,17 @@ class Lnf_Admin {
 	 */
 	public static function reset() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_save', 'lnf_nonce' );
 
-		delete_option( LOGINFENCE_OPTION );
-		add_option( LOGINFENCE_OPTION, lnf_get_defaults(), '', 'yes' );
+		delete_option( LOGINFENNEC_OPTION );
+		add_option( LOGINFENNEC_OPTION, lnf_get_defaults(), '', 'yes' );
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'        => 'loginfence',
+					'page'        => 'loginfennec',
 					'lnf-reset' => 1,
 				),
 				admin_url( 'admin.php' )
@@ -247,19 +247,19 @@ class Lnf_Admin {
 	 */
 	public static function wizard_save() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_wizard', 'lnf_wizard_nonce' );
 
 		$base   = lnf_settings();
 		$input  = isset( $_POST['lnf'] ) && is_array( $_POST['lnf'] ) ? wp_unslash( $_POST['lnf'] ) : array();
-		update_option( LOGINFENCE_OPTION, lnf_sanitize_settings( $input, $base ), 'yes' );
+		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $input, $base ), 'yes' );
 		delete_option( 'lnf_pending_installer' );
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'          => 'loginfence',
+					'page'          => 'loginfennec',
 					'lnf-welcome' => 1,
 				),
 				admin_url( 'admin.php' )
@@ -280,15 +280,15 @@ class Lnf_Admin {
 		$release = Lnf_GitHub_Updater::fetch_latest_release( true );
 		if ( ! $release || empty( $release['version'] ) || '' === $release['download'] ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Impossible de joindre GitHub pour le moment. Réessayez plus tard.', 'loginfence' ) )
+				array( 'message' => __( 'Impossible de joindre GitHub pour le moment. Réessayez plus tard.', 'loginfennec' ) )
 			);
 		}
 
-		if ( version_compare( LOGINFENCE_VERSION, $release['version'], '>=' ) ) {
+		if ( version_compare( LOGINFENNEC_VERSION, $release['version'], '>=' ) ) {
 			wp_send_json_success(
 				array(
 					'status'  => 'up_to_date',
-					'version' => LOGINFENCE_VERSION,
+					'version' => LOGINFENNEC_VERSION,
 				)
 			);
 		}
@@ -297,7 +297,7 @@ class Lnf_Admin {
 		if ( function_exists( 'wp_update_plugins' ) ) {
 			wp_update_plugins();
 		}
-		$basename   = plugin_basename( LOGINFENCE_FILE );
+		$basename   = plugin_basename( LOGINFENNEC_FILE );
 		$update_url = wp_nonce_url(
 			self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $basename ) ),
 			'upgrade-plugin_' . $basename
@@ -329,13 +329,13 @@ class Lnf_Admin {
 	 */
 	public static function export_settings() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_export' );
 
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=loginfence-settings-' . gmdate( 'Ymd-Hi' ) . '.json' );
+		header( 'Content-Disposition: attachment; filename=loginfennec-settings-' . gmdate( 'Ymd-Hi' ) . '.json' );
 		echo wp_json_encode( lnf_settings(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
 		exit;
 	}
@@ -345,20 +345,20 @@ class Lnf_Admin {
 	 */
 	public static function import_settings() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_import', 'lnf_import_nonce' );
 
 		$redirect_ok = add_query_arg(
 			array(
-				'page'          => 'loginfence',
+				'page'          => 'loginfennec',
 				'lnf-imported' => 1,
 			),
 			admin_url( 'admin.php' )
 		);
 		$redirect_ko = add_query_arg(
 			array(
-				'page'           => 'loginfence',
+				'page'           => 'loginfennec',
 				'lnf-import-error' => 1,
 			),
 			admin_url( 'admin.php' )
@@ -382,7 +382,7 @@ class Lnf_Admin {
 			exit;
 		}
 
-		update_option( LOGINFENCE_OPTION, lnf_sanitize_settings( $data, null ), 'yes' );
+		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $data, null ), 'yes' );
 		wp_safe_redirect( $redirect_ok );
 		exit;
 	}
@@ -393,7 +393,7 @@ class Lnf_Admin {
 	 */
 	public static function purge_cache() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_purge_cache' );
 
@@ -403,7 +403,7 @@ class Lnf_Admin {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'       => 'loginfence',
+					'page'       => 'loginfennec',
 					'lnf-cache' => 1,
 				),
 				admin_url( 'admin.php' )
@@ -417,13 +417,13 @@ class Lnf_Admin {
 	 */
 	public static function export_log_csv() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_export_log' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=loginfence-journal-' . gmdate( 'Ymd-Hi' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=loginfennec-journal-' . gmdate( 'Ymd-Hi' ) . '.csv' );
 
 		$out = fopen( 'php://output', 'w' );
 		if ( $out ) {
@@ -456,7 +456,7 @@ class Lnf_Admin {
 		foreach ( array( 'sec_enable', 'sec_honeypot', 'sec_disable_authors', 'sec_disable_xmlrpc', 'sec_generic_error' ) as $key ) {
 			$s[ $key ] = true;
 		}
-		update_option( LOGINFENCE_OPTION, $s, 'yes' );
+		update_option( LOGINFENNEC_OPTION, $s, 'yes' );
 		wp_send_json_success();
 	}
 
@@ -465,11 +465,11 @@ class Lnf_Admin {
 	 */
 	public static function dismiss_review() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Accès refusé.', 'loginfence' ) );
+			wp_die( esc_html__( 'Accès refusé.', 'loginfennec' ) );
 		}
 		check_admin_referer( 'lnf_dismiss_review' );
 		update_option( 'lnf_review_dismissed', 1, false );
-		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'admin.php?page=loginfence' ) );
+		wp_safe_redirect( wp_get_referer() ? wp_get_referer() : admin_url( 'admin.php?page=loginfennec' ) );
 		exit;
 	}
 
@@ -482,8 +482,8 @@ class Lnf_Admin {
 	public static function plugin_action_links( $links ) {
 		array_unshift(
 			$links,
-			'<a href="' . esc_url( admin_url( 'admin.php?page=loginfence' ) ) . '">'
-			. esc_html__( 'Personnaliser', 'loginfence' ) . '</a>'
+			'<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec' ) ) . '">'
+			. esc_html__( 'Personnaliser', 'loginfennec' ) . '</a>'
 		);
 		return $links;
 	}
@@ -496,11 +496,11 @@ class Lnf_Admin {
 	 * @return array
 	 */
 	public static function plugin_row_meta( $meta, $file ) {
-		if ( plugin_basename( LOGINFENCE_FILE ) !== $file ) {
+		if ( plugin_basename( LOGINFENNEC_FILE ) !== $file ) {
 			return $meta;
 		}
-		$meta[] = '<a href="https://github.com/derouicheoussama/loginfence" target="_blank" rel="noopener noreferrer">GitHub</a>';
-		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfence-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfence' ) . '</a>';
+		$meta[] = '<a href="https://github.com/derouicheoussama/loginfennec" target="_blank" rel="noopener noreferrer">GitHub</a>';
+		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfennec' ) . '</a>';
 		return $meta;
 	}
 
@@ -511,28 +511,28 @@ class Lnf_Admin {
 		if ( ! isset( $_GET['page'] ) ) {
 			return;
 		}
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-welcome'] ) ) {
-			echo '<div class="notice notice-success is-dismissible"><p><strong>🎉 ' . esc_html__( 'Bienvenue dans LoginFence Pro !', 'loginfence' ) . '</strong> ' . esc_html__( 'Votre page de connexion est prête — explorez les onglets pour la personnaliser.', 'loginfence' ) . '</p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-welcome'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>🎉 ' . esc_html__( 'Bienvenue dans LoginFennec Pro !', 'loginfennec' ) . '</strong> ' . esc_html__( 'Votre page de connexion est prête — explorez les onglets pour la personnaliser.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-saved'] ) ) {
-			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages enregistrés.', 'loginfence' ) . '</strong> ' . esc_html__( 'Votre page de connexion est à jour.', 'loginfence' ) . '</p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-saved'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages enregistrés.', 'loginfennec' ) . '</strong> ' . esc_html__( 'Votre page de connexion est à jour.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-reset'] ) ) {
-			echo '<div class="notice notice-info is-dismissible"><p>' . esc_html__( 'Réglages réinitialisés aux valeurs par défaut.', 'loginfence' ) . '</p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-reset'] ) ) {
+			echo '<div class="notice notice-info is-dismissible"><p>' . esc_html__( 'Réglages réinitialisés aux valeurs par défaut.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-imported'] ) ) {
-			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages importés avec succès.', 'loginfence' ) . '</strong></p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-imported'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages importés avec succès.', 'loginfennec' ) . '</strong></p></div>';
 		}
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-import-error'] ) ) {
-			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Import impossible : fichier JSON invalide ou illisible.', 'loginfence' ) . '</p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-import-error'] ) ) {
+			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Import impossible : fichier JSON invalide ou illisible.', 'loginfennec' ) . '</p></div>';
 		}
 
-		if ( 'loginfence' === $_GET['page'] && isset( $_GET['lnf-cache'] ) ) {
-			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache du plugin vidé : vérifications de mises à jour réinitialisées et assets rafraîchis.', 'loginfence' ) . '</p></div>';
+		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-cache'] ) ) {
+			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache du plugin vidé : vérifications de mises à jour réinitialisées et assets rafraîchis.', 'loginfennec' ) . '</p></div>';
 		}
 
 		// Demande d'avis : une seule fois, après 14 jours d'utilisation.
-		if ( 'loginfence' !== $_GET['page'] ) {
+		if ( 'loginfennec' !== $_GET['page'] ) {
 			return;
 		}
 		$first = (int) get_option( 'lnf_first_activated', 0 );
@@ -548,10 +548,10 @@ class Lnf_Admin {
 		<div class="notice notice-info lnf-review">
 			<p>
 				<span class="lnf-stars" aria-hidden="true">★★★★★</span>
-				<strong><?php esc_html_e( 'Vous aimez LoginFence Pro ?', 'loginfence' ); ?></strong>
-				<?php esc_html_e( 'Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !', 'loginfence' ); ?>
-				<a class="button button-primary" href="https://wordpress.org/plugins/loginfence/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis', 'loginfence' ); ?></a>
-				<a class="button-link" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'C’est noté', 'loginfence' ); ?></a>
+				<strong><?php esc_html_e( 'Vous aimez LoginFennec Pro ?', 'loginfennec' ); ?></strong>
+				<?php esc_html_e( 'Un avis de votre part aide beaucoup le plugin à grandir. Merci pour votre soutien !', 'loginfennec' ); ?>
+				<a class="button button-primary" href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis', 'loginfennec' ); ?></a>
+				<a class="button-link" href="<?php echo esc_url( $dismiss ); ?>"><?php esc_html_e( 'C’est noté', 'loginfennec' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -700,8 +700,8 @@ class Lnf_Admin {
 		}
 		printf( '<input type="url" class="lnf-input" name="lnf[%s]" value="%s" placeholder="https://…" autocomplete="off">', esc_attr( $key ), esc_attr( $s[ $key ] ) );
 		echo '<span class="lnf-media-actions">';
-		echo '<button type="button" class="button lnf-media-pick">' . esc_html__( 'Médiathèque', 'loginfence' ) . '</button>';
-		echo '<button type="button" class="button-link lnf-media-clear">' . esc_html__( 'Retirer', 'loginfence' ) . '</button>';
+		echo '<button type="button" class="button lnf-media-pick">' . esc_html__( 'Médiathèque', 'loginfennec' ) . '</button>';
+		echo '<button type="button" class="button-link lnf-media-clear">' . esc_html__( 'Retirer', 'loginfennec' ) . '</button>';
 		echo '</span></div>';
 		if ( $desc ) {
 			echo '<p class="lnf-desc">' . esc_html( $desc ) . '</p>';
@@ -720,16 +720,16 @@ class Lnf_Admin {
 	 */
 	protected static function tabs() {
 		return array(
-			'dashboard' => array( __( 'Tableau de bord', 'loginfence' ), 'dashicons-dashboard' ),
-			'styles'    => array( __( 'Styles', 'loginfence' ), 'dashicons-art' ),
-			'logo'      => array( __( 'Logo', 'loginfence' ), 'dashicons-format-image' ),
-			'bg'        => array( __( 'Arrière-plan', 'loginfence' ), 'dashicons-desktop' ),
-			'form'      => array( __( 'Formulaire', 'loginfence' ), 'dashicons-feedback' ),
-			'links'     => array( __( 'Liens', 'loginfence' ), 'dashicons-editor-unlink' ),
-			'social'    => array( __( 'Réseaux sociaux', 'loginfence' ), 'dashicons-share' ),
-			'copyright' => array( __( 'Copyright', 'loginfence' ), 'dashicons-text' ),
-			'extras'    => array( __( 'Extras', 'loginfence' ), 'dashicons-star-filled' ),
-			'security'  => array( __( 'Sécurité', 'loginfence' ), 'dashicons-shield-alt' ),
+			'dashboard' => array( __( 'Tableau de bord', 'loginfennec' ), 'dashicons-dashboard' ),
+			'styles'    => array( __( 'Styles', 'loginfennec' ), 'dashicons-art' ),
+			'logo'      => array( __( 'Logo', 'loginfennec' ), 'dashicons-format-image' ),
+			'bg'        => array( __( 'Arrière-plan', 'loginfennec' ), 'dashicons-desktop' ),
+			'form'      => array( __( 'Formulaire', 'loginfennec' ), 'dashicons-feedback' ),
+			'links'     => array( __( 'Liens', 'loginfennec' ), 'dashicons-editor-unlink' ),
+			'social'    => array( __( 'Réseaux sociaux', 'loginfennec' ), 'dashicons-share' ),
+			'copyright' => array( __( 'Copyright', 'loginfennec' ), 'dashicons-text' ),
+			'extras'    => array( __( 'Extras', 'loginfennec' ), 'dashicons-star-filled' ),
+			'security'  => array( __( 'Sécurité', 'loginfennec' ), 'dashicons-shield-alt' ),
 		);
 	}
 
@@ -744,8 +744,8 @@ class Lnf_Admin {
 				<div class="lnf-brand">
 					<span class="lnf-brand-mark" aria-hidden="true">&#8734;</span>
 					<span class="lnf-brand-text">
-						<strong>LoginFence Pro</strong>
-						<em class="lnf-version"><?php echo esc_html( 'v' . LOGINFENCE_VERSION ); ?></em>
+						<strong>LoginFennec Pro</strong>
+						<em class="lnf-version"><?php echo esc_html( 'v' . LOGINFENNEC_VERSION ); ?></em>
 					</span>
 				</div>
 				<div class="lnf-topbar-actions">
@@ -753,29 +753,29 @@ class Lnf_Admin {
 						<input type="hidden" name="action" value="lnf_reset">
 						<?php wp_nonce_field( 'lnf_save', 'lnf_nonce' ); ?>
 						<button type="submit" id="lnf-reset" class="lnf-btn lnf-btn-ghost">
-							<?php esc_html_e( 'Réinitialiser', 'loginfence' ); ?>
+							<?php esc_html_e( 'Réinitialiser', 'loginfennec' ); ?>
 						</button>
 					</form>
 					<button type="submit" form="lnf-form" class="lnf-btn lnf-btn-primary">
-						<?php esc_html_e( 'Enregistrer', 'loginfence' ); ?>
+						<?php esc_html_e( 'Enregistrer', 'loginfennec' ); ?>
 					</button>
 				</div>
 			</div>
 
 			<div class="lnf-backup-bar">
-				<span class="lnf-backup-title"><span class="dashicons dashicons-database-export"></span> <?php esc_html_e( 'Sauvegarde des réglages', 'loginfence' ); ?></span>
+				<span class="lnf-backup-title"><span class="dashicons dashicons-database-export"></span> <?php esc_html_e( 'Sauvegarde des réglages', 'loginfennec' ); ?></span>
 				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=lnf_export' ), 'lnf_export' ) ); ?>">
-					<?php esc_html_e( 'Exporter (JSON)', 'loginfence' ); ?>
+					<?php esc_html_e( 'Exporter (JSON)', 'loginfennec' ); ?>
 				</a>
 				<a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=lnf_purge_cache' ), 'lnf_purge_cache' ) ); ?>">
-					<span class="dashicons dashicons-image-rotate"></span> <?php esc_html_e( 'Vider le cache du plugin', 'loginfence' ); ?>
+					<span class="dashicons dashicons-image-rotate"></span> <?php esc_html_e( 'Vider le cache du plugin', 'loginfennec' ); ?>
 				</a>
 				<form class="lnf-import-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="action" value="lnf_import">
 					<?php wp_nonce_field( 'lnf_import', 'lnf_import_nonce' ); ?>
-					<label class="screen-reader-text" for="lnf-import-file"><?php esc_html_e( 'Fichier de réglages (JSON)', 'loginfence' ); ?></label>
+					<label class="screen-reader-text" for="lnf-import-file"><?php esc_html_e( 'Fichier de réglages (JSON)', 'loginfennec' ); ?></label>
 					<input type="file" id="lnf-import-file" name="lnf_import_file" accept="application/json,.json" required>
-					<?php submit_button( __( 'Importer', 'loginfence' ), 'secondary', 'submit', false ); ?>
+					<?php submit_button( __( 'Importer', 'loginfennec' ), 'secondary', 'submit', false ); ?>
 				</form>
 			</div>
 
@@ -783,7 +783,7 @@ class Lnf_Admin {
 				<input type="hidden" name="action" value="lnf_save">
 				<?php wp_nonce_field( 'lnf_save', 'lnf_nonce' ); ?>
 
-				<nav class="lnf-tabs" aria-label="<?php esc_attr_e( 'Sections de personnalisation', 'loginfence' ); ?>">
+				<nav class="lnf-tabs" aria-label="<?php esc_attr_e( 'Sections de personnalisation', 'loginfennec' ); ?>">
 					<?php foreach ( self::tabs() as $id => $tab ) : ?>
 						<button type="button" class="lnf-tab<?php echo 'dashboard' === $id ? ' is-active' : ''; ?>" data-tab="<?php echo esc_attr( $id ); ?>">
 							<span class="dashicons <?php echo esc_attr( $tab[1] ); ?>" aria-hidden="true"></span>
@@ -806,24 +806,24 @@ class Lnf_Admin {
 						<?php self::panel_security( $s ); ?>
 					</div>
 
-					<aside class="lnf-preview" aria-label="<?php esc_attr_e( 'Aperçu en direct', 'loginfence' ); ?>">
+					<aside class="lnf-preview" aria-label="<?php esc_attr_e( 'Aperçu en direct', 'loginfennec' ); ?>">
 						<div class="lnf-preview-bar">
-							<span class="lnf-preview-title"><?php esc_html_e( 'Aperçu en direct', 'loginfence' ); ?></span>
+							<span class="lnf-preview-title"><?php esc_html_e( 'Aperçu en direct', 'loginfennec' ); ?></span>
 							<span class="lnf-preview-devices">
-								<button type="button" class="lnf-device is-active" data-width="0" title="<?php esc_attr_e( 'Bureau', 'loginfence' ); ?>"><span class="dashicons dashicons-desktop"></span></button>
-								<button type="button" class="lnf-device" data-width="480" title="<?php esc_attr_e( 'Tablette', 'loginfence' ); ?>"><span class="dashicons dashicons-tablet"></span></button>
-								<button type="button" class="lnf-device" data-width="375" title="<?php esc_attr_e( 'Mobile', 'loginfence' ); ?>"><span class="dashicons dashicons-smartphone"></span></button>
+								<button type="button" class="lnf-device is-active" data-width="0" title="<?php esc_attr_e( 'Bureau', 'loginfennec' ); ?>"><span class="dashicons dashicons-desktop"></span></button>
+								<button type="button" class="lnf-device" data-width="480" title="<?php esc_attr_e( 'Tablette', 'loginfennec' ); ?>"><span class="dashicons dashicons-tablet"></span></button>
+								<button type="button" class="lnf-device" data-width="375" title="<?php esc_attr_e( 'Mobile', 'loginfennec' ); ?>"><span class="dashicons dashicons-smartphone"></span></button>
 							</span>
 							<span class="lnf-preview-actions">
-								<button type="button" class="lnf-expand" title="<?php esc_attr_e( 'Aperçu plein écran', 'loginfence' ); ?>"><span class="dashicons dashicons-fullscreen-exit-alt"></span></button>
-								<button type="button" class="lnf-refresh" title="<?php esc_attr_e( 'Recharger l’aperçu', 'loginfence' ); ?>"><span class="dashicons dashicons-update"></span></button>
-								<a class="lnf-open" href="<?php echo esc_url( wp_login_url() ); ?>" target="_blank" rel="noopener" title="<?php esc_attr_e( 'Ouvrir dans un onglet', 'loginfence' ); ?>"><span class="dashicons dashicons-external"></span></a>
+								<button type="button" class="lnf-expand" title="<?php esc_attr_e( 'Aperçu plein écran', 'loginfennec' ); ?>"><span class="dashicons dashicons-fullscreen-exit-alt"></span></button>
+								<button type="button" class="lnf-refresh" title="<?php esc_attr_e( 'Recharger l’aperçu', 'loginfennec' ); ?>"><span class="dashicons dashicons-update"></span></button>
+								<a class="lnf-open" href="<?php echo esc_url( wp_login_url() ); ?>" target="_blank" rel="noopener" title="<?php esc_attr_e( 'Ouvrir dans un onglet', 'loginfennec' ); ?>"><span class="dashicons dashicons-external"></span></a>
 							</span>
 						</div>
 						<div class="lnf-frame-holder">
-							<iframe id="lnf-frame" src="<?php echo esc_url( wp_login_url() ); ?>" title="<?php esc_attr_e( 'Aperçu de la page de connexion', 'loginfence' ); ?>" loading="lazy"></iframe>
+							<iframe id="lnf-frame" src="<?php echo esc_url( wp_login_url() ); ?>" title="<?php esc_attr_e( 'Aperçu de la page de connexion', 'loginfennec' ); ?>" loading="lazy"></iframe>
 						</div>
-						<p class="lnf-preview-note"><?php esc_html_e( 'Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement.', 'loginfence' ); ?></p>
+						<p class="lnf-preview-note"><?php esc_html_e( 'Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement.', 'loginfennec' ); ?></p>
 					</aside>
 				</div>
 			</form>
@@ -855,17 +855,17 @@ class Lnf_Admin {
 	 * Panneau : tableau de bord.
 	 */
 	protected static function panel_dashboard( $s ) {
-		self::panel_open( 'dashboard', __( 'Tableau de bord', 'loginfence' ), __( 'Statistiques, score de sécurité et accès rapide à tous vos réglages.', 'loginfence' ) );
+		self::panel_open( 'dashboard', __( 'Tableau de bord', 'loginfennec' ), __( 'Statistiques, score de sécurité et accès rapide à tous vos réglages.', 'loginfennec' ) );
 
 		$social_count  = count( lnf_get_social_networks( $s ) );
 
 		// ——— Statistiques de sécurité ———.
 		$stats = Lnf_Login_Security::get_stats();
 		$stat_items = array(
-			array( 'dashicons-yes-alt', __( 'Connexions (7 jours)', 'loginfence' ), $stats['logins7'], 'is-ok' ),
-			array( 'dashicons-shield-alt', __( 'Blocages (7 jours)', 'loginfence' ), $stats['blocked7'], 'is-warn' ),
-			array( 'dashicons-warning', __( 'Échecs (24 h)', 'loginfence' ), $stats['fails24'], 'is-err' ),
-			array( 'dashicons-lock', __( 'Verrouillages actifs', 'loginfence' ), $stats['locks'], 'is-lock' ),
+			array( 'dashicons-yes-alt', __( 'Connexions (7 jours)', 'loginfennec' ), $stats['logins7'], 'is-ok' ),
+			array( 'dashicons-shield-alt', __( 'Blocages (7 jours)', 'loginfennec' ), $stats['blocked7'], 'is-warn' ),
+			array( 'dashicons-warning', __( 'Échecs (24 h)', 'loginfennec' ), $stats['fails24'], 'is-err' ),
+			array( 'dashicons-lock', __( 'Verrouillages actifs', 'loginfennec' ), $stats['locks'], 'is-lock' ),
 		);
 		echo '<div class="lnf-stats">';
 		foreach ( $stat_items as $item ) {
@@ -881,11 +881,11 @@ class Lnf_Admin {
 
 		// ——— Score de sécurité ———.
 		$checks = array(
-			'sec_enable'           => __( 'Limite des tentatives', 'loginfence' ),
-			'sec_honeypot'         => __( 'Honeypot anti-robots', 'loginfence' ),
-			'sec_disable_authors'  => __( 'Anti-énumération des auteurs', 'loginfence' ),
-			'sec_disable_xmlrpc'   => __( 'XML-RPC désactivé', 'loginfence' ),
-			'sec_generic_error'    => __( 'Erreurs masquées', 'loginfence' ),
+			'sec_enable'           => __( 'Limite des tentatives', 'loginfennec' ),
+			'sec_honeypot'         => __( 'Honeypot anti-robots', 'loginfennec' ),
+			'sec_disable_authors'  => __( 'Anti-énumération des auteurs', 'loginfennec' ),
+			'sec_disable_xmlrpc'   => __( 'XML-RPC désactivé', 'loginfennec' ),
+			'sec_generic_error'    => __( 'Erreurs masquées', 'loginfennec' ),
 		);
 		$score    = 0;
 		foreach ( $checks as $key => $label ) {
@@ -895,7 +895,7 @@ class Lnf_Admin {
 		}
 		$score_class = 5 === $score ? 'is-high' : ( $score >= 3 ? 'is-mid' : 'is-low' );
 		echo '<div class="lnf-score">';
-		echo '<div class="lnf-score-head"><h3 class="lnf-group-title">' . esc_html__( 'Score de sécurité', 'loginfence' ) . '</h3>';
+		echo '<div class="lnf-score-head"><h3 class="lnf-group-title">' . esc_html__( 'Score de sécurité', 'loginfennec' ) . '</h3>';
 		printf( '<span class="lnf-score-value %1$s">%2$d/5</span>', esc_attr( $score_class ), (int) $score );
 		echo '</div>';
 		printf( '<div class="lnf-score-bar"><span class="%1$s" style="width:%2$d%%"></span></div>', esc_attr( $score_class ), (int) ( $score * 20 ) );
@@ -911,9 +911,9 @@ class Lnf_Admin {
 		}
 		echo '</div>';
 		echo '<div class="lnf-score-actions">';
-		echo '<button type="button" class="lnf-card-link" data-goto="security">' . esc_html__( 'Renforcer la sécurité', 'loginfence' ) . '</button>';
+		echo '<button type="button" class="lnf-card-link" data-goto="security">' . esc_html__( 'Renforcer la sécurité', 'loginfennec' ) . '</button>';
 		if ( $score < 5 ) {
-			echo '<button type="button" class="lnf-card-link lnf-recommended">⚡ ' . esc_html__( 'Activer le pack recommandé (5/5)', 'loginfence' ) . '</button>';
+			echo '<button type="button" class="lnf-card-link lnf-recommended">⚡ ' . esc_html__( 'Activer le pack recommandé (5/5)', 'loginfennec' ) . '</button>';
 		}
 		echo '</div>';
 		echo '</div>';
@@ -921,12 +921,12 @@ class Lnf_Admin {
 		// ——— Activité récente ———.
 		$log = Lnf_Login_Security::get_log();
 		echo '<div class="lnf-activity">';
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Activité récente', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Activité récente', 'loginfennec' ) . '</h3>';
 		if ( $log ) {
 			$badges = array(
-				'failed'  => array( __( 'Échec', 'loginfence' ), 'is-fail' ),
-				'blocked' => array( __( 'Bloqué', 'loginfence' ), 'is-blocked' ),
-				'login'   => array( __( 'Connexion', 'loginfence' ), 'is-login' ),
+				'failed'  => array( __( 'Échec', 'loginfennec' ), 'is-fail' ),
+				'blocked' => array( __( 'Bloqué', 'loginfennec' ), 'is-blocked' ),
+				'login'   => array( __( 'Connexion', 'loginfennec' ), 'is-login' ),
 			);
 			echo '<ul class="lnf-activity-list">';
 			foreach ( array_slice( $log, 0, 5 ) as $event ) {
@@ -941,102 +941,102 @@ class Lnf_Admin {
 				);
 			}
 			echo '</ul>';
-			echo '<button type="button" class="lnf-card-link" data-goto="security">' . esc_html__( 'Ouvrir le journal complet', 'loginfence' ) . '</button>';
+			echo '<button type="button" class="lnf-card-link" data-goto="security">' . esc_html__( 'Ouvrir le journal complet', 'loginfennec' ) . '</button>';
 		} else {
-			echo '<p class="lnf-desc">' . esc_html__( 'Aucun événement pour le moment — votre page de connexion est tranquille.', 'loginfence' ) . '</p>';
+			echo '<p class="lnf-desc">' . esc_html__( 'Aucun événement pour le moment — votre page de connexion est tranquille.', 'loginfennec' ) . '</p>';
 		}
 		echo '</div>';
 		$links_count   = ( ! empty( $s['hide_lost_password'] ) ? 1 : 0 ) + ( ! empty( $s['hide_back_to'] ) ? 1 : 0 ) + ( ! empty( $s['back_to_url'] ) || ! empty( $s['back_to_text'] ) ? 1 : 0 );
 		$preset_labels = array(
-			'glass'   => __( 'Effet verre', 'loginfence' ),
-			'minimal' => __( 'Minimal', 'loginfence' ),
-			'dark'    => __( 'Sombre', 'loginfence' ),
-			'sunset'  => __( 'Coucher de soleil', 'loginfence' ),
-			'ocean'   => __( 'Océan', 'loginfence' ),
-			'forest'  => __( 'Forêt', 'loginfence' ),
-			'neon'    => __( 'Néon', 'loginfence' ),
-			'sakura'  => __( 'Sakura', 'loginfence' ),
-			'mono'    => __( 'Monochrome', 'loginfence' ),
-			'royal'   => __( 'Royal', 'loginfence' ),
-			'custom'  => __( 'Personnalisé', 'loginfence' ),
+			'glass'   => __( 'Effet verre', 'loginfennec' ),
+			'minimal' => __( 'Minimal', 'loginfennec' ),
+			'dark'    => __( 'Sombre', 'loginfennec' ),
+			'sunset'  => __( 'Coucher de soleil', 'loginfennec' ),
+			'ocean'   => __( 'Océan', 'loginfennec' ),
+			'forest'  => __( 'Forêt', 'loginfennec' ),
+			'neon'    => __( 'Néon', 'loginfennec' ),
+			'sakura'  => __( 'Sakura', 'loginfennec' ),
+			'mono'    => __( 'Monochrome', 'loginfennec' ),
+			'royal'   => __( 'Royal', 'loginfennec' ),
+			'custom'  => __( 'Personnalisé', 'loginfennec' ),
 		);
 
 		$cards = array(
 			array(
 				'icon'   => 'dashicons-art',
-				'title'  => __( 'Style actif', 'loginfence' ),
-				'state'  => isset( $preset_labels[ $s['preset'] ] ) ? $preset_labels[ $s['preset'] ] : __( 'Personnalisé', 'loginfence' ),
+				'title'  => __( 'Style actif', 'loginfennec' ),
+				'state'  => isset( $preset_labels[ $s['preset'] ] ) ? $preset_labels[ $s['preset'] ] : __( 'Personnalisé', 'loginfennec' ),
 				'ok'     => true,
 				'goto'   => 'styles',
-				'button' => __( 'Changer de style', 'loginfence' ),
+				'button' => __( 'Changer de style', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-shield-alt',
-				'title'  => __( 'Sécurité', 'loginfence' ),
+				'title'  => __( 'Sécurité', 'loginfennec' ),
 				'state'  => ! empty( $s['sec_enable'] )
 					/* translators: 1 : nombre de tentatives, 2 : minutes. */
-					? sprintf( __( 'Activé — %1$d tentatives, blocage %2$d min', 'loginfence' ), (int) $s['sec_max_attempts'], (int) $s['sec_lockout_minutes'] )
-					: __( 'Désactivé', 'loginfence' ),
+					? sprintf( __( 'Activé — %1$d tentatives, blocage %2$d min', 'loginfennec' ), (int) $s['sec_max_attempts'], (int) $s['sec_lockout_minutes'] )
+					: __( 'Désactivé', 'loginfennec' ),
 				'ok'     => ! empty( $s['sec_enable'] ),
 				'goto'   => 'security',
-				'button' => __( 'Configurer', 'loginfence' ),
+				'button' => __( 'Configurer', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-share',
-				'title'  => __( 'Réseaux sociaux', 'loginfence' ),
+				'title'  => __( 'Réseaux sociaux', 'loginfennec' ),
 				'state'  => $social_count > 0
 					/* translators: %d : nombre de réseaux configurés. */
-					? sprintf( _n( '%d réseau configuré', '%d réseaux configurés', $social_count, 'loginfence' ), $social_count )
-					: __( 'Aucun réseau configuré', 'loginfence' ),
+					? sprintf( _n( '%d réseau configuré', '%d réseaux configurés', $social_count, 'loginfennec' ), $social_count )
+					: __( 'Aucun réseau configuré', 'loginfennec' ),
 				'ok'     => $social_count > 0,
 				'goto'   => 'social',
-				'button' => __( 'Configurer', 'loginfence' ),
+				'button' => __( 'Configurer', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-text',
-				'title'  => __( 'Copyright', 'loginfence' ),
-				'state'  => ! empty( $s['copyright_enable'] ) ? __( 'Affiché', 'loginfence' ) : __( 'Masqué', 'loginfence' ),
+				'title'  => __( 'Copyright', 'loginfennec' ),
+				'state'  => ! empty( $s['copyright_enable'] ) ? __( 'Affiché', 'loginfennec' ) : __( 'Masqué', 'loginfennec' ),
 				'ok'     => ! empty( $s['copyright_enable'] ),
 				'goto'   => 'copyright',
-				'button' => __( 'Configurer', 'loginfence' ),
+				'button' => __( 'Configurer', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-format-image',
-				'title'  => __( 'Logo', 'loginfence' ),
-				'state'  => ! empty( $s['logo_hide'] ) ? __( 'Masqué', 'loginfence' ) : ( ! empty( $s['logo_url'] ) ? __( 'Image personnalisée', 'loginfence' ) : __( 'Logo WordPress par défaut', 'loginfence' ) ),
+				'title'  => __( 'Logo', 'loginfennec' ),
+				'state'  => ! empty( $s['logo_hide'] ) ? __( 'Masqué', 'loginfennec' ) : ( ! empty( $s['logo_url'] ) ? __( 'Image personnalisée', 'loginfennec' ) : __( 'Logo WordPress par défaut', 'loginfennec' ) ),
 				'ok'     => ! empty( $s['logo_url'] ) && empty( $s['logo_hide'] ),
 				'goto'   => 'logo',
-				'button' => __( 'Personnaliser', 'loginfence' ),
+				'button' => __( 'Personnaliser', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-editor-unlink',
-				'title'  => __( 'Liens', 'loginfence' ),
-				'state'  => $links_count > 0 ? __( 'Liens personnalisés', 'loginfence' ) : __( 'Liens par défaut', 'loginfence' ),
+				'title'  => __( 'Liens', 'loginfennec' ),
+				'state'  => $links_count > 0 ? __( 'Liens personnalisés', 'loginfennec' ) : __( 'Liens par défaut', 'loginfennec' ),
 				'ok'     => $links_count > 0,
 				'goto'   => 'links',
-				'button' => __( 'Personnaliser', 'loginfence' ),
+				'button' => __( 'Personnaliser', 'loginfennec' ),
 			),
 			array(
 				'icon'   => 'dashicons-download',
-				'title'  => __( 'Mises à jour', 'loginfence' ),
+				'title'  => __( 'Mises à jour', 'loginfennec' ),
 				'state'  => sprintf(
 					/* translators: %s : dépôt GitHub. */
-					__( 'Version %s — GitHub : ', 'loginfence' ),
-					LOGINFENCE_VERSION
-				) . LOGINFENCE_GITHUB_REPO,
+					__( 'Version %s — GitHub : ', 'loginfennec' ),
+					LOGINFENNEC_VERSION
+				) . LOGINFENNEC_GITHUB_REPO,
 				'ok'     => true,
 				'goto'   => '',
-				'button' => __( 'Vérifier les mises à jour', 'loginfence' ),
+				'button' => __( 'Vérifier les mises à jour', 'loginfennec' ),
 				'check'  => true,
 			),
 			array(
 				'icon'   => 'dashicons-superhero-alt',
-				'title'  => __( 'LoginFence Pro', 'loginfence' ),
-				'state'  => __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'loginfence' ),
+				'title'  => __( 'LoginFennec Pro', 'loginfennec' ),
+				'state'  => __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'loginfennec' ),
 				'ok'     => false,
 				'goto'   => '',
-				'link'   => admin_url( 'admin.php?page=loginfence-pro' ),
-				'button' => __( 'Passer en Pro', 'loginfence' ),
+				'link'   => admin_url( 'admin.php?page=loginfennec-pro' ),
+				'button' => __( 'Passer en Pro', 'loginfennec' ),
 			),
 		);
 
@@ -1065,19 +1065,19 @@ class Lnf_Admin {
 	 * Panneau : styles prédéfinis.
 	 */
 	protected static function panel_styles( $s ) {
-		self::panel_open( 'styles', __( 'Styles modernes', 'loginfence' ), __( 'Appliquez un style et un thème d’interface en un clic, puis affinez-les dans les onglets suivants.', 'loginfence' ) );
+		self::panel_open( 'styles', __( 'Styles modernes', 'loginfennec' ), __( 'Appliquez un style et un thème d’interface en un clic, puis affinez-les dans les onglets suivants.', 'loginfennec' ) );
 
 		$presets = array(
-			'glass'   => array( __( 'Effet verre', 'loginfence' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
-			'minimal' => array( __( 'Minimal', 'loginfence' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
-			'dark'    => array( __( 'Sombre', 'loginfence' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
-			'sunset'  => array( __( 'Coucher de soleil', 'loginfence' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
-			'ocean'   => array( __( 'Océan', 'loginfence' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
-			'forest'  => array( __( 'Forêt', 'loginfence' ), 'linear-gradient(135deg,#059669,#065f46)' ),
-			'neon'    => array( __( 'Néon', 'loginfence' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
-			'sakura'  => array( __( 'Sakura', 'loginfence' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
-			'mono'    => array( __( 'Monochrome', 'loginfence' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
-			'royal'   => array( __( 'Royal', 'loginfence' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
+			'glass'   => array( __( 'Effet verre', 'loginfennec' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
+			'minimal' => array( __( 'Minimal', 'loginfennec' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
+			'dark'    => array( __( 'Sombre', 'loginfennec' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
+			'sunset'  => array( __( 'Coucher de soleil', 'loginfennec' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
+			'ocean'   => array( __( 'Océan', 'loginfennec' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
+			'forest'  => array( __( 'Forêt', 'loginfennec' ), 'linear-gradient(135deg,#059669,#065f46)' ),
+			'neon'    => array( __( 'Néon', 'loginfennec' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
+			'sakura'  => array( __( 'Sakura', 'loginfennec' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
+			'mono'    => array( __( 'Monochrome', 'loginfennec' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
+			'royal'   => array( __( 'Royal', 'loginfennec' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
 		);
 
 		echo '<input type="hidden" name="lnf[preset]" value="' . esc_attr( $s['preset'] ) . '">';
@@ -1093,18 +1093,18 @@ class Lnf_Admin {
 		}
 		echo '</div>';
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Thème d’interface du formulaire', 'loginfence' ) . '</h3>';
-		echo '<p class="lnf-panel-desc">' . esc_html__( 'Le design général du formulaire, indépendant des couleurs.', 'loginfence' ) . '</p>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Thème d’interface du formulaire', 'loginfennec' ) . '</h3>';
+		echo '<p class="lnf-panel-desc">' . esc_html__( 'Le design général du formulaire, indépendant des couleurs.', 'loginfennec' ) . '</p>';
 		echo '<input type="hidden" name="lnf[form_theme]" value="' . esc_attr( $s['form_theme'] ) . '">';
 		echo '<div class="lnf-presets lnf-themes">';
 		$themes = array(
-			'glass'    => array( __( 'Effet verre', 'loginfence' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
-			'classic'  => array( __( 'Classique', 'loginfence' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-			'outline'  => array( __( 'Contour', 'loginfence' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
-			'pill'     => array( __( 'Pillule', 'loginfence' ), 'background:#fff;border-radius:999px;' ),
-			'elevated' => array( __( 'Surélevé', 'loginfence' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-			'accent'   => array( __( 'Accent', 'loginfence' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
-			'minimal'  => array( __( 'Minimal', 'loginfence' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
+			'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
+			'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
+			'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
+			'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
+			'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
+			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
+			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
 		);
 		foreach ( $themes as $key => $theme ) {
 			printf(
@@ -1124,14 +1124,14 @@ class Lnf_Admin {
 	 * Panneau : logo.
 	 */
 	protected static function panel_logo( $s ) {
-		self::panel_open( 'logo', __( 'Logo', 'loginfence' ), __( 'Remplacez le logo WordPress par le vôtre.', 'loginfence' ) );
+		self::panel_open( 'logo', __( 'Logo', 'loginfennec' ), __( 'Remplacez le logo WordPress par le vôtre.', 'loginfennec' ) );
 
-		self::field_toggle( $s, 'logo_hide', __( 'Masquer complètement le logo', 'loginfence' ) );
-		self::field_media( $s, 'logo_url', __( 'Image du logo', 'loginfence' ), __( 'SVG ou PNG transparent recommandé.', 'loginfence' ), array( 'logo_hide' => 0 ) );
-		self::field_text( $s, 'logo_text', __( 'Ou logo en texte', 'loginfence' ), 'text', __( 'ex. : MaBoutique', 'loginfence' ), __( 'Remplace l’image par un titre stylé — prioritaire si les deux sont remplis.', 'loginfence' ), array( 'logo_hide' => 0 ) );
-		self::field_range( $s, 'logo_width', __( 'Largeur', 'loginfence' ), 40, 400, 'px', '', array( 'logo_hide' => 0 ) );
-		self::field_range( $s, 'logo_height', __( 'Hauteur', 'loginfence' ), 24, 300, 'px', '', array( 'logo_hide' => 0 ) );
-		self::field_text( $s, 'logo_link', __( 'Lien du logo', 'loginfence' ), 'url', 'https://exemple.com', __( 'Laisser vide pour pointer vers l’accueil du site.', 'loginfence' ), array( 'logo_hide' => 0 ) );
+		self::field_toggle( $s, 'logo_hide', __( 'Masquer complètement le logo', 'loginfennec' ) );
+		self::field_media( $s, 'logo_url', __( 'Image du logo', 'loginfennec' ), __( 'SVG ou PNG transparent recommandé.', 'loginfennec' ), array( 'logo_hide' => 0 ) );
+		self::field_text( $s, 'logo_text', __( 'Ou logo en texte', 'loginfennec' ), 'text', __( 'ex. : MaBoutique', 'loginfennec' ), __( 'Remplace l’image par un titre stylé — prioritaire si les deux sont remplis.', 'loginfennec' ), array( 'logo_hide' => 0 ) );
+		self::field_range( $s, 'logo_width', __( 'Largeur', 'loginfennec' ), 40, 400, 'px', '', array( 'logo_hide' => 0 ) );
+		self::field_range( $s, 'logo_height', __( 'Hauteur', 'loginfennec' ), 24, 300, 'px', '', array( 'logo_hide' => 0 ) );
+		self::field_text( $s, 'logo_link', __( 'Lien du logo', 'loginfennec' ), 'url', 'https://exemple.com', __( 'Laisser vide pour pointer vers l’accueil du site.', 'loginfennec' ), array( 'logo_hide' => 0 ) );
 
 		self::panel_close();
 	}
@@ -1140,30 +1140,30 @@ class Lnf_Admin {
 	 * Panneau : arrière-plan.
 	 */
 	protected static function panel_background( $s ) {
-		self::panel_open( 'bg', __( 'Arrière-plan', 'loginfence' ), __( 'Couleur, dégradé ou image, avec flou et voile coloré.', 'loginfence' ) );
+		self::panel_open( 'bg', __( 'Arrière-plan', 'loginfennec' ), __( 'Couleur, dégradé ou image, avec flou et voile coloré.', 'loginfennec' ) );
 
 		self::field_select(
 			$s,
 			'bg_type',
-			__( 'Type de fond', 'loginfence' ),
+			__( 'Type de fond', 'loginfennec' ),
 			array(
-				'color'    => __( 'Couleur unie', 'loginfence' ),
-				'gradient' => __( 'Dégradé', 'loginfence' ),
-				'image'    => __( 'Image', 'loginfence' ),
+				'color'    => __( 'Couleur unie', 'loginfennec' ),
+				'gradient' => __( 'Dégradé', 'loginfennec' ),
+				'image'    => __( 'Image', 'loginfennec' ),
 			)
 		);
-		self::field_color( $s, 'bg_color1', __( 'Couleur de fond / dégradé 1', 'loginfence' ) );
-		self::field_color( $s, 'bg_color2', __( 'Dégradé — couleur 2', 'loginfence' ), '', array( 'bg_type' => 'gradient' ) );
-		self::field_range( $s, 'bg_gradient_angle', __( 'Angle du dégradé', 'loginfence' ), 0, 360, '°', '', array( 'bg_type' => 'gradient' ) );
-		self::field_media( $s, 'bg_image', __( 'Image de fond', 'loginfence' ), '', array( 'bg_type' => 'image' ) );
+		self::field_color( $s, 'bg_color1', __( 'Couleur de fond / dégradé 1', 'loginfennec' ) );
+		self::field_color( $s, 'bg_color2', __( 'Dégradé — couleur 2', 'loginfennec' ), '', array( 'bg_type' => 'gradient' ) );
+		self::field_range( $s, 'bg_gradient_angle', __( 'Angle du dégradé', 'loginfennec' ), 0, 360, '°', '', array( 'bg_type' => 'gradient' ) );
+		self::field_media( $s, 'bg_image', __( 'Image de fond', 'loginfennec' ), '', array( 'bg_type' => 'image' ) );
 		self::field_select(
 			$s,
 			'bg_size',
-			__( 'Affichage de l’image', 'loginfence' ),
+			__( 'Affichage de l’image', 'loginfennec' ),
 			array(
-				'cover'   => __( 'Couvrir (cover)', 'loginfence' ),
-				'contain' => __( 'Contenir (contain)', 'loginfence' ),
-				'repeat'  => __( 'Répéter (motif)', 'loginfence' ),
+				'cover'   => __( 'Couvrir (cover)', 'loginfennec' ),
+				'contain' => __( 'Contenir (contain)', 'loginfennec' ),
+				'repeat'  => __( 'Répéter (motif)', 'loginfennec' ),
 			),
 			'',
 			array( 'bg_type' => 'image' )
@@ -1171,26 +1171,26 @@ class Lnf_Admin {
 		self::field_select(
 			$s,
 			'bg_position',
-			__( 'Position de l’image', 'loginfence' ),
+			__( 'Position de l’image', 'loginfennec' ),
 			array(
-				'center'       => __( 'Centrée', 'loginfence' ),
-				'top'          => __( 'En haut', 'loginfence' ),
-				'bottom'       => __( 'En bas', 'loginfence' ),
-				'left'         => __( 'À gauche', 'loginfence' ),
-				'right'        => __( 'À droite', 'loginfence' ),
-				'top-left'     => __( 'Haut gauche', 'loginfence' ),
-				'top-right'    => __( 'Haut droit', 'loginfence' ),
-				'bottom-left'  => __( 'Bas gauche', 'loginfence' ),
-				'bottom-right' => __( 'Bas droit', 'loginfence' ),
+				'center'       => __( 'Centrée', 'loginfennec' ),
+				'top'          => __( 'En haut', 'loginfennec' ),
+				'bottom'       => __( 'En bas', 'loginfennec' ),
+				'left'         => __( 'À gauche', 'loginfennec' ),
+				'right'        => __( 'À droite', 'loginfennec' ),
+				'top-left'     => __( 'Haut gauche', 'loginfennec' ),
+				'top-right'    => __( 'Haut droit', 'loginfennec' ),
+				'bottom-left'  => __( 'Bas gauche', 'loginfennec' ),
+				'bottom-right' => __( 'Bas droit', 'loginfennec' ),
 			),
 			'',
 			array( 'bg_type' => 'image' )
 		);
-		self::field_range( $s, 'bg_blur', __( 'Flou de l’image', 'loginfence' ), 0, 30, 'px', __( 'Contrôle du flou (backdrop).', 'loginfence' ), array( 'bg_type' => 'image' ) );
-		self::field_range( $s, 'bg_brightness', __( 'Luminosité de l’image', 'loginfence' ), 30, 150, '%', '', array( 'bg_type' => 'image' ) );
-		self::field_range( $s, 'bg_saturation', __( 'Saturation de l’image', 'loginfence' ), 0, 200, '%', '', array( 'bg_type' => 'image' ) );
-		self::field_color( $s, 'bg_overlay_color', __( 'Voile coloré', 'loginfence' ), __( 'Couche de couleur superposée au fond.', 'loginfence' ) );
-		self::field_range( $s, 'bg_overlay_opacity', __( 'Opacité du voile', 'loginfence' ), 0, 100, '%' );
+		self::field_range( $s, 'bg_blur', __( 'Flou de l’image', 'loginfennec' ), 0, 30, 'px', __( 'Contrôle du flou (backdrop).', 'loginfennec' ), array( 'bg_type' => 'image' ) );
+		self::field_range( $s, 'bg_brightness', __( 'Luminosité de l’image', 'loginfennec' ), 30, 150, '%', '', array( 'bg_type' => 'image' ) );
+		self::field_range( $s, 'bg_saturation', __( 'Saturation de l’image', 'loginfennec' ), 0, 200, '%', '', array( 'bg_type' => 'image' ) );
+		self::field_color( $s, 'bg_overlay_color', __( 'Voile coloré', 'loginfennec' ), __( 'Couche de couleur superposée au fond.', 'loginfennec' ) );
+		self::field_range( $s, 'bg_overlay_opacity', __( 'Opacité du voile', 'loginfennec' ), 0, 100, '%' );
 
 		self::panel_close();
 	}
@@ -1199,32 +1199,32 @@ class Lnf_Admin {
 	 * Panneau : formulaire.
 	 */
 	protected static function panel_form( $s ) {
-		self::panel_open( 'form', __( 'Formulaire', 'loginfence' ), __( 'Effet verre, couleurs des champs, bouton et liens.', 'loginfence' ) );
+		self::panel_open( 'form', __( 'Formulaire', 'loginfennec' ), __( 'Effet verre, couleurs des champs, bouton et liens.', 'loginfennec' ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Conteneur', 'loginfence' ) . '</h3>';
-		self::field_color( $s, 'form_bg', __( 'Fond du formulaire', 'loginfence' ) );
-		self::field_range( $s, 'form_opacity', __( 'Opacité du fond', 'loginfence' ), 0, 100, '%' );
-		self::field_range( $s, 'form_blur', __( 'Flou (effet verre)', 'loginfence' ), 0, 40, 'px' );
-		self::field_range( $s, 'form_radius', __( 'Arrondi des coins', 'loginfence' ), 0, 60, 'px' );
-		self::field_range( $s, 'form_width', __( 'Largeur du formulaire', 'loginfence' ), 260, 560, 'px' );
-		self::field_range( $s, 'form_padding', __( 'Espacement intérieur', 'loginfence' ), 12, 80, 'px' );
-		self::field_range( $s, 'input_height', __( 'Hauteur des champs', 'loginfence' ), 0, 60, 'px', __( '0 = hauteur WordPress par défaut.', 'loginfence' ) );
-		self::field_toggle( $s, 'form_shadow', __( 'Ombre portée', 'loginfence' ) );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Conteneur', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'form_bg', __( 'Fond du formulaire', 'loginfennec' ) );
+		self::field_range( $s, 'form_opacity', __( 'Opacité du fond', 'loginfennec' ), 0, 100, '%' );
+		self::field_range( $s, 'form_blur', __( 'Flou (effet verre)', 'loginfennec' ), 0, 40, 'px' );
+		self::field_range( $s, 'form_radius', __( 'Arrondi des coins', 'loginfennec' ), 0, 60, 'px' );
+		self::field_range( $s, 'form_width', __( 'Largeur du formulaire', 'loginfennec' ), 260, 560, 'px' );
+		self::field_range( $s, 'form_padding', __( 'Espacement intérieur', 'loginfennec' ), 12, 80, 'px' );
+		self::field_range( $s, 'input_height', __( 'Hauteur des champs', 'loginfennec' ), 0, 60, 'px', __( '0 = hauteur WordPress par défaut.', 'loginfennec' ) );
+		self::field_toggle( $s, 'form_shadow', __( 'Ombre portée', 'loginfennec' ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Textes et champs', 'loginfence' ) . '</h3>';
-		self::field_color( $s, 'text_color', __( 'Texte du formulaire', 'loginfence' ) );
-		self::field_color( $s, 'label_color', __( 'Libellés', 'loginfence' ) );
-		self::field_color( $s, 'input_bg', __( 'Fond des champs', 'loginfence' ) );
-		self::field_color( $s, 'input_color', __( 'Texte des champs', 'loginfence' ) );
-		self::field_color( $s, 'input_border', __( 'Bordure des champs', 'loginfence' ) );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Textes et champs', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'text_color', __( 'Texte du formulaire', 'loginfennec' ) );
+		self::field_color( $s, 'label_color', __( 'Libellés', 'loginfennec' ) );
+		self::field_color( $s, 'input_bg', __( 'Fond des champs', 'loginfennec' ) );
+		self::field_color( $s, 'input_color', __( 'Texte des champs', 'loginfennec' ) );
+		self::field_color( $s, 'input_border', __( 'Bordure des champs', 'loginfennec' ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Bouton « Se connecter »', 'loginfence' ) . '</h3>';
-		self::field_color( $s, 'button_bg', __( 'Couleur du bouton', 'loginfence' ) );
-		self::field_color( $s, 'button_hover', __( 'Couleur au survol', 'loginfence' ) );
-		self::field_range( $s, 'button_radius', __( 'Arrondi du bouton', 'loginfence' ), 0, 40, 'px' );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Bouton « Se connecter »', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'button_bg', __( 'Couleur du bouton', 'loginfennec' ) );
+		self::field_color( $s, 'button_hover', __( 'Couleur au survol', 'loginfennec' ) );
+		self::field_range( $s, 'button_radius', __( 'Arrondi du bouton', 'loginfennec' ), 0, 40, 'px' );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Liens', 'loginfence' ) . '</h3>';
-		self::field_color( $s, 'link_color', __( 'Couleur des liens', 'loginfence' ) );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Liens', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'link_color', __( 'Couleur des liens', 'loginfennec' ) );
 
 		self::panel_close();
 	}
@@ -1233,14 +1233,14 @@ class Lnf_Admin {
 	 * Panneau : liens.
 	 */
 	protected static function panel_links( $s ) {
-		self::panel_open( 'links', __( 'Liens de la page de connexion', 'loginfence' ), __( 'Modifiez la cible et le texte des liens, ou masquez-les.', 'loginfence' ) );
+		self::panel_open( 'links', __( 'Liens de la page de connexion', 'loginfennec' ), __( 'Modifiez la cible et le texte des liens, ou masquez-les.', 'loginfennec' ) );
 
-		self::field_toggle( $s, 'hide_lost_password', __( 'Masquer « Mot de passe perdu ? »', 'loginfence' ) );
-		self::field_toggle( $s, 'hide_back_to', __( 'Masquer « Retour au site »', 'loginfence' ) );
-		self::field_text( $s, 'back_to_text', __( 'Texte du lien « Retour au site »', 'loginfence' ), 'text', __( 'ex. : Retour à la boutique', 'loginfence' ) );
-		self::field_text( $s, 'back_to_url', __( 'Cible du lien « Retour au site »', 'loginfence' ), 'url', 'https://exemple.com' );
-		self::field_toggle( $s, 'hide_register', __( 'Masquer le lien « S’enregistrer »', 'loginfence' ) );
-		self::field_text( $s, 'register_text', __( 'Texte du lien « S’enregistrer »', 'loginfence' ), 'text', __( 'ex. : Créer un compte client', 'loginfence' ) );
+		self::field_toggle( $s, 'hide_lost_password', __( 'Masquer « Mot de passe perdu ? »', 'loginfennec' ) );
+		self::field_toggle( $s, 'hide_back_to', __( 'Masquer « Retour au site »', 'loginfennec' ) );
+		self::field_text( $s, 'back_to_text', __( 'Texte du lien « Retour au site »', 'loginfennec' ), 'text', __( 'ex. : Retour à la boutique', 'loginfennec' ) );
+		self::field_text( $s, 'back_to_url', __( 'Cible du lien « Retour au site »', 'loginfennec' ), 'url', 'https://exemple.com' );
+		self::field_toggle( $s, 'hide_register', __( 'Masquer le lien « S’enregistrer »', 'loginfennec' ) );
+		self::field_text( $s, 'register_text', __( 'Texte du lien « S’enregistrer »', 'loginfennec' ), 'text', __( 'ex. : Créer un compte client', 'loginfennec' ) );
 
 		self::panel_close();
 	}
@@ -1249,34 +1249,34 @@ class Lnf_Admin {
 	 * Panneau : réseaux sociaux.
 	 */
 	protected static function panel_social( $s ) {
-		self::panel_open( 'social', __( 'Icônes de réseaux sociaux', 'loginfence' ), __( 'Renseignez une URL pour afficher l’icône — laissez vide pour la masquer.', 'loginfence' ) );
+		self::panel_open( 'social', __( 'Icônes de réseaux sociaux', 'loginfennec' ), __( 'Renseignez une URL pour afficher l’icône — laissez vide pour la masquer.', 'loginfennec' ) );
 
-		self::field_toggle( $s, 'social_enable', __( 'Afficher les icônes sociales', 'loginfence' ) );
-		self::field_toggle( $s, 'social_brand', __( 'Couleurs officielles des marques', 'loginfence' ), __( 'Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge.', 'loginfence' ) );
+		self::field_toggle( $s, 'social_enable', __( 'Afficher les icônes sociales', 'loginfennec' ) );
+		self::field_toggle( $s, 'social_brand', __( 'Couleurs officielles des marques', 'loginfennec' ), __( 'Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge.', 'loginfennec' ) );
 		self::field_select(
 			$s,
 			'social_style',
-			__( 'Forme des icônes', 'loginfence' ),
+			__( 'Forme des icônes', 'loginfennec' ),
 			array(
-				'circle'  => __( 'Cercle', 'loginfence' ),
-				'rounded' => __( 'Arrondi', 'loginfence' ),
-				'square'  => __( 'Carré', 'loginfence' ),
+				'circle'  => __( 'Cercle', 'loginfennec' ),
+				'rounded' => __( 'Arrondi', 'loginfennec' ),
+				'square'  => __( 'Carré', 'loginfennec' ),
 			),
 			'',
 			array( 'social_enable' => 1 )
 		);
-		self::field_range( $s, 'social_size', __( 'Taille des icônes', 'loginfence' ), 28, 72, 'px', '', array( 'social_enable' => 1 ) );
-		self::field_color( $s, 'social_icon_color', __( 'Couleur de l’icône', 'loginfence' ), '', array( 'social_enable' => 1 ) );
-		self::field_color( $s, 'social_icon_bg', __( 'Fond de l’icône', 'loginfence' ), '', array( 'social_enable' => 1 ) );
-		self::field_range( $s, 'social_icon_bg_opacity', __( 'Opacité du fond d’icône', 'loginfence' ), 0, 100, '%', '', array( 'social_enable' => 1 ) );
+		self::field_range( $s, 'social_size', __( 'Taille des icônes', 'loginfennec' ), 28, 72, 'px', '', array( 'social_enable' => 1 ) );
+		self::field_color( $s, 'social_icon_color', __( 'Couleur de l’icône', 'loginfennec' ), '', array( 'social_enable' => 1 ) );
+		self::field_color( $s, 'social_icon_bg', __( 'Fond de l’icône', 'loginfennec' ), '', array( 'social_enable' => 1 ) );
+		self::field_range( $s, 'social_icon_bg_opacity', __( 'Opacité du fond d’icône', 'loginfennec' ), 0, 100, '%', '', array( 'social_enable' => 1 ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Réseaux', 'loginfence' ) . '</h3>';
-		self::field_text( $s, 'social_facebook', __( 'Facebook', 'loginfence' ), 'url', 'https://facebook.com/votre-page' );
-		self::field_text( $s, 'social_twitter', __( 'X (Twitter)', 'loginfence' ), 'url', 'https://x.com/votre-compte' );
-		self::field_text( $s, 'social_instagram', __( 'Instagram', 'loginfence' ), 'url', 'https://instagram.com/votre-compte' );
-		self::field_text( $s, 'social_linkedin', __( 'LinkedIn', 'loginfence' ), 'url', 'https://linkedin.com/in/votre-profil' );
-		self::field_text( $s, 'social_youtube', __( 'YouTube', 'loginfence' ), 'url', 'https://youtube.com/@votre-chaine' );
-		self::field_text( $s, 'social_email', __( 'E-mail', 'loginfence' ), 'email', 'contact@exemple.com' );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Réseaux', 'loginfennec' ) . '</h3>';
+		self::field_text( $s, 'social_facebook', __( 'Facebook', 'loginfennec' ), 'url', 'https://facebook.com/votre-page' );
+		self::field_text( $s, 'social_twitter', __( 'X (Twitter)', 'loginfennec' ), 'url', 'https://x.com/votre-compte' );
+		self::field_text( $s, 'social_instagram', __( 'Instagram', 'loginfennec' ), 'url', 'https://instagram.com/votre-compte' );
+		self::field_text( $s, 'social_linkedin', __( 'LinkedIn', 'loginfennec' ), 'url', 'https://linkedin.com/in/votre-profil' );
+		self::field_text( $s, 'social_youtube', __( 'YouTube', 'loginfennec' ), 'url', 'https://youtube.com/@votre-chaine' );
+		self::field_text( $s, 'social_email', __( 'E-mail', 'loginfennec' ), 'email', 'contact@exemple.com' );
 
 		self::panel_close();
 	}
@@ -1285,15 +1285,15 @@ class Lnf_Admin {
 	 * Panneau : copyright.
 	 */
 	protected static function panel_copyright( $s ) {
-		self::panel_open( 'copyright', __( 'Copyright', 'loginfence' ), __( 'Affichez votre mention de copyright sous le formulaire.', 'loginfence' ) );
+		self::panel_open( 'copyright', __( 'Copyright', 'loginfennec' ), __( 'Affichez votre mention de copyright sous le formulaire.', 'loginfennec' ) );
 
-		self::field_toggle( $s, 'copyright_enable', __( 'Afficher le copyright', 'loginfence' ) );
+		self::field_toggle( $s, 'copyright_enable', __( 'Afficher le copyright', 'loginfennec' ) );
 		self::field_textarea(
 			$s,
 			'copyright_text',
-			__( 'Texte du copyright', 'loginfence' ),
+			__( 'Texte du copyright', 'loginfennec' ),
 			/* translators: les balises <code> sont des variables. */
-			sprintf( __( 'Variables disponibles : %1$s (année) et %2$s (nom du site).', 'loginfence' ), '<code>{year}</code>', '<code>{sitename}</code>' ),
+			sprintf( __( 'Variables disponibles : %1$s (année) et %2$s (nom du site).', 'loginfennec' ), '<code>{year}</code>', '<code>{sitename}</code>' ),
 			array( 'copyright_enable' => 1 )
 		);
 
@@ -1304,69 +1304,69 @@ class Lnf_Admin {
 	 * Panneau : extras (message d'accueil, typographie, animation).
 	 */
 	protected static function panel_extras( $s ) {
-		self::panel_open( 'extras', __( 'Extras', 'loginfence' ), __( 'Message d’accueil, typographie et animation d’entrée de la page de connexion.', 'loginfence' ) );
+		self::panel_open( 'extras', __( 'Extras', 'loginfennec' ), __( 'Message d’accueil, typographie et animation d’entrée de la page de connexion.', 'loginfennec' ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Message de bienvenue', 'loginfence' ) . '</h3>';
-		self::field_toggle( $s, 'welcome_enable', __( 'Afficher un message d’accueil', 'loginfence' ), __( 'Titre et sous-titre affichés au-dessus du formulaire.', 'loginfence' ) );
-		self::field_text( $s, 'welcome_title', __( 'Titre', 'loginfence' ), 'text', __( 'ex. : Bon retour parmi nous ✨', 'loginfence' ), '', array( 'welcome_enable' => 1 ) );
-		self::field_text( $s, 'welcome_subtitle', __( 'Sous-titre', 'loginfence' ), 'text', __( 'ex. : Connectez-vous pour gérer votre boutique.', 'loginfence' ), '', array( 'welcome_enable' => 1 ) );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Message de bienvenue', 'loginfennec' ) . '</h3>';
+		self::field_toggle( $s, 'welcome_enable', __( 'Afficher un message d’accueil', 'loginfennec' ), __( 'Titre et sous-titre affichés au-dessus du formulaire.', 'loginfennec' ) );
+		self::field_text( $s, 'welcome_title', __( 'Titre', 'loginfennec' ), 'text', __( 'ex. : Bon retour parmi nous ✨', 'loginfennec' ), '', array( 'welcome_enable' => 1 ) );
+		self::field_text( $s, 'welcome_subtitle', __( 'Sous-titre', 'loginfennec' ), 'text', __( 'ex. : Connectez-vous pour gérer votre boutique.', 'loginfennec' ), '', array( 'welcome_enable' => 1 ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Typographie', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Typographie', 'loginfennec' ) . '</h3>';
 		self::field_select(
 			$s,
 			'font_family',
-			__( 'Police', 'loginfence' ),
+			__( 'Police', 'loginfennec' ),
 			array(
-				'system'  => __( 'Système (moderne)', 'loginfence' ),
-				'serif'   => __( 'Serif élégante', 'loginfence' ),
-				'rounded' => __( 'Arrondie', 'loginfence' ),
-				'mono'    => __( 'Monospace', 'loginfence' ),
+				'system'  => __( 'Système (moderne)', 'loginfennec' ),
+				'serif'   => __( 'Serif élégante', 'loginfennec' ),
+				'rounded' => __( 'Arrondie', 'loginfennec' ),
+				'mono'    => __( 'Monospace', 'loginfennec' ),
 			)
 		);
-		self::field_range( $s, 'font_size', __( 'Taille du texte', 'loginfence' ), 12, 18, 'px' );
+		self::field_range( $s, 'font_size', __( 'Taille du texte', 'loginfennec' ), 12, 18, 'px' );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Animation d’entrée', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Animation d’entrée', 'loginfennec' ) . '</h3>';
 		self::field_select(
 			$s,
 			'anim',
-			__( 'Effet à l’ouverture de la page', 'loginfence' ),
+			__( 'Effet à l’ouverture de la page', 'loginfennec' ),
 			array(
-				'none'  => __( 'Aucune', 'loginfence' ),
-				'fade'  => __( 'Fondu', 'loginfence' ),
-				'slide' => __( 'Glissement vers le haut', 'loginfence' ),
-				'zoom'  => __( 'Zoom', 'loginfence' ),
+				'none'  => __( 'Aucune', 'loginfennec' ),
+				'fade'  => __( 'Fondu', 'loginfennec' ),
+				'slide' => __( 'Glissement vers le haut', 'loginfennec' ),
+				'zoom'  => __( 'Zoom', 'loginfennec' ),
 			),
-			__( 'Désactivée automatiquement si l’utilisateur demande moins d’animations.', 'loginfence' )
+			__( 'Désactivée automatiquement si l’utilisateur demande moins d’animations.', 'loginfennec' )
 		);
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Champs du formulaire', 'loginfence' ) . '</h3>';
-		self::field_text( $s, 'field_label_user', __( 'Libellé « Identifiant »', 'loginfence' ), 'text', __( 'ex. : E-mail ou pseudo', 'loginfence' ) );
-		self::field_text( $s, 'field_label_pass', __( 'Libellé « Mot de passe »', 'loginfence' ), 'text', __( 'ex. : Votre mot de passe', 'loginfence' ) );
-		self::field_text( $s, 'field_placeholder_user', __( 'Placeholder « Identifiant »', 'loginfence' ), 'text', __( 'ex. : vous@exemple.com', 'loginfence' ) );
-		self::field_text( $s, 'field_placeholder_pass', __( 'Placeholder « Mot de passe »', 'loginfence' ), 'text', __( 'ex. : ••••••••', 'loginfence' ) );
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Champs du formulaire', 'loginfennec' ) . '</h3>';
+		self::field_text( $s, 'field_label_user', __( 'Libellé « Identifiant »', 'loginfennec' ), 'text', __( 'ex. : E-mail ou pseudo', 'loginfennec' ) );
+		self::field_text( $s, 'field_label_pass', __( 'Libellé « Mot de passe »', 'loginfennec' ), 'text', __( 'ex. : Votre mot de passe', 'loginfennec' ) );
+		self::field_text( $s, 'field_placeholder_user', __( 'Placeholder « Identifiant »', 'loginfennec' ), 'text', __( 'ex. : vous@exemple.com', 'loginfennec' ) );
+		self::field_text( $s, 'field_placeholder_pass', __( 'Placeholder « Mot de passe »', 'loginfennec' ), 'text', __( 'ex. : ••••••••', 'loginfennec' ) );
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Après connexion', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Après connexion', 'loginfennec' ) . '</h3>';
 		self::field_text(
 			$s,
 			'login_redirect',
-			__( 'Redirection après connexion', 'loginfence' ),
+			__( 'Redirection après connexion', 'loginfennec' ),
 			'url',
 			'https://exemple.com/espace-client',
-			__( 'Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée).', 'loginfence' )
+			__( 'Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée).', 'loginfennec' )
 		);
 
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'CSS personnalisé', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'CSS personnalisé', 'loginfennec' ) . '</h3>';
 		self::field_textarea(
 			$s,
 			'custom_css',
-			__( 'CSS brut pour la page de connexion', 'loginfence' ),
-			__( 'Injecté après tous les réglages du plugin — les balises sont retirées automatiquement.', 'loginfence' )
+			__( 'CSS brut pour la page de connexion', 'loginfennec' ),
+			__( 'Injecté après tous les réglages du plugin — les balises sont retirées automatiquement.', 'loginfennec' )
 		);
 		self::field_textarea(
 			$s,
 			'custom_js',
-			__( 'JavaScript personnalisé', 'loginfence' ),
-			__( 'Injecté en pied de page de connexion (fermetures de balise neutralisées automatiquement).', 'loginfence' )
+			__( 'JavaScript personnalisé', 'loginfennec' ),
+			__( 'Injecté en pied de page de connexion (fermetures de balise neutralisées automatiquement).', 'loginfennec' )
 		);
 
 		self::panel_close();
@@ -1376,35 +1376,35 @@ class Lnf_Admin {
 	 * Panneau : sécurité.
 	 */
 	protected static function panel_security( $s ) {
-		self::panel_open( 'security', __( 'Sécurité de la connexion', 'loginfence' ), __( 'Bloquez les attaques par force brute sur la page de connexion.', 'loginfence' ) );
+		self::panel_open( 'security', __( 'Sécurité de la connexion', 'loginfennec' ), __( 'Bloquez les attaques par force brute sur la page de connexion.', 'loginfennec' ) );
 
-		self::field_toggle( $s, 'sec_enable', __( 'Limiter les tentatives de connexion', 'loginfence' ), __( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfence' ) );
-		self::field_range( $s, 'sec_max_attempts', __( 'Tentatives autorisées', 'loginfence' ), 1, 20, '', '', array( 'sec_enable' => 1 ) );
-		self::field_range( $s, 'sec_lockout_minutes', __( 'Durée du blocage', 'loginfence' ), 1, 1440, 'min', '', array( 'sec_enable' => 1 ) );
-		self::field_text( $s, 'sec_lock_message', __( 'Message de blocage', 'loginfence' ), 'text', '', sprintf( __( 'Utilisez %%d pour la durée restante en minutes.', 'loginfence' ) ), array( 'sec_enable' => 1 ) );
-		self::field_toggle( $s, 'sec_generic_error', __( 'Masquer le détail des erreurs', 'loginfence' ), __( 'Affiche un message générique au lieu de « mot de passe incorrect ».', 'loginfence' ) );
-		self::field_toggle( $s, 'sec_hide_language_switcher', __( 'Masquer le sélecteur de langue', 'loginfence' ) );
-		self::field_toggle( $s, 'sec_disable_xmlrpc', __( 'Désactiver XML-RPC', 'loginfence' ), __( 'Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress).', 'loginfence' ) );
-		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfence' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfence' ) );
-		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfence' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfence' ) );
+		self::field_toggle( $s, 'sec_enable', __( 'Limiter les tentatives de connexion', 'loginfennec' ), __( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfennec' ) );
+		self::field_range( $s, 'sec_max_attempts', __( 'Tentatives autorisées', 'loginfennec' ), 1, 20, '', '', array( 'sec_enable' => 1 ) );
+		self::field_range( $s, 'sec_lockout_minutes', __( 'Durée du blocage', 'loginfennec' ), 1, 1440, 'min', '', array( 'sec_enable' => 1 ) );
+		self::field_text( $s, 'sec_lock_message', __( 'Message de blocage', 'loginfennec' ), 'text', '', sprintf( __( 'Utilisez %%d pour la durée restante en minutes.', 'loginfennec' ) ), array( 'sec_enable' => 1 ) );
+		self::field_toggle( $s, 'sec_generic_error', __( 'Masquer le détail des erreurs', 'loginfennec' ), __( 'Affiche un message générique au lieu de « mot de passe incorrect ».', 'loginfennec' ) );
+		self::field_toggle( $s, 'sec_hide_language_switcher', __( 'Masquer le sélecteur de langue', 'loginfennec' ) );
+		self::field_toggle( $s, 'sec_disable_xmlrpc', __( 'Désactiver XML-RPC', 'loginfennec' ), __( 'Coupe une porte d’entrée classique des attaques par force brute (recommandé si vous n’utilisez pas l’appli mobile WordPress).', 'loginfennec' ) );
+		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfennec' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfennec' ) );
+		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfennec' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfennec' ) );
 		self::field_textarea(
 			$s,
 			'sec_whitelist',
-			__( 'Liste blanche d’IP (jamais verrouillées)', 'loginfence' ),
-			__( 'Une IP par ligne ou séparées par des virgules. Le joker * est accepté (ex. 192.168.1.*). Vos IP de confiance ne seront jamais bloquées — utile pour éviter de vous verrouiller vous-même.', 'loginfence' )
+			__( 'Liste blanche d’IP (jamais verrouillées)', 'loginfennec' ),
+			__( 'Une IP par ligne ou séparées par des virgules. Le joker * est accepté (ex. 192.168.1.*). Vos IP de confiance ne seront jamais bloquées — utile pour éviter de vous verrouiller vous-même.', 'loginfennec' )
 		);
 
 		// ——— Journal de sécurité ———.
 		$log = Lnf_Login_Security::get_log();
 		echo '<div class="lnf-journal">';
-		echo '<h3 class="lnf-group-title">' . esc_html__( 'Journal de sécurité', 'loginfence' ) . '</h3>';
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Journal de sécurité', 'loginfennec' ) . '</h3>';
 		if ( $log ) {
 			$badges = array(
-				'failed'  => array( __( 'Échec', 'loginfence' ), 'is-fail' ),
-				'blocked' => array( __( 'Bloqué', 'loginfence' ), 'is-blocked' ),
-				'login'   => array( __( 'Connexion', 'loginfence' ), 'is-login' ),
+				'failed'  => array( __( 'Échec', 'loginfennec' ), 'is-fail' ),
+				'blocked' => array( __( 'Bloqué', 'loginfennec' ), 'is-blocked' ),
+				'login'   => array( __( 'Connexion', 'loginfennec' ), 'is-login' ),
 			);
-			echo '<table class="lnf-journal-table"><thead><tr><th>' . esc_html__( 'Date', 'loginfence' ) . '</th><th>IP</th><th>' . esc_html__( 'Identifiant', 'loginfence' ) . '</th><th>' . esc_html__( 'Action', 'loginfence' ) . '</th></tr></thead><tbody>';
+			echo '<table class="lnf-journal-table"><thead><tr><th>' . esc_html__( 'Date', 'loginfennec' ) . '</th><th>IP</th><th>' . esc_html__( 'Identifiant', 'loginfennec' ) . '</th><th>' . esc_html__( 'Action', 'loginfennec' ) . '</th></tr></thead><tbody>';
 			foreach ( array_slice( $log, 0, 20 ) as $event ) {
 				$badge = isset( $badges[ $event['a'] ] ) ? $badges[ $event['a'] ] : array( $event['a'], 'is-fail' );
 				printf(
@@ -1422,23 +1422,23 @@ class Lnf_Admin {
 				esc_html(
 					sprintf(
 						/* translators: %d : nombre d'événements. */
-						__( '%d événements enregistrés (50 maximum).', 'loginfence' ),
+						__( '%d événements enregistrés (50 maximum).', 'loginfennec' ),
 						count( $log )
 					)
 				)
 			);
-			echo '<button type="button" class="button lnf-purge-log">' . esc_html__( 'Vider le journal', 'loginfence' ) . '</button> ';
-			echo '<a class="button" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=lnf_export_log' ), 'lnf_export_log' ) ) . '">' . esc_html__( 'Exporter (CSV)', 'loginfence' ) . '</a> <span class="lnf-purge-status"></span>';
+			echo '<button type="button" class="button lnf-purge-log">' . esc_html__( 'Vider le journal', 'loginfennec' ) . '</button> ';
+			echo '<a class="button" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=lnf_export_log' ), 'lnf_export_log' ) ) . '">' . esc_html__( 'Exporter (CSV)', 'loginfennec' ) . '</a> <span class="lnf-purge-status"></span>';
 		} else {
-			echo '<p class="lnf-desc">' . esc_html__( 'Aucun événement enregistré pour le moment.', 'loginfence' ) . '</p>';
+			echo '<p class="lnf-desc">' . esc_html__( 'Aucun événement enregistré pour le moment.', 'loginfennec' ) . '</p>';
 		}
 		echo '</div>';
 
 		echo '<div class="lnf-pro-teaser">';
-		echo '<div class="lnf-pro-teaser-text"><h4>' . esc_html__( 'Niveaux de sécurité avancés — LoginFence Pro', 'loginfence' ) . '</h4><p>'
-			. esc_html__( 'Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique.', 'loginfence' )
+		echo '<div class="lnf-pro-teaser-text"><h4>' . esc_html__( 'Niveaux de sécurité avancés — LoginFennec Pro', 'loginfennec' ) . '</h4><p>'
+			. esc_html__( 'Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique.', 'loginfennec' )
 			. '</p></div>';
-		echo '<a class="lnf-btn lnf-btn-pro" href="' . esc_url( admin_url( 'admin.php?page=loginfence-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'loginfence' ) . '</a>';
+		echo '<a class="lnf-btn lnf-btn-pro" href="' . esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'loginfennec' ) . '</a>';
 		echo '</div>';
 
 		self::panel_close();
@@ -1454,7 +1454,7 @@ class Lnf_Admin {
 	 * @return string
 	 */
 	protected static function donate_url() {
-		return apply_filters( 'loginfence_donate_url', 'https://www.paypal.com/donate' );
+		return apply_filters( 'loginfennec_donate_url', 'https://www.paypal.com/donate' );
 	}
 
 	/**
@@ -1465,34 +1465,34 @@ class Lnf_Admin {
 		<div class="wrap lnf-wrap lnf-about">
 			<div class="lnf-hero">
 				<span class="lnf-hero-mark" aria-hidden="true">&#8734;</span>
-				<h1><?php esc_html_e( 'LoginFence Pro', 'loginfence' ); ?></h1>
+				<h1><?php esc_html_e( 'LoginFennec Pro', 'loginfennec' ); ?></h1>
 				<p>
-					<?php esc_html_e( 'La page de connexion de WordPress, enfin à votre image.', 'loginfence' ); ?><br>
-					<span class="lnf-version">v<?php echo esc_html( LOGINFENCE_VERSION ); ?></span>
+					<?php esc_html_e( 'La page de connexion de WordPress, enfin à votre image.', 'loginfennec' ); ?><br>
+					<span class="lnf-version">v<?php echo esc_html( LOGINFENNEC_VERSION ); ?></span>
 				</p>
 				<div class="lnf-hero-actions">
 						<a class="lnf-btn lnf-btn-donate" href="<?php echo esc_url( self::donate_url() ); ?>" target="_blank" rel="noopener">
-							<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don', 'loginfence' ); ?>
+							<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don', 'loginfennec' ); ?>
 						</a>
-						<a class="lnf-btn lnf-btn-ghost is-light" href="https://github.com/derouicheoussama/loginfence" target="_blank" rel="noopener">
-							<span class="dashicons dashicons-github"></span> <?php esc_html_e( 'Voir sur GitHub', 'loginfence' ); ?>
+						<a class="lnf-btn lnf-btn-ghost is-light" href="https://github.com/derouicheoussama/loginfennec" target="_blank" rel="noopener">
+							<span class="dashicons dashicons-github"></span> <?php esc_html_e( 'Voir sur GitHub', 'loginfennec' ); ?>
 						</a>
 					</div>
-					<div class="lnf-quality" aria-label="<?php esc_attr_e( 'Engagements qualité', 'loginfence' ); ?>">
-						<span>✔ <?php esc_html_e( 'Sans publicité', 'loginfence' ); ?></span>
-						<span>✔ <?php esc_html_e( 'Aucune donnée collectée', 'loginfence' ); ?></span>
-						<span>✔ <?php esc_html_e( 'Compatible multisite', 'loginfence' ); ?></span>
-						<span>✔ <?php esc_html_e( 'Prêt pour la traduction', 'loginfence' ); ?></span>
-						<span>✔ <?php esc_html_e( 'Licence GPL v2+', 'loginfence' ); ?></span>
+					<div class="lnf-quality" aria-label="<?php esc_attr_e( 'Engagements qualité', 'loginfennec' ); ?>">
+						<span>✔ <?php esc_html_e( 'Sans publicité', 'loginfennec' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Aucune donnée collectée', 'loginfennec' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Compatible multisite', 'loginfennec' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Prêt pour la traduction', 'loginfennec' ); ?></span>
+						<span>✔ <?php esc_html_e( 'Licence GPL v2+', 'loginfennec' ); ?></span>
 					</div>
 				</div>
 
 			<div class="lnf-about-grid">
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-admin-users"></span> <?php esc_html_e( 'Développeur', 'loginfence' ); ?></h2>
-					<p class="lnf-about-dev"><strong><?php esc_html_e( 'Derouiche Oussama', 'loginfence' ); ?></strong></p>
-					<p><?php esc_html_e( 'Créateur du plugin, passionné par WordPress et les interfaces modernes.', 'loginfence' ); ?></p>
-					<div class="lnf-dev-social" aria-label="<?php esc_attr_e( 'Réseaux du développeur', 'loginfence' ); ?>">
+					<h2><span class="dashicons dashicons-admin-users"></span> <?php esc_html_e( 'Développeur', 'loginfennec' ); ?></h2>
+					<p class="lnf-about-dev"><strong><?php esc_html_e( 'Derouiche Oussama', 'loginfennec' ); ?></strong></p>
+					<p><?php esc_html_e( 'Créateur du plugin, passionné par WordPress et les interfaces modernes.', 'loginfennec' ); ?></p>
+					<div class="lnf-dev-social" aria-label="<?php esc_attr_e( 'Réseaux du développeur', 'loginfennec' ); ?>">
 						<?php foreach ( self::dev_socials() as $network ) : ?>
 							<a class="lnf-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>" style="<?php echo esc_attr( ! empty( $network['bg'] ) ? 'background:' . $network['bg'] : '' ); ?>">
 								<?php if ( ! empty( $network['svg'] ) ) : ?>
@@ -1504,128 +1504,128 @@ class Lnf_Admin {
 						<?php endforeach; ?>
 					</div>
 					<p class="lnf-about-links">
-						<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'loginfence' ); ?></a> ·
+						<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'loginfennec' ); ?></a> ·
 						<a href="https://github.com/derouicheoussama" target="_blank" rel="noopener">GitHub</a> ·
 						<a href="https://profiles.wordpress.org/derouicheoussama/" target="_blank" rel="noopener">WordPress.org</a>
 					</p>
 				</section>
 
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-visibility"></span> <?php esc_html_e( 'Fonctionnalités', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-visibility"></span> <?php esc_html_e( 'Fonctionnalités', 'loginfennec' ); ?></h2>
 					<ul class="lnf-about-list">
-						<li><?php esc_html_e( 'Logo personnalisé + lien du logo', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Arrière-plan : couleur, dégradé ou image', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Contrôles de flou et d’opacité', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( '6 styles modernes (effet verre, sombre…)', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Liens : personnalisation ou masquage', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Icônes de réseaux sociaux', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Mention de copyright', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Blocage des tentatives de mot de passe', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Honeypot anti-robots et anti-énumération des auteurs', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Journal de sécurité des 50 derniers événements', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Export / import des réglages (JSON)', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Achat intégré et activation de licence Pro', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Aperçu en direct 100 % responsive', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Mises à jour automatiques via GitHub', 'loginfence' ); ?></li>
+						<li><?php esc_html_e( 'Logo personnalisé + lien du logo', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Arrière-plan : couleur, dégradé ou image', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Contrôles de flou et d’opacité', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( '6 styles modernes (effet verre, sombre…)', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Liens : personnalisation ou masquage', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Icônes de réseaux sociaux', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Mention de copyright', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Blocage des tentatives de mot de passe', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Honeypot anti-robots et anti-énumération des auteurs', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Journal de sécurité des 50 derniers événements', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Export / import des réglages (JSON)', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Achat intégré et activation de licence Pro', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Aperçu en direct 100 % responsive', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Mises à jour automatiques via GitHub', 'loginfennec' ); ?></li>
 					</ul>
 				</section>
 
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-admin-links"></span> <?php esc_html_e( 'Liens rapides', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-admin-links"></span> <?php esc_html_e( 'Liens rapides', 'loginfennec' ); ?></h2>
 					<ul class="lnf-about-links-list">
 						<li>
-							<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'loginfence' ); ?></a>
-							— <?php esc_html_e( 'tutoriels et actualités', 'loginfence' ); ?>
+							<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener"><?php esc_html_e( 'Site web', 'loginfennec' ); ?></a>
+							— <?php esc_html_e( 'tutoriels et actualités', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<a href="https://github.com/derouicheoussama/loginfence#readme" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'loginfence' ); ?></a>
-							— <?php esc_html_e( 'guide complet sur GitHub', 'loginfence' ); ?>
+							<a href="https://github.com/derouicheoussama/loginfennec#readme" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'loginfennec' ); ?></a>
+							— <?php esc_html_e( 'guide complet sur GitHub', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<a href="https://github.com/derouicheoussama/loginfence/issues" target="_blank" rel="noopener"><?php esc_html_e( 'Signaler un bug', 'loginfence' ); ?></a>
-							— <?php esc_html_e( 'ouverture d’un ticket en un clic', 'loginfence' ); ?>
+							<a href="https://github.com/derouicheoussama/loginfennec/issues" target="_blank" rel="noopener"><?php esc_html_e( 'Signaler un bug', 'loginfennec' ); ?></a>
+							— <?php esc_html_e( 'ouverture d’un ticket en un clic', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<a href="https://wordpress.org/support/plugin/loginfence/" target="_blank" rel="noopener"><?php esc_html_e( 'Forum d’entraide', 'loginfence' ); ?></a>
-							— <?php esc_html_e( 'poser une question', 'loginfence' ); ?>
+							<a href="https://wordpress.org/support/plugin/loginfennec/" target="_blank" rel="noopener"><?php esc_html_e( 'Forum d’entraide', 'loginfennec' ); ?></a>
+							— <?php esc_html_e( 'poser une question', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<a href="https://wordpress.org/plugins/loginfence/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis ★', 'loginfence' ); ?></a>
-							— <?php esc_html_e( 'soutenir le projet', 'loginfence' ); ?>
+							<a href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener"><?php esc_html_e( 'Laisser un avis ★', 'loginfennec' ); ?></a>
+							— <?php esc_html_e( 'soutenir le projet', 'loginfennec' ); ?>
 						</li>
 					</ul>
 				</section>
 
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Protection & DMCA', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-lock"></span> <?php esc_html_e( 'Protection & DMCA', 'loginfennec' ); ?></h2>
 					<p class="lnf-desc">
 						<?php
 						printf(
 							/* translators: %s : année courante. */
-							esc_html__( 'LoginFence Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée.', 'loginfence' ),
+							esc_html__( 'LoginFennec Pro est une œuvre originale protégée par le droit d’auteur — © %s Derouiche Oussama. La signature « ∞ Infinity Coder » présente dans tous les fichiers doit être conservée.', 'loginfennec' ),
 							esc_html( gmdate( 'Y' ) )
 						);
 						?>
 					</p>
 					<ul class="lnf-about-links-list">
 						<li>
-							<strong><?php esc_html_e( 'Version gratuite', 'loginfence' ); ?></strong>
-							— <?php esc_html_e( 'libre d’utilisation sous licence GPL, avec signature intacte.', 'loginfence' ); ?>
+							<strong><?php esc_html_e( 'Version gratuite', 'loginfennec' ); ?></strong>
+							— <?php esc_html_e( 'libre d’utilisation sous licence GPL, avec signature intacte.', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<strong><?php esc_html_e( 'Version Pro', 'loginfence' ); ?></strong>
-							— <?php esc_html_e( 'soumise à licence : une clé invalide ou révoquée suspend les fonctionnalités Pro à distance.', 'loginfence' ); ?>
+							<strong><?php esc_html_e( 'Version Pro', 'loginfennec' ); ?></strong>
+							— <?php esc_html_e( 'soumise à licence : une clé invalide ou révoquée suspend les fonctionnalités Pro à distance.', 'loginfennec' ); ?>
 						</li>
 						<li>
-							<strong><?php esc_html_e( 'Copies illégales', 'loginfence' ); ?></strong>
-							— <?php esc_html_e( 'revente, republication ou retrait de la signature : signalement DMCA immédiat à l’hébergeur (retrait sous 24-72 h).', 'loginfence' ); ?>
+							<strong><?php esc_html_e( 'Copies illégales', 'loginfennec' ); ?></strong>
+							— <?php esc_html_e( 'revente, republication ou retrait de la signature : signalement DMCA immédiat à l’hébergeur (retrait sous 24-72 h).', 'loginfennec' ); ?>
 						</li>
 					</ul>
 					<?php $badge = lnf_dmca_badge(); ?>
 					<?php if ( '' !== $badge ) : ?>
 						<p>
 							<a href="<?php echo esc_url( lnf_dmca_url() ); ?>" target="_blank" rel="noopener noreferrer nofollow">
-								<img src="<?php echo esc_url( $badge ); ?>" alt="<?php esc_attr_e( 'Protégé par DMCA.com', 'loginfence' ); ?>" loading="lazy">
+								<img src="<?php echo esc_url( $badge ); ?>" alt="<?php esc_attr_e( 'Protégé par DMCA.com', 'loginfennec' ); ?>" loading="lazy">
 							</a>
 						</p>
 					<?php endif; ?>
 					<div class="lnf-hero-actions">
 						<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( lnf_dmca_url() ); ?>" target="_blank" rel="noopener noreferrer nofollow">
-							<span class="dashicons dashicons-flag"></span> <?php esc_html_e( 'Signaler une violation', 'loginfence' ); ?>
+							<span class="dashicons dashicons-flag"></span> <?php esc_html_e( 'Signaler une violation', 'loginfennec' ); ?>
 						</a>
 					</div>
 				</section>
 
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'loginfennec' ); ?></h2>
 					<p>
 						<?php
 						printf(
 							/* translators: %s : dépôt GitHub. */
-							esc_html__( 'Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :', 'loginfence' )
+							esc_html__( 'Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :', 'loginfennec' )
 						);
-						echo ' <code>' . esc_html( LOGINFENCE_GITHUB_REPO ) . '</code>';
+						echo ' <code>' . esc_html( LOGINFENNEC_GITHUB_REPO ) . '</code>';
 						?>
 					</p>
-					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'loginfence' ); ?></p>
+					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'loginfennec' ); ?></p>
 					<div class="lnf-about-actions">
-						<button type="button" class="lnf-btn lnf-btn-ghost lnf-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'loginfence' ); ?></button>
+						<button type="button" class="lnf-btn lnf-btn-ghost lnf-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'loginfennec' ); ?></button>
 						<span class="lnf-update-status" aria-live="polite"></span>
 					</div>
 				</section>
 
 				<section class="lnf-about-card">
-					<h2><span class="dashicons dashicons-info-outline"></span> <?php esc_html_e( 'État du système', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-info-outline"></span> <?php esc_html_e( 'État du système', 'loginfennec' ); ?></h2>
 					<ul class="lnf-about-status">
-						<li><strong><?php esc_html_e( 'Version du plugin', 'loginfence' ); ?></strong> <?php echo esc_html( LOGINFENCE_VERSION ); ?></li>
-						<li><strong><?php esc_html_e( 'Version de WordPress', 'loginfence' ); ?></strong> <?php echo esc_html( get_bloginfo( 'version' ) ); ?></li>
-						<li><strong><?php esc_html_e( 'Version de PHP', 'loginfence' ); ?></strong> <?php echo esc_html( PHP_VERSION ); ?></li>
-						<li><strong><?php esc_html_e( 'Site', 'loginfence' ); ?></strong> <?php echo esc_html( get_bloginfo( 'name' ) ); ?></li>
+						<li><strong><?php esc_html_e( 'Version du plugin', 'loginfennec' ); ?></strong> <?php echo esc_html( LOGINFENNEC_VERSION ); ?></li>
+						<li><strong><?php esc_html_e( 'Version de WordPress', 'loginfennec' ); ?></strong> <?php echo esc_html( get_bloginfo( 'version' ) ); ?></li>
+						<li><strong><?php esc_html_e( 'Version de PHP', 'loginfennec' ); ?></strong> <?php echo esc_html( PHP_VERSION ); ?></li>
+						<li><strong><?php esc_html_e( 'Site', 'loginfennec' ); ?></strong> <?php echo esc_html( get_bloginfo( 'name' ) ); ?></li>
 						</ul>
 					</section>
 
 					<section class="lnf-about-card">
-						<h2><span class="dashicons dashicons-list-view"></span> <?php esc_html_e( 'Notes de version', 'loginfence' ); ?></h2>
+						<h2><span class="dashicons dashicons-list-view"></span> <?php esc_html_e( 'Notes de version', 'loginfennec' ); ?></h2>
 						<?php $changelog = self::latest_changelog(); ?>
 						<?php if ( $changelog ) : ?>
 							<span class="lnf-changelog-version">v<?php echo esc_html( $changelog['version'] ); ?></span>
@@ -1635,23 +1635,23 @@ class Lnf_Admin {
 								<?php endforeach; ?>
 							</ul>
 							<p class="lnf-desc">
-								<a href="https://github.com/derouicheoussama/loginfence/releases" target="_blank" rel="noopener"><?php esc_html_e( 'Historique complet sur GitHub', 'loginfence' ); ?></a>
+								<a href="https://github.com/derouicheoussama/loginfennec/releases" target="_blank" rel="noopener"><?php esc_html_e( 'Historique complet sur GitHub', 'loginfennec' ); ?></a>
 							</p>
 						<?php else : ?>
-							<p class="lnf-desc"><?php esc_html_e( 'Historique disponible sur GitHub.', 'loginfence' ); ?></p>
+							<p class="lnf-desc"><?php esc_html_e( 'Historique disponible sur GitHub.', 'loginfennec' ); ?></p>
 						<?php endif; ?>
 					</section>
 				</div>
 
 			<section class="lnf-about-card lnf-about-support">
-				<h2><span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Soutenir le projet', 'loginfence' ); ?></h2>
-				<p><?php esc_html_e( 'LoginFence Pro est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit.', 'loginfence' ); ?></p>
+				<h2><span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Soutenir le projet', 'loginfennec' ); ?></h2>
+				<p><?php esc_html_e( 'LoginFennec Pro est développé sur le temps personnel. Si ce plugin vous est utile, un petit don aide à le maintenir, à l’améliorer et à le garder gratuit.', 'loginfennec' ); ?></p>
 				<div class="lnf-hero-actions">
 					<a class="lnf-btn lnf-btn-donate" href="<?php echo esc_url( self::donate_url() ); ?>" target="_blank" rel="noopener">
-						<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don via PayPal', 'loginfence' ); ?>
+						<span class="dashicons dashicons-heart"></span> <?php esc_html_e( 'Faire un don via PayPal', 'loginfennec' ); ?>
 					</a>
-					<a class="lnf-btn lnf-btn-ghost" href="https://wordpress.org/support/plugin/loginfence/" target="_blank" rel="noopener">
-						<?php esc_html_e( 'Forum d’entraide', 'loginfence' ); ?>
+					<a class="lnf-btn lnf-btn-ghost" href="https://wordpress.org/support/plugin/loginfennec/" target="_blank" rel="noopener">
+						<?php esc_html_e( 'Forum d’entraide', 'loginfennec' ); ?>
 					</a>
 				</div>
 			</section>
@@ -1676,10 +1676,10 @@ class Lnf_Admin {
 		};
 
 		return apply_filters(
-			'loginfence_dev_socials',
+			'loginfennec_dev_socials',
 			array(
 				array(
-					'label' => __( 'Site web', 'loginfence' ),
+					'label' => __( 'Site web', 'loginfennec' ),
 					'icon'  => 'dashicons-admin-links',
 					'url'   => 'https://www.derouicheoussama.com',
 				),
@@ -1723,7 +1723,7 @@ class Lnf_Admin {
 	 * @return string
 	 */
 	protected static function pro_url() {
-		return apply_filters( 'loginfence_pro_url', '#' );
+		return apply_filters( 'loginfennec_pro_url', '#' );
 	}
 
 	/**
@@ -1732,7 +1732,7 @@ class Lnf_Admin {
 	 * @return array { version: string, items: string[] } — vide si indisponible.
 	 */
 	protected static function latest_changelog() {
-		$file = LOGINFENCE_DIR . 'readme.txt';
+		$file = LOGINFENNEC_DIR . 'readme.txt';
 		if ( ! is_readable( $file ) ) {
 			return array();
 		}
@@ -1766,13 +1766,13 @@ class Lnf_Admin {
 		<div class="wrap lnf-installer">
 			<header class="lnf-inst-hero">
 				<span class="lnf-inst-mark" aria-hidden="true">&#8734;</span>
-				<span class="lnf-version"><?php esc_html_e( 'Configuration guidée', 'loginfence' ); ?></span>
-				<h1><?php esc_html_e( 'Bienvenue dans LoginFence Pro', 'loginfence' ); ?></h1>
-				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite.', 'loginfence' ); ?></p>
+				<span class="lnf-version"><?php esc_html_e( 'Configuration guidée', 'loginfennec' ); ?></span>
+				<h1><?php esc_html_e( 'Bienvenue dans LoginFennec Pro', 'loginfennec' ); ?></h1>
+				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite.', 'loginfennec' ); ?></p>
 				<ol class="lnf-inst-steps" aria-hidden="true">
-					<li class="is-active" data-step-dot="1"><?php esc_html_e( 'Bienvenue', 'loginfence' ); ?></li>
-					<li data-step-dot="2"><?php esc_html_e( 'Style & thème', 'loginfence' ); ?></li>
-					<li data-step-dot="3"><?php esc_html_e( 'Sécurité', 'loginfence' ); ?></li>
+					<li class="is-active" data-step-dot="1"><?php esc_html_e( 'Bienvenue', 'loginfennec' ); ?></li>
+					<li data-step-dot="2"><?php esc_html_e( 'Style & thème', 'loginfennec' ); ?></li>
+					<li data-step-dot="3"><?php esc_html_e( 'Sécurité', 'loginfennec' ); ?></li>
 				</ol>
 			</header>
 
@@ -1783,35 +1783,35 @@ class Lnf_Admin {
 				<?php wp_nonce_field( 'lnf_wizard', 'lnf_wizard_nonce' ); ?>
 
 				<section class="lnf-wstep is-active" data-step="1">
-					<h2><?php esc_html_e( 'Ce que vous allez obtenir', 'loginfence' ); ?></h2>
-					<p class="lnf-inst-desc"><?php esc_html_e( 'Un aperçu de tout ce que couvre LoginFence Pro.', 'loginfence' ); ?></p>
+					<h2><?php esc_html_e( 'Ce que vous allez obtenir', 'loginfennec' ); ?></h2>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'Un aperçu de tout ce que couvre LoginFennec Pro.', 'loginfennec' ); ?></p>
 					<div class="lnf-inst-grid">
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Logo image ou texte, image de fond avec flou, luminosité et voile coloré réglables.', 'loginfence' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '10 styles & 7 thèmes', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, néon, sakura… combinés à 7 designs de formulaire.', 'loginfence' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Honeypot anti-robots, blocage IP + identifiant et liste blanche de confiance.', 'loginfence' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Icônes aux couleurs officielles des marques et mention de copyright.', 'loginfence' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-desktop"></span><h3><?php esc_html_e( 'Aperçu en direct', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Bureau, tablette et mobile — chaque changement se voit instantanément.', 'loginfence' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-chart-bar"></span><h3><?php esc_html_e( 'Statistiques', 'loginfence' ); ?></h3><p><?php esc_html_e( 'Score de sécurité et journal des 50 derniers événements de connexion.', 'loginfence' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Logo image ou texte, image de fond avec flou, luminosité et voile coloré réglables.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '10 styles & 7 thèmes', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, néon, sakura… combinés à 7 designs de formulaire.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Honeypot anti-robots, blocage IP + identifiant et liste blanche de confiance.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Icônes aux couleurs officielles des marques et mention de copyright.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-desktop"></span><h3><?php esc_html_e( 'Aperçu en direct', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Bureau, tablette et mobile — chaque changement se voit instantanément.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-chart-bar"></span><h3><?php esc_html_e( 'Statistiques', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Score de sécurité et journal des 50 derniers événements de connexion.', 'loginfennec' ); ?></p></div>
 					</div>
-					<p class="lnf-inst-note">∞ <?php esc_html_e( 'Création de Derouiche Oussama — sans publicité, sans collecte de données.', 'loginfence' ); ?></p>
+					<p class="lnf-inst-note">∞ <?php esc_html_e( 'Création de Derouiche Oussama — sans publicité, sans collecte de données.', 'loginfennec' ); ?></p>
 				</section>
 
 				<section class="lnf-wstep" data-step="2">
-					<h2><?php esc_html_e( 'Choisissez votre style', 'loginfence' ); ?></h2>
-					<p class="lnf-inst-desc"><?php esc_html_e( 'Un style définit les couleurs d’ambiance. Vous pourrez tout affiner plus tard (flou, opacité, typographie…).', 'loginfence' ); ?></p>
+					<h2><?php esc_html_e( 'Choisissez votre style', 'loginfennec' ); ?></h2>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'Un style définit les couleurs d’ambiance. Vous pourrez tout affiner plus tard (flou, opacité, typographie…).', 'loginfennec' ); ?></p>
 					<div class="lnf-presets">
 						<?php
 						$presets = array(
-							'glass'   => array( __( 'Effet verre', 'loginfence' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
-							'minimal' => array( __( 'Minimal', 'loginfence' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
-							'dark'    => array( __( 'Sombre', 'loginfence' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
-							'sunset'  => array( __( 'Coucher de soleil', 'loginfence' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
-							'ocean'   => array( __( 'Océan', 'loginfence' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
-							'forest'  => array( __( 'Forêt', 'loginfence' ), 'linear-gradient(135deg,#059669,#065f46)' ),
-							'neon'    => array( __( 'Néon', 'loginfence' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
-							'sakura'  => array( __( 'Sakura', 'loginfence' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
-							'mono'    => array( __( 'Monochrome', 'loginfence' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
-							'royal'   => array( __( 'Royal', 'loginfence' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
+							'glass'   => array( __( 'Effet verre', 'loginfennec' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
+							'minimal' => array( __( 'Minimal', 'loginfennec' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
+							'dark'    => array( __( 'Sombre', 'loginfennec' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
+							'sunset'  => array( __( 'Coucher de soleil', 'loginfennec' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
+							'ocean'   => array( __( 'Océan', 'loginfennec' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
+							'forest'  => array( __( 'Forêt', 'loginfennec' ), 'linear-gradient(135deg,#059669,#065f46)' ),
+							'neon'    => array( __( 'Néon', 'loginfennec' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
+							'sakura'  => array( __( 'Sakura', 'loginfennec' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
+							'mono'    => array( __( 'Monochrome', 'loginfennec' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
+							'royal'   => array( __( 'Royal', 'loginfennec' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
 						);
 						foreach ( $presets as $key => $preset ) {
 							printf(
@@ -1825,18 +1825,18 @@ class Lnf_Admin {
 						?>
 					</div>
 
-					<h2 class="lnf-inst-subtitle"><?php esc_html_e( 'Et le design du formulaire', 'loginfence' ); ?></h2>
-					<p class="lnf-inst-desc"><?php esc_html_e( 'La silhouette du formulaire, indépendante des couleurs.', 'loginfence' ); ?></p>
+					<h2 class="lnf-inst-subtitle"><?php esc_html_e( 'Et le design du formulaire', 'loginfennec' ); ?></h2>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'La silhouette du formulaire, indépendante des couleurs.', 'loginfennec' ); ?></p>
 					<div class="lnf-presets lnf-themes">
 						<?php
 						$themes = array(
-							'glass'    => array( __( 'Effet verre', 'loginfence' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
-							'classic'  => array( __( 'Classique', 'loginfence' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-							'outline'  => array( __( 'Contour', 'loginfence' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
-							'pill'     => array( __( 'Pillule', 'loginfence' ), 'background:#fff;border-radius:999px;' ),
-							'elevated' => array( __( 'Surélevé', 'loginfence' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-							'accent'   => array( __( 'Accent', 'loginfence' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
-							'minimal'  => array( __( 'Minimal', 'loginfence' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
+							'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
+							'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
+							'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
+							'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
+							'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
+							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
+							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
 						);
 						foreach ( $themes as $key => $theme ) {
 							printf(
@@ -1852,35 +1852,35 @@ class Lnf_Admin {
 				</section>
 
 				<section class="lnf-wstep" data-step="3">
-					<h2><?php esc_html_e( 'Protégez votre page de connexion', 'loginfence' ); ?></h2>
-					<p class="lnf-inst-desc"><?php esc_html_e( 'Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité.', 'loginfence' ); ?></p>
+					<h2><?php esc_html_e( 'Protégez votre page de connexion', 'loginfennec' ); ?></h2>
+					<p class="lnf-inst-desc"><?php esc_html_e( 'Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité.', 'loginfennec' ); ?></p>
 
 					<div class="lnf-inst-security">
 						<label class="lnf-switch"><input type="checkbox" name="lnf[sec_enable]" value="1" <?php checked( ! empty( $s['sec_enable'] ) ); ?>><span class="lnf-switch-ui"></span></label>
 						<div>
-							<strong><?php esc_html_e( 'Limiter les tentatives de connexion', 'loginfence' ); ?></strong>
-							<p class="lnf-inst-desc"><?php esc_html_e( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfence' ); ?></p>
+							<strong><?php esc_html_e( 'Limiter les tentatives de connexion', 'loginfennec' ); ?></strong>
+							<p class="lnf-inst-desc"><?php esc_html_e( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfennec' ); ?></p>
 						</div>
 						<div class="lnf-inst-attempts">
-							<label for="lnf-wizard-attempts"><?php esc_html_e( 'Tentatives autorisées', 'loginfence' ); ?></label>
+							<label for="lnf-wizard-attempts"><?php esc_html_e( 'Tentatives autorisées', 'loginfennec' ); ?></label>
 							<input type="number" id="lnf-wizard-attempts" class="lnf-input" name="lnf[sec_max_attempts]" min="1" max="20" value="<?php echo esc_attr( $s['sec_max_attempts'] ); ?>">
-							<label for="lnf-wizard-lockout"><?php esc_html_e( 'Blocage (minutes)', 'loginfence' ); ?></label>
+							<label for="lnf-wizard-lockout"><?php esc_html_e( 'Blocage (minutes)', 'loginfennec' ); ?></label>
 							<input type="number" id="lnf-wizard-lockout" class="lnf-input" name="lnf[sec_lockout_minutes]" min="1" max="1440" value="<?php echo esc_attr( $s['sec_lockout_minutes'] ); ?>">
 						</div>
 					</div>
 
 					<div class="lnf-inst-checks">
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_honeypot]" value="1" <?php checked( ! empty( $s['sec_honeypot'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Honeypot anti-robots', 'loginfence' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Un champ caché piège les bots avant même la connexion.', 'loginfence' ); ?></p></div></div>
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'loginfence' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'loginfence' ); ?></p></div></div>
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfence' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfence' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_honeypot]" value="1" <?php checked( ! empty( $s['sec_honeypot'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Honeypot anti-robots', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Un champ caché piège les bots avant même la connexion.', 'loginfennec' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'loginfennec' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfennec' ); ?></p></div></div>
 					</div>
-					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfence-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfence' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'loginfence' ); ?></p>
+					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'loginfennec' ); ?></p>
 				</section>
 
 				<footer class="lnf-inst-footer">
-					<button type="button" class="lnf-btn lnf-btn-ghost lnf-step-prev"><?php esc_html_e( 'Retour', 'loginfence' ); ?></button>
-					<button type="button" class="lnf-btn lnf-btn-primary lnf-step-next"><?php esc_html_e( 'Continuer', 'loginfence' ); ?></button>
-					<button type="submit" class="lnf-btn lnf-btn-primary lnf-step-finish"><?php esc_html_e( 'Terminer et ouvrir le dashboard', 'loginfence' ); ?></button>
+					<button type="button" class="lnf-btn lnf-btn-ghost lnf-step-prev"><?php esc_html_e( 'Retour', 'loginfennec' ); ?></button>
+					<button type="button" class="lnf-btn lnf-btn-primary lnf-step-next"><?php esc_html_e( 'Continuer', 'loginfennec' ); ?></button>
+					<button type="submit" class="lnf-btn lnf-btn-primary lnf-step-finish"><?php esc_html_e( 'Terminer et ouvrir le dashboard', 'loginfennec' ); ?></button>
 				</footer>
 			</form>
 		</div>
@@ -1892,40 +1892,40 @@ class Lnf_Admin {
 	 */
 	public static function render_pro() {
 		$groups = array(
-			__( 'Protection', 'loginfence' )        => array(
-				array( __( 'Limitation des tentatives + blocage IP', 'loginfence' ), true, true ),
-				array( __( 'Messages de sécurité personnalisés', 'loginfence' ), true, true ),
-				array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'loginfence' ), false, true ),
-				array( __( 'Double authentification (2FA)', 'loginfence' ), false, true ),
-				array( __( 'URL de connexion personnalisée', 'loginfence' ), false, true ),
-				array( __( 'Protection dédiée de /wp-admin (liste blanche IP)', 'loginfence' ), false, true ),
+			__( 'Protection', 'loginfennec' )        => array(
+				array( __( 'Limitation des tentatives + blocage IP', 'loginfennec' ), true, true ),
+				array( __( 'Messages de sécurité personnalisés', 'loginfennec' ), true, true ),
+				array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'loginfennec' ), false, true ),
+				array( __( 'Double authentification (2FA)', 'loginfennec' ), false, true ),
+				array( __( 'URL de connexion personnalisée', 'loginfennec' ), false, true ),
+				array( __( 'Protection dédiée de /wp-admin (liste blanche IP)', 'loginfennec' ), false, true ),
 			),
-			__( 'Surveillance', 'loginfence' )      => array(
-				array( __( 'Journal des tentatives (audit complet)', 'loginfence' ), false, true ),
-				array( __( 'Alertes e-mail après chaque blocage', 'loginfence' ), false, true ),
-				array( __( 'Détection avancée des activités suspectes', 'loginfence' ), false, true ),
+			__( 'Surveillance', 'loginfennec' )      => array(
+				array( __( 'Journal des tentatives (audit complet)', 'loginfennec' ), false, true ),
+				array( __( 'Alertes e-mail après chaque blocage', 'loginfennec' ), false, true ),
+				array( __( 'Détection avancée des activités suspectes', 'loginfennec' ), false, true ),
 			),
-			__( 'Contrôle', 'loginfence' )          => array(
-				array( __( 'Blocage géographique (pays)', 'loginfence' ), false, true ),
-				array( __( 'Sessions & appareils de confiance', 'loginfence' ), false, true ),
+			__( 'Contrôle', 'loginfennec' )          => array(
+				array( __( 'Blocage géographique (pays)', 'loginfennec' ), false, true ),
+				array( __( 'Sessions & appareils de confiance', 'loginfennec' ), false, true ),
 			),
 		);
 
 		$benefits = array(
 			array(
 				'icon'  => 'dashicons-shield-alt',
-				'title' => __( 'Sécurité maximale', 'loginfence' ),
-				'text'  => __( '2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse.', 'loginfence' ),
+				'title' => __( 'Sécurité maximale', 'loginfennec' ),
+				'text'  => __( '2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse.', 'loginfennec' ),
 			),
 			array(
 				'icon'  => 'dashicons-chart-line',
-				'title' => __( 'Surveillance complète', 'loginfence' ),
-				'text'  => __( 'Journal étendu, alertes e-mail immédiates et détection des comportements suspects.', 'loginfence' ),
+				'title' => __( 'Surveillance complète', 'loginfennec' ),
+				'text'  => __( 'Journal étendu, alertes e-mail immédiates et détection des comportements suspects.', 'loginfennec' ),
 			),
 			array(
 				'icon'  => 'dashicons-superhero-alt',
-				'title' => __( 'Sérénité totale', 'loginfence' ),
-				'text'  => __( 'Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle.', 'loginfence' ),
+				'title' => __( 'Sérénité totale', 'loginfennec' ),
+				'text'  => __( 'Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle.', 'loginfennec' ),
 			),
 		);
 		$checkout = lnf_checkout_url();
@@ -1935,52 +1935,52 @@ class Lnf_Admin {
 		<div class="wrap lnf-wrap lnf-pro">
 			<div class="lnf-hero lnf-pro-hero">
 				<span class="lnf-hero-mark" aria-hidden="true">&#8734;</span>
-				<h1><?php esc_html_e( 'LoginFence Pro', 'loginfence' ); ?></h1>
-				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'loginfence' ); ?></p>
+				<h1><?php esc_html_e( 'LoginFennec Pro', 'loginfennec' ); ?></h1>
+				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'loginfennec' ); ?></p>
 				<div class="lnf-hero-actions">
 					<?php if ( ! $pro ) : ?>
 						<?php if ( '' !== $checkout ) : ?>
 							<button type="button" class="lnf-btn lnf-btn-pro lnf-open-checkout" data-checkout="<?php echo esc_url( $checkout ); ?>">
-								<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter Pro — paiement intégré', 'loginfence' ); ?>
+								<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter Pro — paiement intégré', 'loginfennec' ); ?>
 							</button>
 						<?php else : ?>
 							<a class="lnf-btn lnf-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
-								<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfence' ); ?>
+								<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?>
 							</a>
 						<?php endif; ?>
 					<?php endif; ?>
-					<a class="lnf-btn lnf-btn-ghost is-light" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfence' ) ); ?>">
-						<?php esc_html_e( 'Revenir au dashboard', 'loginfence' ); ?>
+					<a class="lnf-btn lnf-btn-ghost is-light" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec' ) ); ?>">
+						<?php esc_html_e( 'Revenir au dashboard', 'loginfennec' ); ?>
 					</a>
 				</div>
 			</div>
 
 			<?php if ( $pro ) : ?>
 				<section class="lnf-about-card lnf-pro-active">
-					<h2><span class="dashicons dashicons-yes-alt"></span> <?php esc_html_e( 'Pro actif — merci pour votre soutien !', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-yes-alt"></span> <?php esc_html_e( 'Pro actif — merci pour votre soutien !', 'loginfennec' ); ?></h2>
 					<p>
-						<?php esc_html_e( 'Licence :', 'loginfence' ); ?>
+						<?php esc_html_e( 'Licence :', 'loginfennec' ); ?>
 						<code><?php echo esc_html( strlen( $license['key'] ) > 10 ? substr( $license['key'], 0, 4 ) . '••••' . substr( $license['key'], -4 ) : $license['key'] ); ?></code>
 					</p>
-					<button type="button" class="button lnf-deactivate-license"><?php esc_html_e( 'Désactiver la licence sur ce site', 'loginfence' ); ?></button>
+					<button type="button" class="button lnf-deactivate-license"><?php esc_html_e( 'Désactiver la licence sur ce site', 'loginfennec' ); ?></button>
 					<span class="lnf-license-status" aria-live="polite"></span>
 				</section>
 			<?php else : ?>
 				<section class="lnf-about-card lnf-purchase-card">
-					<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'loginfence' ); ?></h2>
+					<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'loginfennec' ); ?></h2>
 					<ol class="lnf-purchase-steps">
-						<li><?php esc_html_e( 'Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même.', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Après l’achat, vous recevez votre clé de licence par e-mail.', 'loginfence' ); ?></li>
-						<li><?php esc_html_e( 'Collez la clé ci-dessous : Pro est activé instantanément.', 'loginfence' ); ?></li>
+						<li><?php esc_html_e( 'Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même.', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Après l’achat, vous recevez votre clé de licence par e-mail.', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( 'Collez la clé ci-dessous : Pro est activé instantanément.', 'loginfennec' ); ?></li>
 					</ol>
 					<div class="lnf-license-form">
-						<label class="screen-reader-text" for="lnf-license-key"><?php esc_html_e( 'Clé de licence', 'loginfence' ); ?></label>
+						<label class="screen-reader-text" for="lnf-license-key"><?php esc_html_e( 'Clé de licence', 'loginfennec' ); ?></label>
 						<input type="text" id="lnf-license-key" class="lnf-input" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off">
-						<button type="button" class="button button-primary lnf-activate-license"><?php esc_html_e( 'Activer Pro', 'loginfence' ); ?></button>
+						<button type="button" class="button button-primary lnf-activate-license"><?php esc_html_e( 'Activer Pro', 'loginfennec' ); ?></button>
 					</div>
 					<p class="lnf-license-status" aria-live="polite"></p>
 					<?php if ( '' === $checkout ) : ?>
-						<p class="lnf-pro-note"><?php esc_html_e( 'Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENCE_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENCE_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe.', 'loginfence' ); ?></p>
+						<p class="lnf-pro-note"><?php esc_html_e( 'Configuration vendeur (visible par les administrateurs uniquement) : définissez LOGINFENNEC_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et LOGINFENNEC_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe.', 'loginfennec' ); ?></p>
 					<?php endif; ?>
 				</section>
 			<?php endif; ?>
@@ -1988,13 +1988,13 @@ class Lnf_Admin {
 			<?php if ( ! $pro && '' !== $checkout ) : ?>
 				<div class="lnf-modal" id="lnf-checkout-modal" hidden>
 					<div class="lnf-modal-backdrop" data-close></div>
-					<div class="lnf-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'loginfence' ); ?>">
+					<div class="lnf-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'loginfennec' ); ?>">
 						<div class="lnf-modal-head">
-							<strong><?php esc_html_e( 'Paiement sécurisé — LoginFence Pro', 'loginfence' ); ?></strong>
-							<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfence' ); ?>">×</button>
+							<strong><?php esc_html_e( 'Paiement sécurisé — LoginFennec Pro', 'loginfennec' ); ?></strong>
+							<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfennec' ); ?>">×</button>
 						</div>
-						<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'loginfence' ); ?>"></iframe>
-						<p class="lnf-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous.', 'loginfence' ); ?></p>
+						<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'loginfennec' ); ?>"></iframe>
+						<p class="lnf-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous.', 'loginfennec' ); ?></p>
 					</div>
 				</div>
 			<?php endif; ?>
@@ -2010,12 +2010,12 @@ class Lnf_Admin {
 			</div>
 
 			<div class="lnf-about-card lnf-pro-table-card">
-				<h2><span class="dashicons dashicons-shield-alt"></span> <?php esc_html_e( 'Comparatif détaillé : Gratuit vs Pro', 'loginfence' ); ?></h2>
+				<h2><span class="dashicons dashicons-shield-alt"></span> <?php esc_html_e( 'Comparatif détaillé : Gratuit vs Pro', 'loginfennec' ); ?></h2>
 				<table class="lnf-pro-table">
 					<thead>
 						<tr>
-							<th><?php esc_html_e( 'Fonctionnalité', 'loginfence' ); ?></th>
-							<th><?php esc_html_e( 'Gratuit', 'loginfence' ); ?></th>
+							<th><?php esc_html_e( 'Fonctionnalité', 'loginfennec' ); ?></th>
+							<th><?php esc_html_e( 'Gratuit', 'loginfennec' ); ?></th>
 							<th class="lnf-pro-col">Pro</th>
 						</tr>
 					</thead>
@@ -2032,10 +2032,10 @@ class Lnf_Admin {
 						<?php endforeach; ?>
 					</tbody>
 				</table>
-				<p class="lnf-pro-note"><?php esc_html_e( 'Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfence_pro_url).', 'loginfence' ); ?></p>
+				<p class="lnf-pro-note"><?php esc_html_e( 'Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfennec_pro_url).', 'loginfennec' ); ?></p>
 				<div class="lnf-hero-actions">
 					<a class="lnf-btn lnf-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
-						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfence' ); ?>
+						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?>
 					</a>
 				</div>
 			</div>

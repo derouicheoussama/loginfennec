@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -15,7 +15,7 @@
  * Apparence de la page de connexion : CSS dynamique, logo, liens,
  * réseaux sociaux, copyright.
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -357,12 +357,12 @@ function lnf_form_theme_css( $s ) {
  */
 function lnf_get_social_networks( $s ) {
 	$networks = array(
-		'facebook'  => array( 'icon' => 'dashicons-facebook-alt', 'label' => __( 'Facebook', 'loginfence' ) ),
-		'twitter'   => array( 'icon' => 'dashicons-twitter', 'label' => __( 'X (Twitter)', 'loginfence' ) ),
-		'instagram' => array( 'icon' => 'dashicons-instagram', 'label' => __( 'Instagram', 'loginfence' ) ),
-		'linkedin'  => array( 'icon' => 'dashicons-linkedin', 'label' => __( 'LinkedIn', 'loginfence' ) ),
-		'youtube'   => array( 'icon' => 'dashicons-youtube', 'label' => __( 'YouTube', 'loginfence' ) ),
-		'email'     => array( 'icon' => 'dashicons-email-alt', 'label' => __( 'E-mail', 'loginfence' ) ),
+		'facebook'  => array( 'icon' => 'dashicons-facebook-alt', 'label' => __( 'Facebook', 'loginfennec' ) ),
+		'twitter'   => array( 'icon' => 'dashicons-twitter', 'label' => __( 'X (Twitter)', 'loginfennec' ) ),
+		'instagram' => array( 'icon' => 'dashicons-instagram', 'label' => __( 'Instagram', 'loginfennec' ) ),
+		'linkedin'  => array( 'icon' => 'dashicons-linkedin', 'label' => __( 'LinkedIn', 'loginfennec' ) ),
+		'youtube'   => array( 'icon' => 'dashicons-youtube', 'label' => __( 'YouTube', 'loginfennec' ) ),
+		'email'     => array( 'icon' => 'dashicons-email-alt', 'label' => __( 'E-mail', 'loginfennec' ) ),
 	);
 
 	$active = array();
@@ -389,8 +389,8 @@ function lnf_login_head() {
 	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {
 		printf( '<link rel="preload" as="image" href="%s">' . "\n", esc_url( $s['bg_image'] ) );
 	}
-	echo '<style id="loginfence">' . "\n";
-	echo "/* ∞ INFINITY CODER — style généré par LoginFence Pro\n";
+	echo '<style id="loginfennec">' . "\n";
+	echo "/* ∞ INFINITY CODER — style généré par LoginFennec Pro\n";
 	echo ' * Création originale de Derouiche Oussama — https://www.derouicheoussama.com' . "\n */\n";
 	echo wp_strip_all_tags( lnf_build_login_css( $s ) ) . "\n";
 	echo "</style>\n";
@@ -406,7 +406,7 @@ function lnf_login_honeypot() {
 		return;
 	}
 	echo '<p class="lnf-hp" style="position:absolute!important;left:-9999px!important;top:-9999px!important;margin:0;" aria-hidden="true">'
-		. '<label>' . esc_html__( 'Ne pas remplir ce champ', 'loginfence' )
+		. '<label>' . esc_html__( 'Ne pas remplir ce champ', 'loginfennec' )
 		. ' <input type="text" name="lnf_hp" value="" tabindex="-1" autocomplete="off"></label></p>';
 }
 add_action( 'login_form', 'lnf_login_honeypot' );
@@ -505,8 +505,8 @@ function lnf_generic_login_error( $error ) {
 	if ( empty( $s['sec_generic_error'] ) || Lnf_Login_Security::$lock_triggered ) {
 		return $error;
 	}
-	return '<strong>' . esc_html__( 'Erreur', 'loginfence' ) . '</strong> : '
-		. esc_html__( 'Identifiants incorrects. Veuillez réessayer.', 'loginfence' );
+	return '<strong>' . esc_html__( 'Erreur', 'loginfennec' ) . '</strong> : '
+		. esc_html__( 'Identifiants incorrects. Veuillez réessayer.', 'loginfennec' );
 }
 add_filter( 'login_errors', 'lnf_generic_login_error', 100 );
 
@@ -529,13 +529,13 @@ function lnf_login_footer() {
 	$js  = '';
 
 	// Signature visible dans le code source de la page.
-	echo '<!-- ∞ INFINITY CODER | LoginFence Pro — création originale de Derouiche Oussama | https://www.derouicheoussama.com -->' . "\n";
+	echo '<!-- ∞ INFINITY CODER | LoginFennec Pro — création originale de Derouiche Oussama | https://www.derouicheoussama.com -->' . "\n";
 
 	// ——— Réseaux sociaux ———.
 	if ( ! empty( $s['social_enable'] ) ) {
 		$networks = lnf_get_social_networks( $s );
 		if ( $networks ) {
-			echo '<div class="lnf-social" aria-label="' . esc_attr__( 'Réseaux sociaux', 'loginfence' ) . '">';
+			echo '<div class="lnf-social" aria-label="' . esc_attr__( 'Réseaux sociaux', 'loginfennec' ) . '">';
 			foreach ( $networks as $key => $data ) {
 				printf(
 					'<a class="lnf-icon" data-network="%1$s" href="%2$s" target="_blank" rel="noopener noreferrer" aria-label="%3$s" title="%3$s"><span class="dashicons %4$s"></span></a>',
@@ -617,7 +617,7 @@ function lnf_login_footer() {
 	// ——— JS personnalisé ———.
 	if ( '' !== trim( (string) $s['custom_js'] ) ) {
 		$custom_js = str_ireplace( '</script', '<\/script', (string) $s['custom_js'] );
-		echo '<script id="loginfence-custom">' . $custom_js . '</script>';
+		echo '<script id="loginfennec-custom">' . $custom_js . '</script>';
 	}
 }
 add_action( 'login_footer', 'lnf_login_footer', 20 );

@@ -1,4 +1,4 @@
-=== LoginFence Pro – Login Customizer & Security ===
+=== LoginFennec Pro – Personnalisation page login et Security ===
 Contributors: derouicheoussama
 Donate link: https://www.paypal.com/donate
 Tags: login, customizer, login page, security, social icons
@@ -13,7 +13,7 @@ Make the WordPress login page yours: logo, background (blur, opacity, gradients)
 
 == Description ==
 
-LoginFence Pro redesigns your WordPress login page AND protects it, from one elegant dashboard with a live preview. No code needed — and unlike most login customizers, security is built in, not an afterthought.
+LoginFennec Pro — Personnalisation page login et Security. It redesigns your WordPress login page AND protects it, from one elegant dashboard with a live preview. No code needed — and unlike most login customizers, security is built in, not an afterthought.
 
 <strong>🎨 Design &amp; Branding</strong>
 
@@ -64,9 +64,9 @@ LoginFence Pro redesigns your WordPress login page AND protects it, from one ele
 
 == Installation ==
 
-1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `loginfence.zip`.
+1. In your WordPress admin, go to **Plugins → Add New → Upload Plugin** and upload `loginfennec.zip`.
 2. Activate the plugin.
-3. Open the new **LoginFence Pro** menu and start customizing — the live preview updates as you type.
+3. Open the new **LoginFennec Pro** menu and start customizing — the live preview updates as you type.
 4. Click **Save** to apply your design to the real login page.
 
 == Frequently Asked Questions ==
@@ -82,7 +82,7 @@ The plugin checks the latest GitHub release of its repository every 6 hours and 
 = I published the plugin on WordPress.org, how do I switch updates? =
 
 Add this to your site (or a small companion plugin):
-`add_filter( 'loginfence_update_source', fn() => 'wordpress' );`
+`add_filter( 'loginfennec_update_source', fn() => 'wordpress' );`
 
 = Can I reset everything? =
 
@@ -90,7 +90,7 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 
 = Can I buy Pro without leaving WordPress? =
 
-Yes. Define `LOGINFENCE_CHECKOUT_URL` in wp-config.php with your payment link (Lemon Squeezy, Stripe Payment Link, Gumroad…) and the checkout opens in an overlay inside the plugin. Add `LOGINFENCE_LICENSE_API` to validate license keys against your own server.
+Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (Lemon Squeezy, Stripe Payment Link, Gumroad…) and the checkout opens in an overlay inside the plugin. Add `LOGINFENNEC_LICENSE_API` to validate license keys against your own server.
 
 == Screenshots ==
 
@@ -104,7 +104,7 @@ Yes. Define `LOGINFENCE_CHECKOUT_URL` in wp-config.php with your payment link (L
 == Changelog ==
 
 = 2.0.0 =
-* Important: the plugin is now called **LoginFence Pro** — your settings are migrated automatically
+* Important: the plugin is now called **LoginFennec Pro** — your settings are migrated automatically
 * Everything from 1.x is included: design customizer, security suite, journal, stats, in-plugin purchase and license activation
 
 
@@ -127,7 +127,7 @@ Yes. Define `LOGINFENCE_CHECKOUT_URL` in wp-config.php with your payment link (L
 = 1.8.1 =
 * Fixed: official brand colors of social icons now always win over any other CSS
 * New: "Protection & DMCA" card on the About page — copyright, license terms and violation reporting
-* New: optional DMCA badge via LOGINFENCE_DMCA_BADGE / LOGINFENCE_DMCA_URL
+* New: optional DMCA badge via LOGINFENNEC_DMCA_BADGE / LOGINFENNEC_DMCA_URL
 
 = 1.8.0 =
 * New: "∞ Infinity Coder" signature in every source file (PHP, JS, CSS) and in the generated login-page HTML
@@ -169,7 +169,7 @@ Yes. Define `LOGINFENCE_CHECKOUT_URL` in wp-config.php with your payment link (L
 * Dev: CI workflow with PHP syntax checks and PHPCS configuration
 
 = 1.3.0 =
-* Important: the plugin is now called **LoginFence Pro**
+* Important: the plugin is now called **LoginFennec Pro**
 * New: 7 form UI themes (glass, classic, outline, pill, elevated, accent, minimal) — independent from colors
 * New: 4 color styles (Neon, Sakura, Monochrome, Royal) — 10 presets total
 * New: custom CSS field for the login page

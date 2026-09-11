@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -17,7 +17,7 @@
  * Bloque temporairement une adresse IP (et un identifiant) après
  * N échecs de mot de passe, et affiche les messages correspondants.
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -78,7 +78,7 @@ class Lnf_Login_Security {
 		self::log_event( 'blocked', $username );
 		return new WP_Error(
 			'lnf_honeypot',
-			'<strong>' . esc_html__( 'Erreur', 'loginfence' ) . '</strong> : ' . esc_html__( 'requête refusée par la protection anti-robots.', 'loginfence' )
+			'<strong>' . esc_html__( 'Erreur', 'loginfennec' ) . '</strong> : ' . esc_html__( 'requête refusée par la protection anti-robots.', 'loginfennec' )
 		);
 	}
 
@@ -440,7 +440,7 @@ class Lnf_Login_Security {
 						'Attention : il vous reste %d tentative avant le blocage temporaire.',
 						'Attention : il vous reste %d tentatives avant le blocage temporaire.',
 						$remaining,
-						'loginfence'
+						'loginfennec'
 					),
 					$remaining
 				)

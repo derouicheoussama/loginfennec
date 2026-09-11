@@ -3,7 +3,7 @@
 /**
  * ∞ INFINITY CODER — création originale de Derouiche Oussama
  *
- * Plugin   : LoginFence Pro – Login Customizer & Security
+ * Plugin   : LoginFennec Pro – Login Customizer & Security
  * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
  * GitHub   : https://github.com/derouicheoussama
  * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
@@ -14,12 +14,12 @@
 /**
  * Réglages : valeurs par défaut, accès et assainissement.
  *
- * @package LoginFencePro
+ * @package LoginFennecPro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-const LOGINFENCE_OPTION = 'loginfence_settings';
+const LOGINFENNEC_OPTION = 'loginfennec_settings';
 
 // Disponible nativement depuis WP 5.4 ; fallback pour la compatibilité 5.2+.
 if ( ! function_exists( 'sanitize_hex_color' ) ) {
@@ -158,7 +158,7 @@ function lnf_get_defaults() {
 function lnf_settings() {
 	static $cache = null;
 	if ( null === $cache ) {
-		$saved = get_option( LOGINFENCE_OPTION, array() );
+		$saved = get_option( LOGINFENNEC_OPTION, array() );
 		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), lnf_get_defaults() );
 	}
 	return $cache;
