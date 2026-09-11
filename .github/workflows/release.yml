@@ -28,6 +28,7 @@ jobs:
             --exclude 'build' \
             --exclude 'tools' \
             --exclude 'wporg-assets' \
+            --exclude 'brand' \
             --exclude 'README.md' \
             --exclude '*.pot' \
             ./ build/loginfence/
