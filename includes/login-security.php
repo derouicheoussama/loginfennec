@@ -149,17 +149,6 @@ class Lnf_Login_Security {
 	}
 
 	/**
-	 * Désactive XML-RPC si l'option de durcissement est active.
-	 *
-	 * @param bool $enabled État courant.
-	 * @return bool
-	 */
-	public static function maybe_disable_xmlrpc( $enabled ) {
-		$s = lnf_settings();
-		return empty( $s['sec_disable_xmlrpc'] ) ? $enabled : false;
-	}
-
-	/**
 	 * Ajoute une entrée au journal de sécurité (50 dernières).
 	 *
 	 * @param string $action   fail | blocked | login.
