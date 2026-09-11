@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * ∞ INFINITY CODER — création originale de Derouiche Oussama
+ *
+ * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
+ * GitHub   : https://github.com/derouicheoussama
+ * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
+ * Licence  : GPL v2 ou ultérieure — toute copie ou modification de ce
+ *            fichier DOIT conserver la présente signature et les mentions
+ *            de licence et d'attribution (article 2(c) de la GPL).
+ */
 /**
  * Mises à jour automatiques depuis les releases GitHub.
  *

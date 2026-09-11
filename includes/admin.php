@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * ∞ INFINITY CODER — création originale de Derouiche Oussama
+ *
+ * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
+ * GitHub   : https://github.com/derouicheoussama
+ * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
+ * Licence  : GPL v2 ou ultérieure — toute copie ou modification de ce
+ *            fichier DOIT conserver la présente signature et les mentions
+ *            de licence et d'attribution (article 2(c) de la GPL).
+ */
 /**
  * Dashboard d'administration : menu, onglets, aperçu en direct,
  * page « À propos » et bouton de don.
@@ -29,8 +41,25 @@ class Inls_Admin {
 		add_action( 'wp_ajax_inls_purge_log', array( __CLASS__, 'ajax_purge_log' ) );
 		add_action( 'wp_ajax_inls_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
+		add_filter( 'admin_footer_text', array( __CLASS__, 'footer_signature' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( INFINITY_LOGINSHIELD_FILE ), array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
+	}
+
+	/**
+	 * Signature « Infinity Coder » en pied de page admin,
+	 * uniquement sur les pages du plugin.
+	 *
+	 * @param string $text Texte par défaut.
+	 * @return string
+	 */
+	public static function footer_signature( $text ) {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( $screen && false !== strpos( (string) $screen->id, 'infinity-loginshield' ) ) {
+			return '∞ <strong>Infinity Coder</strong> — conçu par Derouiche Oussama · '
+				. '<a href="https://www.derouicheoussama.com" target="_blank" rel="noopener noreferrer">derouicheoussama.com</a>';
+		}
+		return $text;
 	}
 
 	/**

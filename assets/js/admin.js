@@ -1,4 +1,11 @@
 /**
+ * ∞ INFINITY CODER — création originale de Derouiche Oussama
+ * Plugin : Infinity LoginShield · https://www.derouicheoussama.com
+ * Copyright © 2026 Derouiche Oussama. Licence GPL v2+ —
+ * toute copie ou modification doit conserver cette signature.
+ */
+
+/**
  * Infinity LoginShield — dashboard.
  * Onglets, aperçu en direct (CSS injecté dans l'iframe), presets,
  * médiathèque, interrupteurs et curseurs.

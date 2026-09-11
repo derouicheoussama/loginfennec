@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * ∞ INFINITY CODER — création originale de Derouiche Oussama
+ *
+ * Plugin   : Infinity LoginShield – Login Customizer & Security
+ * Auteur   : Derouiche Oussama  ·  https://www.derouicheoussama.com
+ * GitHub   : https://github.com/derouicheoussama
+ * Copyright © 2026 Derouiche Oussama. Tous droits réservés.
+ * Licence  : GPL v2 ou ultérieure — toute copie ou modification de ce
+ *            fichier DOIT conserver la présente signature et les mentions
+ *            de licence et d'attribution (article 2(c) de la GPL).
+ */
 /**
  * Apparence de la page de connexion : CSS dynamique, logo, liens,
  * réseaux sociaux, copyright.
@@ -367,6 +379,8 @@ function inls_login_head() {
 		printf( '<link rel="preload" as="image" href="%s">' . "\n", esc_url( $s['bg_image'] ) );
 	}
 	echo '<style id="infinity-loginshield">' . "\n";
+	echo "/* ∞ INFINITY CODER — style généré par Infinity LoginShield\n";
+	echo ' * Création originale de Derouiche Oussama — https://www.derouicheoussama.com' . "\n */\n";
 	echo wp_strip_all_tags( inls_build_login_css( $s ) ) . "\n";
 	echo "</style>\n";
 }
@@ -502,6 +516,9 @@ add_filter( 'login_display_language_dropdown', 'inls_hide_language_switcher', 10
 function inls_login_footer() {
 	$s   = inls_settings();
 	$js  = '';
+
+	// Signature visible dans le code source de la page.
+	echo '<!-- ∞ INFINITY CODER | Infinity LoginShield — création originale de Derouiche Oussama | https://www.derouicheoussama.com -->' . "\n";
 
 	// ——— Réseaux sociaux ———.
 	if ( ! empty( $s['social_enable'] ) ) {

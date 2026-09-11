@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,11 @@ Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payme
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.8.0 =
+* New: "∞ Infinity Coder" signature in every source file (PHP, JS, CSS) and in the generated login-page HTML
+* New: "Infinity Coder — conçu par Derouiche Oussama" in the admin footer of every plugin page
+* License and attribution notices added to all sources (must be preserved on copy/modify, per GPL 2(c))
 
 = 1.7.0 =
 * New: in-plugin purchase — the checkout opens in a secure overlay inside wp-admin (Lemon Squeezy, Stripe Payment Link, Gumroad…)
