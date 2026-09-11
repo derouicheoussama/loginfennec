@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Infinity LoginShield 1.6.1\n"
+"Project-Id-Version: Infinity LoginShield 1.7.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/infinity-loginshield\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,16 @@ msgstr ""
 msgid "Accès refusé."
 msgstr ""
 
+msgid "Achat intégré et activation de licence Pro"
+msgstr ""
+
+msgid "Acheter Pro — paiement intégré"
+msgstr ""
+
 msgid "Action"
+msgstr ""
+
+msgid "Activer Pro"
 msgstr ""
 
 msgid "Activer le pack recommandé (5/5)"
@@ -103,6 +112,9 @@ msgid "Après N échecs, l’adresse IP et l’identifiant sont bloqués tempora
 msgstr ""
 
 msgid "Après connexion"
+msgstr ""
+
+msgid "Après l’achat, vous recevez votre clé de licence par e-mail."
 msgstr ""
 
 msgid "Arrière-plan"
@@ -222,10 +234,22 @@ msgstr ""
 msgid "Classique"
 msgstr ""
 
+msgid "Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même."
+msgstr ""
+
+msgid "Clé de licence"
+msgstr ""
+
+msgid "Collez la clé ci-dessous : Pro est activé instantanément."
+msgstr ""
+
 msgid "Comparatif détaillé : Gratuit vs Pro"
 msgstr ""
 
 msgid "Compatible multisite"
+msgstr ""
+
+msgid "Configuration vendeur (visible par les administrateurs uniquement) : définissez INFINITY_LOGINSHIELD_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et INFINITY_LOGINSHIELD_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe."
 msgstr ""
 
 msgid "Configurer"
@@ -321,6 +345,9 @@ msgstr ""
 msgid "Durée du blocage"
 msgstr ""
 
+msgid "Débloquer Pro sans quitter votre tableau de bord"
+msgstr ""
+
 msgid "Dégradé"
 msgstr ""
 
@@ -328,6 +355,9 @@ msgid "Dégradé — couleur 2"
 msgstr ""
 
 msgid "Désactiver XML-RPC"
+msgstr ""
+
+msgid "Désactiver la licence sur ce site"
 msgstr ""
 
 msgid "Désactivé"
@@ -397,6 +427,9 @@ msgid "Faire un don"
 msgstr ""
 
 msgid "Faire un don via PayPal"
+msgstr ""
+
+msgid "Fermer"
 msgstr ""
 
 msgid "Fichier de réglages (JSON)"
@@ -561,7 +594,16 @@ msgstr ""
 msgid "Libellés"
 msgstr ""
 
+msgid "Licence :"
+msgstr ""
+
 msgid "Licence GPL v2+"
+msgstr ""
+
+msgid "Licence enregistrée. (Serveur de licences non configuré : validation locale.)"
+msgstr ""
+
+msgid "Licence invalide ou expirée."
 msgstr ""
 
 msgid "Lien du logo"
@@ -711,6 +753,18 @@ msgstr ""
 msgid "Ouvrir le journal complet"
 msgstr ""
 
+msgid "Paiement"
+msgstr ""
+
+msgid "Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous."
+msgstr ""
+
+msgid "Paiement sécurisé"
+msgstr ""
+
+msgid "Paiement sécurisé — Infinity LoginShield Pro"
+msgstr ""
+
 msgid "Passer en Pro"
 msgstr ""
 
@@ -739,6 +793,12 @@ msgid "Position de l’image"
 msgstr ""
 
 msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total."
+msgstr ""
+
+msgid "Pro actif — merci pour votre soutien !"
+msgstr ""
+
+msgid "Pro activé. Merci pour votre soutien !"
 msgstr ""
 
 msgid "Protection"
@@ -832,6 +892,9 @@ msgid "Sections de personnalisation"
 msgstr ""
 
 msgid "Serif élégante"
+msgstr ""
+
+msgid "Serveur de licences injoignable. Réessayez dans un instant."
 msgstr ""
 
 msgid "Sessions & appareils de confiance"
@@ -979,6 +1042,9 @@ msgid "Version de WordPress"
 msgstr ""
 
 msgid "Version du plugin"
+msgstr ""
+
+msgid "Veuillez saisir une clé de licence valide."
 msgstr ""
 
 msgid "Vider le journal"

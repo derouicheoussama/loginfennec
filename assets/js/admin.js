@@ -452,6 +452,75 @@
 			});
 	});
 
+	/* Paiement intégré : modale de checkout */
+	function closeCheckoutModal() {
+		var $modal = $('#inls-checkout-modal');
+		if ($modal.length) {
+			$modal.attr('hidden', '');
+			$modal.find('iframe').attr('src', 'about:blank');
+		}
+	}
+
+	$(document).on('click', '.inls-open-checkout', function (e) {
+		e.preventDefault();
+		var url = $(this).data('checkout');
+		var $modal = $('#inls-checkout-modal');
+		if (!url || !$modal.length) {
+			return;
+		}
+		$modal.find('iframe').attr('src', url);
+		$modal.removeAttr('hidden');
+	});
+
+	$(document).on('click', '#inls-checkout-modal [data-close]', closeCheckoutModal);
+
+	$(document).on('keydown', function (e) {
+		if (e.key === 'Escape') {
+			closeCheckoutModal();
+		}
+	});
+
+	/* Activation / désactivation de la licence Pro */
+	$(document).on('click', '.inls-activate-license', function () {
+		var $btn = $(this);
+		var $key = $('#inls-license-key');
+		var $out = $('.inls-license-status');
+		var key = $.trim($key.val());
+		if (!key) {
+			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
+			return;
+		}
+		$btn.prop('disabled', true);
+		$out.text('…').removeClass('is-err is-ok');
+		$.post(cfg.ajaxUrl, { action: 'inls_activate_license', nonce: cfg.nonce, license_key: key })
+			.done(function (res) {
+				if (res && res.success) {
+					$out.text('✓ ' + res.data.message).addClass('is-ok').removeClass('is-err');
+					window.location.reload();
+				} else {
+					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
+					$out.text(msg).addClass('is-err').removeClass('is-ok');
+					$btn.prop('disabled', false);
+				}
+			})
+			.fail(function () {
+				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
+				$btn.prop('disabled', false);
+			});
+	});
+
+	$(document).on('click', '.inls-deactivate-license', function () {
+		if (!window.confirm('Désactiver la licence sur ce site ?')) {
+			return;
+		}
+		$.post(cfg.ajaxUrl, { action: 'inls_deactivate_license', nonce: cfg.nonce })
+			.done(function (res) {
+				if (res && res.success) {
+					window.location.reload();
+				}
+			});
+	});
+
 	/* Vider le journal de sécurité */
 	$(document).on('click', '.inls-purge-log', function () {
 		var $btn = $(this);

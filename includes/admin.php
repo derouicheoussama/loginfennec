@@ -1435,6 +1435,7 @@ class Inls_Admin {
 						<li><?php esc_html_e( 'Honeypot anti-robots et anti-énumération des auteurs', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Journal de sécurité des 50 derniers événements', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Export / import des réglages (JSON)', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Achat intégré et activation de licence Pro', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Aperçu en direct 100 % responsive', 'infinity-loginshield' ); ?></li>
 						<li><?php esc_html_e( 'Mises à jour automatiques via GitHub', 'infinity-loginshield' ); ?></li>
 					</ul>
@@ -1744,6 +1745,9 @@ class Inls_Admin {
 				'text'  => __( 'Blocage géographique, /wp-admin verrouillé et appareils de confiance : vous gardez le contrôle.', 'infinity-loginshield' ),
 			),
 		);
+		$checkout = inls_checkout_url();
+		$license  = inls_license_get();
+		$pro      = inls_is_pro();
 		?>
 		<div class="wrap inls-wrap inls-pro">
 			<div class="inls-hero inls-pro-hero">
@@ -1751,14 +1755,66 @@ class Inls_Admin {
 				<h1><?php esc_html_e( 'Infinity LoginShield Pro', 'infinity-loginshield' ); ?></h1>
 				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'infinity-loginshield' ); ?></p>
 				<div class="inls-hero-actions">
-					<a class="inls-btn inls-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
-						<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?>
-					</a>
+					<?php if ( ! $pro ) : ?>
+						<?php if ( '' !== $checkout ) : ?>
+							<button type="button" class="inls-btn inls-btn-pro inls-open-checkout" data-checkout="<?php echo esc_url( $checkout ); ?>">
+								<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter Pro — paiement intégré', 'infinity-loginshield' ); ?>
+							</button>
+						<?php else : ?>
+							<a class="inls-btn inls-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
+								<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'infinity-loginshield' ); ?>
+							</a>
+						<?php endif; ?>
+					<?php endif; ?>
 					<a class="inls-btn inls-btn-ghost is-light" href="<?php echo esc_url( admin_url( 'admin.php?page=infinity-loginshield' ) ); ?>">
 						<?php esc_html_e( 'Revenir au dashboard', 'infinity-loginshield' ); ?>
 					</a>
 				</div>
 			</div>
+
+			<?php if ( $pro ) : ?>
+				<section class="inls-about-card inls-pro-active">
+					<h2><span class="dashicons dashicons-yes-alt"></span> <?php esc_html_e( 'Pro actif — merci pour votre soutien !', 'infinity-loginshield' ); ?></h2>
+					<p>
+						<?php esc_html_e( 'Licence :', 'infinity-loginshield' ); ?>
+						<code><?php echo esc_html( strlen( $license['key'] ) > 10 ? substr( $license['key'], 0, 4 ) . '••••' . substr( $license['key'], -4 ) : $license['key'] ); ?></code>
+					</p>
+					<button type="button" class="button inls-deactivate-license"><?php esc_html_e( 'Désactiver la licence sur ce site', 'infinity-loginshield' ); ?></button>
+					<span class="inls-license-status" aria-live="polite"></span>
+				</section>
+			<?php else : ?>
+				<section class="inls-about-card inls-purchase-card">
+					<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'infinity-loginshield' ); ?></h2>
+					<ol class="inls-purchase-steps">
+						<li><?php esc_html_e( 'Cliquez sur « Acheter Pro » : le paiement sécurisé s’ouvre ici même.', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Après l’achat, vous recevez votre clé de licence par e-mail.', 'infinity-loginshield' ); ?></li>
+						<li><?php esc_html_e( 'Collez la clé ci-dessous : Pro est activé instantanément.', 'infinity-loginshield' ); ?></li>
+					</ol>
+					<div class="inls-license-form">
+						<label class="screen-reader-text" for="inls-license-key"><?php esc_html_e( 'Clé de licence', 'infinity-loginshield' ); ?></label>
+						<input type="text" id="inls-license-key" class="inls-input" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off">
+						<button type="button" class="button button-primary inls-activate-license"><?php esc_html_e( 'Activer Pro', 'infinity-loginshield' ); ?></button>
+					</div>
+					<p class="inls-license-status" aria-live="polite"></p>
+					<?php if ( '' === $checkout ) : ?>
+						<p class="inls-pro-note"><?php esc_html_e( 'Configuration vendeur (visible par les administrateurs uniquement) : définissez INFINITY_LOGINSHIELD_CHECKOUT_URL dans wp-config.php pour ouvrir le paiement intégré, et INFINITY_LOGINSHIELD_LICENSE_API pour valider les clés. D’ici là, le bouton du hero utilise le lien externe.', 'infinity-loginshield' ); ?></p>
+					<?php endif; ?>
+				</section>
+			<?php endif; ?>
+
+			<?php if ( ! $pro && '' !== $checkout ) : ?>
+				<div class="inls-modal" id="inls-checkout-modal" hidden>
+					<div class="inls-modal-backdrop" data-close></div>
+					<div class="inls-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'infinity-loginshield' ); ?>">
+						<div class="inls-modal-head">
+							<strong><?php esc_html_e( 'Paiement sécurisé — Infinity LoginShield Pro', 'infinity-loginshield' ); ?></strong>
+							<button type="button" class="inls-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'infinity-loginshield' ); ?>">×</button>
+						</div>
+						<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'infinity-loginshield' ); ?>"></iframe>
+						<p class="inls-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessous.', 'infinity-loginshield' ); ?></p>
+					</div>
+				</div>
+			<?php endif; ?>
 
 			<div class="inls-pro-benefits">
 				<?php foreach ( $benefits as $benefit ) : ?>

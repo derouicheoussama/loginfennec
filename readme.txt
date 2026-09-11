@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,10 @@ Add this to your site (or a small companion plugin):
 
 Yes — the "Reset" button in the dashboard restores the default settings.
 
+= Can I buy Pro without leaving WordPress? =
+
+Yes. Define `INFINITY_LOGINSHIELD_CHECKOUT_URL` in wp-config.php with your payment link (Lemon Squeezy, Stripe Payment Link, Gumroad…) and the checkout opens in an overlay inside the plugin. Add `INFINITY_LOGINSHIELD_LICENSE_API` to validate license keys against your own server.
+
 == Screenshots ==
 
 1. Modern admin dashboard with live preview.
@@ -90,6 +94,11 @@ Yes — the "Reset" button in the dashboard restores the default settings.
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 1.7.0 =
+* New: in-plugin purchase — the checkout opens in a secure overlay inside wp-admin (Lemon Squeezy, Stripe Payment Link, Gumroad…)
+* New: license key activation and deactivation from the Pro page, with optional license-server validation
+* New: one `inls_is_pro()` helper for add-ons and the upcoming Pro module
 
 = 1.6.1 =
 * Improved: Pro page redesign — benefits cards, comparison table grouped by category (Protection / Surveillance / Contrôle) with a highlighted Pro column
