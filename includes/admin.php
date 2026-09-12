@@ -2010,15 +2010,9 @@ class Lnf_Admin {
 				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'loginfennec' ); ?></p>
 				<div class="lnf-hero-actions">
 					<?php if ( ! $pro ) : ?>
-						<?php if ( '' !== $checkout ) : ?>
-							<button type="button" class="lnf-btn lnf-btn-pro lnf-open-checkout" data-checkout="<?php echo esc_url( add_query_arg( array( 'pack' => 'site1', 'billing' => 'yearly', 'site' => rawurlencode( home_url( '/' ) ) ), $checkout ) ); ?>">
-								<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter Pro — paiement intégré', 'loginfennec' ); ?>
-							</button>
-						<?php else : ?>
-							<a class="lnf-btn lnf-btn-pro" href="<?php echo esc_url( self::pro_url() ); ?>" target="_blank" rel="noopener">
-								<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?>
-							</a>
-						<?php endif; ?>
+						<a class="lnf-btn lnf-btn-pro" href="#lnf-packs-head">
+							<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter maintenant', 'loginfennec' ); ?>
+						</a>
 					<?php endif; ?>
 					<a class="lnf-btn lnf-btn-ghost is-light" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec' ) ); ?>">
 						<?php esc_html_e( 'Revenir au dashboard', 'loginfennec' ); ?>
@@ -2080,7 +2074,7 @@ class Lnf_Admin {
 			<?php endif; ?>
 
 			<?php if ( ! $pro ) : ?>
-				<div class="lnf-packs-head">
+				<div class="lnf-packs-head" id="lnf-packs-head">
 					<h2><?php esc_html_e( 'Choisissez votre pack', 'loginfennec' ); ?></h2>
 					<div class="lnf-billing-toggle" role="group" aria-label="<?php esc_attr_e( 'Type de licence', 'loginfennec' ); ?>">
 						<button type="button" class="lnf-bill-btn is-active" data-billing="yearly"><?php esc_html_e( 'Annuelle', 'loginfennec' ); ?></button>

@@ -522,6 +522,16 @@
 		}
 	});
 
+	/* Achat direct : le pack 1 site est présélectionné à l'ouverture */
+	if ($('#lnf-pay').length) {
+		selectedPack = 'site1';
+		var $defaultPack = $('.lnf-choose-pack[data-pack="' + selectedPack + '"]');
+		$('.lnf-pack').removeClass('is-selected');
+		$defaultPack.closest('.lnf-pack').addClass('is-selected');
+		updatePaySummary();
+		$('#lnf-pay').removeAttr('hidden');
+	}
+
 	$(document).on('click', '.lnf-pay-tile', function () {
 		$('.lnf-pay-tile').removeClass('is-active');
 		$(this).addClass('is-active');
