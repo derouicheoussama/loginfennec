@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,11 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.3.3 =
+* Fixed: the Annuelle/À vie switch now syncs the license activation form
+* Verified: automated tests of all 4 license offers (activation, sites, expiry, deactivation) pass in real PHP 8.3
+
 
 = 2.3.2 =
 * New: one-click purchase — "Acheter maintenant" goes straight to the packs, the 1-site pack is preselected and the payment methods (BaridiMob/CCP, PayPal, card) are visible immediately

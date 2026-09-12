@@ -465,6 +465,9 @@
 			var url = $(this).data('url-' + currentBilling);
 			if (url) { $(this).attr('data-checkout', url); }
 		});
+		// Synchronise le formulaire d'activation avec le type choisi.
+		var $formBilling = $('#lnf-license-billing');
+		if ($formBilling.length) { $formBilling.val(currentBilling); }
 		updatePaySummary();
 	});
 
