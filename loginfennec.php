@@ -77,7 +77,7 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '2.2.0' );
+define( 'LOGINFENNEC_VERSION', '2.3.1' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
