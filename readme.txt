@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,14 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.5.0 =
+* New: 7-day trial system with anti-tampering (clock rollback detection, persistent file in uploads)
+* New: after trial, login page returns to WordPress default and security features stop
+* New: dashboard shows trial countdown during the last 3 days
+* New: trial expired screen with one-click purchase and license activation
+* Security: lockout escalation now works correctly
+
 
 = 2.4.0 =
 * New: professional in-plugin checkout popup — 3 steps (payment method, license key, activation), payment without ever leaving WordPress

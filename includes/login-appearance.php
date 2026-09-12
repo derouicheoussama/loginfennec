@@ -384,6 +384,10 @@ function lnf_get_social_networks( $s ) {
  * Affiche le CSS personnalisé dans la page de connexion.
  */
 function lnf_login_head() {
+	// Essai expiré sans licence Pro : pas de personnalisation.
+	if ( lnf_trial_is_locked() ) {
+		return;
+	}
 	$s = lnf_settings();
 	// Rapidité : précharge l'image de fond avant le CSS (moins de flash visuel).
 	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {

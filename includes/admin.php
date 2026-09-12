@@ -761,6 +761,18 @@ class Lnf_Admin {
 	 * Affiche la page de personnalisation.
 	 */
 	public static function render_page() {
+		// Verrouillage : essai expiré sans licence Pro.
+		if ( lnf_trial_is_locked() ) {
+			self::render_trial_expired();
+			return;
+		}
+
+		// Compte à rebours pendant l'essai.
+		$trial = lnf_trial_status();
+		if ( ! lnf_is_pro() && $trial['days_left'] <= 3 && $trial['days_left'] > 0 ) {
+			echo '<div class="notice notice-warning"><p><strong>⏳ ' . esc_html__( 'Essai — ', 'loginfennec' ) . absint( $trial['days_left'] ) . esc_html__( ' jour(s) restant(s).', 'loginfennec' ) . '</strong> <a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'loginfennec' ) . '</a></p></div>';
+		}
+
 		$s = lnf_settings();
 		?>
 		<div class="wrap lnf-wrap">
@@ -1492,6 +1504,32 @@ class Lnf_Admin {
 	 */
 	protected static function donate_url() {
 		return apply_filters( 'loginfennec_donate_url', 'https://www.paypal.com/donate' );
+	}
+
+	/**
+	 * Écran de verrouillage : essai expiré sans licence Pro.
+	 */
+	public static function render_trial_expired() {
+		$trial = lnf_trial_status();
+		?>
+		<div class="wrap lnf-wrap lnf-trial-locked">
+			<div class="lnf-trial-overlay">
+				<div class="lnf-trial-icon" aria-hidden="true">🔒</div>
+				<h1><?php esc_html_e( 'Votre essai de 7 jours est terminé', 'loginfennec' ); ?></h1>
+				<p class="lnf-trial-sub"><?php esc_html_e( 'Votre page de connexion est revenue au design WordPress par défaut et les fonctionnalités de sécurité sont désactivées.', 'loginfennec' ); ?></p>
+				<p class="lnf-trial-sub"><?php esc_html_e( 'Activez une licence LoginFennec Pro pour retrouver votre personnalisation, votre journal de sécurité et toutes les protections anti force brute.', 'loginfennec' ); ?></p>
+				<div class="lnf-trial-buttons">
+					<a class="lnf-btn lnf-btn-pro" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>">
+						<span class="dashicons dashicons-cart"></span> <?php esc_html_e( 'Acheter une licence Pro', 'loginfennec' ); ?>
+					</a>
+					<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>">
+						<?php esc_html_e( 'J’ai déjà une clé de licence', 'loginfennec' ); ?>
+					</a>
+				</div>
+				<p class="lnf-trial-sig">∞ <?php esc_html_e( 'Création de Derouiche Oussama —', 'loginfennec' ); ?> <a href="https://www.derouicheoussama.com" target="_blank" rel="noopener">derouicheoussama.com</a></p>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**

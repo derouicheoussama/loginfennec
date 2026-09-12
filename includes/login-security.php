@@ -57,6 +57,17 @@ class Lnf_Login_Security {
 		add_filter( 'xmlrpc_enabled', array( __CLASS__, 'maybe_disable_xmlrpc' ) );
 		add_filter( 'wp_is_application_passwords_available', array( __CLASS__, 'maybe_disable_app_passwords' ) );
 		add_action( 'init', array( __CLASS__, 'harden_author_scans' ) );
+		add_action( 'admin_init', 'lnf_trial_touch' );
+	}
+
+	/**
+	 * Les fonctionnalités de sécurité sont-elles actives ?
+	 * (essai expiré sans licence Pro = fonctionnalités coupées)
+	 *
+	 * @return bool
+	 */
+	public static function can_use_features() {
+		return ! lnf_trial_is_locked();
 	}
 
 	/**
@@ -66,6 +77,9 @@ class Lnf_Login_Security {
 	 * @return bool
 	 */
 	public static function maybe_disable_xmlrpc( $enabled ) {
+		if ( ! self::can_use_features() ) {
+			return $enabled;
+		}
 		$s = lnf_settings();
 		return empty( $s['sec_disable_xmlrpc'] ) ? $enabled : false;
 	}
@@ -114,6 +128,9 @@ class Lnf_Login_Security {
 	 * @return WP_User|WP_Error
 	 */
 	public static function check_honeypot( $user, $username, $password ) {
+		if ( ! self::can_use_features() ) {
+			return $user;
+		}
 		$s = lnf_settings();
 		if ( empty( $s['sec_honeypot'] ) ) {
 			return $user;
@@ -133,10 +150,10 @@ class Lnf_Login_Security {
 	 * Active la protection contre le balayage des auteurs (visiteurs non connectés).
 	 */
 	public static function harden_author_scans() {
-		$s = lnf_settings();
-		if ( empty( $s['sec_disable_authors'] ) ) {
+		if ( ! self::can_use_features() ) {
 			return;
 		}
+		$s = lnf_settings();
 		add_filter( 'redirect_canonical', array( __CLASS__, 'block_author_scan' ) );
 		add_filter( 'rest_endpoints', array( __CLASS__, 'hide_rest_users' ) );
 	}
@@ -381,6 +398,9 @@ class Lnf_Login_Security {
 	 */
 	public static function authenticate( $user, $username, $password ) {
 		if ( empty( $username ) ) {
+			return $user;
+		}
+		if ( ! self::can_use_features() ) {
 			return $user;
 		}
 		if ( self::is_whitelisted() ) {
