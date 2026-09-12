@@ -2,7 +2,7 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: LoginFennec Pro 2.3.0\n"
+"Project-Id-Version: LoginFennec Pro 2.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/loginfennec\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,7 +15,13 @@ msgstr ""
 msgid "0 = hauteur WordPress par défaut."
 msgstr ""
 
+msgid "1 · Paiement"
+msgstr ""
+
 msgid "10 styles & 7 thèmes"
+msgstr ""
+
+msgid "2 · Clé de licence"
 msgstr ""
 
 msgid "2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse."
@@ -31,6 +37,9 @@ msgid "2FA, reCAPTCHA, URL personnalisée*"
 msgstr ""
 
 msgid "3 900 DA / an"
+msgstr ""
+
+msgid "3 · Activé"
 msgstr ""
 
 msgid "6 800 DA / an"
@@ -51,10 +60,16 @@ msgstr ""
 msgid "Accès refusé."
 msgstr ""
 
+msgid "Achat de LoginFennec Pro"
+msgstr ""
+
 msgid "Achat intégré et activation de licence Pro"
 msgstr ""
 
-msgid "Acheter Pro — paiement intégré"
+msgid "Acheter maintenant"
+msgstr ""
+
+msgid "Acheter — paiement sur place"
 msgstr ""
 
 msgid "Action"
@@ -150,7 +165,7 @@ msgstr ""
 msgid "Après connexion"
 msgstr ""
 
-msgid "Après le paiement, collez la clé reçue par e-mail dans le formulaire « Débloquer Pro » ci-dessus."
+msgid "Après le paiement, collez la clé reçue par e-mail à l’étape 2."
 msgstr ""
 
 msgid "Après l’achat, vous recevez votre clé de licence par e-mail."
@@ -192,16 +207,10 @@ msgstr ""
 msgid "Aucune licence"
 msgstr ""
 
-msgid "BaridiMob / CCP"
-msgstr ""
-
 msgid "Bas droit"
 msgstr ""
 
 msgid "Bas gauche"
-msgstr ""
-
-msgid "Bientôt disponible"
 msgstr ""
 
 msgid "Bienvenue"
@@ -288,9 +297,6 @@ msgstr ""
 msgid "Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge."
 msgstr ""
 
-msgid "Choisir ce pack"
-msgstr ""
-
 msgid "Choisissez votre pack"
 msgstr ""
 
@@ -313,6 +319,9 @@ msgid "Clé"
 msgstr ""
 
 msgid "Collez la clé ci-dessous : Pro est activé instantanément."
+msgstr ""
+
+msgid "Collez votre clé de licence"
 msgstr ""
 
 msgid "Comparatif détaillé : Gratuit vs Pro"
@@ -483,6 +492,9 @@ msgstr ""
 msgid "Effet à l’ouverture de la page"
 msgstr ""
 
+msgid "Elle vous a été envoyée par e-mail après votre paiement."
+msgstr ""
+
 msgid "En bas"
 msgstr ""
 
@@ -498,7 +510,7 @@ msgstr ""
 msgid "Envoyer ma preuve de paiement"
 msgstr ""
 
-msgid "Envoyez la capture du reçu par e-mail avec le bouton ci-dessous."
+msgid "Envoyez la capture du reçu avec le bouton « Envoyer ma preuve »."
 msgstr ""
 
 msgid "Erreur"
@@ -696,10 +708,13 @@ msgstr ""
 msgid "Journal étendu, alertes e-mail immédiates et détection des comportements suspects."
 msgstr ""
 
-msgid "J’ai ma clé — activer maintenant"
+msgid "J’ai payé — saisir ma clé"
 msgstr ""
 
 msgid "La durée double automatiquement à chaque récidive (jusqu’à ×8), pour user la patience des bots."
+msgstr ""
+
+msgid "La fenêtre ne s’affiche pas ? Ouvrir dans un nouvel onglet."
 msgstr ""
 
 msgid "La page de connexion de WordPress, enfin à votre image."
@@ -730,9 +745,6 @@ msgid "Le design général du formulaire, indépendant des couleurs."
 msgstr ""
 
 msgid "Le module Pro est en préparation — le bouton « Passer en Pro » devient actif dès sa sortie (URL personnalisable via le filtre loginfennec_pro_url)."
-msgstr ""
-
-msgid "Le paiement s’ouvre dans une fenêtre sécurisée."
 msgstr ""
 
 msgid "Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement."
@@ -897,10 +909,13 @@ msgstr ""
 msgid "Monospace"
 msgstr ""
 
+msgid "Montant PayPal :"
+msgstr ""
+
 msgid "Montant exact"
 msgstr ""
 
-msgid "Montant à payer :"
+msgid "Montant à payer"
 msgstr ""
 
 msgid "Médiathèque"
@@ -936,40 +951,16 @@ msgstr ""
 msgid "Ou logo en texte"
 msgstr ""
 
-msgid "Ouvrir PayPal"
-msgstr ""
-
 msgid "Ouvrir dans un onglet"
 msgstr ""
 
 msgid "Ouvrir le journal complet"
 msgstr ""
 
-msgid "Ouvrir le paiement par carte"
-msgstr ""
-
 msgid "Pack"
 msgstr ""
 
-msgid "Pack sélectionné :"
-msgstr ""
-
-msgid "Paiement"
-msgstr ""
-
-msgid "Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessus."
-msgstr ""
-
-msgid "Paiement international"
-msgstr ""
-
-msgid "Paiement intégré"
-msgstr ""
-
-msgid "Paiement sécurisé"
-msgstr ""
-
-msgid "Paiement sécurisé — LoginFennec Pro"
+msgid "Paiement par carte"
 msgstr ""
 
 msgid "Passer en Pro"
@@ -978,16 +969,13 @@ msgstr ""
 msgid "Passer l’assistant et aller au dashboard →"
 msgstr ""
 
-msgid "Payer avec PayPal"
+msgid "Payer sur PayPal"
 msgstr ""
 
-msgid "Payer par BaridiMob ou virement CCP"
+msgid "Payez le montant exact via BaridiMob ou un virement CCP :"
 msgstr ""
 
-msgid "Payer par carte bancaire"
-msgstr ""
-
-msgid "Payez le montant exact via l’application BaridiMob (virement vers le compte CCP ci-dessus)."
+msgid "Payez via l’application BaridiMob ou un virement CCP."
 msgstr ""
 
 msgid "Personnalisation"
@@ -1026,6 +1014,9 @@ msgstr ""
 msgid "Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total."
 msgstr ""
 
+msgid "Pro activé — merci pour votre soutien !"
+msgstr ""
+
 msgid "Pro activé. Merci pour votre soutien !"
 msgstr ""
 
@@ -1056,7 +1047,7 @@ msgstr ""
 msgid "Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites."
 msgstr ""
 
-msgid "Recevez votre clé de licence, puis activez-la dans le formulaire « Débloquer Pro »."
+msgid "Recevez votre clé par e-mail, puis passez à l’étape 2."
 msgstr ""
 
 msgid "Recharger l’aperçu"
@@ -1093,6 +1084,9 @@ msgid "Retour"
 msgstr ""
 
 msgid "Revenir au dashboard"
+msgstr ""
+
+msgid "Revenir au paiement"
 msgstr ""
 
 msgid "Royal"
@@ -1248,6 +1242,9 @@ msgstr ""
 msgid "Tentatives autorisées"
 msgstr ""
 
+msgid "Terminer"
+msgstr ""
+
 msgid "Terminer et ouvrir le dashboard"
 msgstr ""
 
@@ -1368,9 +1365,6 @@ msgstr ""
 msgid "Vider le journal"
 msgstr ""
 
-msgid "Virement local en DA"
-msgstr ""
-
 msgid "Voici votre configuration de départ — tout reste modifiable dans le dashboard."
 msgstr ""
 
@@ -1393,6 +1387,9 @@ msgid "Votre licence Pro"
 msgstr ""
 
 msgid "Votre licence a expiré."
+msgstr ""
+
+msgid "Votre licence est active sur ce site."
 msgstr ""
 
 msgid "Votre page de connexion est prête — explorez les onglets pour la personnaliser."
@@ -1431,6 +1428,12 @@ msgstr ""
 msgid "disponibles dans le dashboard"
 msgstr ""
 
+msgid "en DA"
+msgstr ""
+
+msgid "en ligne"
+msgstr ""
+
 msgid "ex. : Bon retour parmi nous ✨"
 msgstr ""
 
@@ -1459,6 +1462,9 @@ msgid "ex. : ••••••••"
 msgstr ""
 
 msgid "guide complet sur GitHub"
+msgstr ""
+
+msgid "international"
 msgstr ""
 
 msgid "libre d’utilisation sous licence GPL, avec signature intacte."

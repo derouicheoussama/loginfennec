@@ -2096,7 +2096,7 @@ class Lnf_Admin {
 						<p class="lnf-pack-note">✨ <?php esc_html_e( 'Vous y êtes déjà', 'loginfennec' ); ?></p>
 					</div>
 
-					<div class="lnf-pack is-featured">
+						<div class="lnf-pack is-featured">
 						<div class="lnf-pack-badge"><?php esc_html_e( 'Recommandé', 'loginfennec' ); ?></div>
 						<h3><?php esc_html_e( 'Pro — 1 site', 'loginfennec' ); ?></h3>
 						<div class="lnf-pack-price">
@@ -2108,11 +2108,7 @@ class Lnf_Admin {
 							<li><?php esc_html_e( '2FA, reCAPTCHA, URL personnalisée*', 'loginfennec' ); ?></li>
 							<li class="lnf-updates" data-yearly="<?php esc_attr_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?>" data-lifetime="<?php esc_attr_e( 'Mises à jour à vie ♾️', 'loginfennec' ); ?>"><?php esc_html_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?></li>
 						</ul>
-						<?php if ( '' !== $checkout ) : ?>
-							<button type="button" class="lnf-btn lnf-btn-pro lnf-choose-pack" data-pack="site1"><?php esc_html_e( 'Choisir ce pack', 'loginfennec' ); ?></button>
-						<?php else : ?>
-							<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( self::pro_url() ); ?>"><?php esc_html_e( 'Bientôt disponible', 'loginfennec' ); ?></a>
-						<?php endif; ?>
+						<button type="button" class="lnf-btn lnf-btn-pro lnf-buy-open" data-pack="site1"><?php esc_html_e( 'Acheter — paiement sur place', 'loginfennec' ); ?></button>
 					</div>
 
 					<div class="lnf-pack">
@@ -2127,93 +2123,94 @@ class Lnf_Admin {
 							<li><?php esc_html_e( 'Idéal pour agences et clients', 'loginfennec' ); ?></li>
 							<li class="lnf-updates" data-yearly="<?php esc_attr_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?>" data-lifetime="<?php esc_attr_e( 'Mises à jour à vie ♾️', 'loginfennec' ); ?>"><?php esc_html_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?></li>
 						</ul>
-						<?php if ( '' !== $checkout ) : ?>
-							<button type="button" class="lnf-btn lnf-btn-pro lnf-choose-pack" data-pack="site5"><?php esc_html_e( 'Choisir ce pack', 'loginfennec' ); ?></button>
-						<?php else : ?>
-							<a class="lnf-btn lnf-btn-ghost" href="<?php echo esc_url( self::pro_url() ); ?>"><?php esc_html_e( 'Bientôt disponible', 'loginfennec' ); ?></a>
-						<?php endif; ?>
+						<button type="button" class="lnf-btn lnf-btn-pro lnf-buy-open" data-pack="site5"><?php esc_html_e( 'Acheter — paiement sur place', 'loginfennec' ); ?></button>
 					</div>
 				</div>
 				<p class="lnf-pack-footnote">* <?php esc_html_e( 'Fonctionnalités livrées par le module Pro en préparation — votre licence les débloquera automatiquement dès leur sortie.', 'loginfennec' ); ?></p>
 
-				<div class="lnf-pay" id="lnf-pay" hidden>
-					<h2 class="lnf-group-title"><?php esc_html_e( 'Paiement', 'loginfennec' ); ?></h2>
-					<p class="lnf-inst-desc">
-						<?php esc_html_e( 'Pack sélectionné :', 'loginfennec' ); ?>
-						<strong id="lnf-pay-pack-label">—</strong>
-						· <span id="lnf-pay-billing-label">—</span>
-						· <strong id="lnf-pay-amount">—</strong>
-					</p>
-					<div class="lnf-pay-tiles">
-						<button type="button" class="lnf-pay-tile" data-method="ccp">
-							<span class="dashicons dashicons-bank"></span>
-							<strong><?php esc_html_e( 'BaridiMob / CCP', 'loginfennec' ); ?></strong>
-							<small><?php esc_html_e( 'Virement local en DA', 'loginfennec' ); ?></small>
-						</button>
-						<button type="button" class="lnf-pay-tile" data-method="paypal">
-							<span class="dashicons dashicons-money-alt"></span>
-							<strong>PayPal</strong>
-							<small><?php esc_html_e( 'Paiement international', 'loginfennec' ); ?></small>
-						</button>
-						<?php if ( '' !== $checkout ) : ?>
-							<button type="button" class="lnf-pay-tile" data-method="card">
-								<span class="dashicons dashicons-cart"></span>
-								<strong><?php esc_html_e( 'Carte bancaire', 'loginfennec' ); ?></strong>
-								<small><?php esc_html_e( 'Paiement intégré', 'loginfennec' ); ?></small>
-							</button>
-						<?php endif; ?>
-					</div>
-
-					<div class="lnf-pay-panel" data-panel="ccp" hidden>
-						<h4><?php esc_html_e( 'Payer par BaridiMob ou virement CCP', 'loginfennec' ); ?></h4>
-						<div class="lnf-ccp-box">
-							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Compte CCP', 'loginfennec' ); ?></span><code id="lnf-ccp-rip"><?php echo esc_html( lnf_ccp_rip() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-rip"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
-							<div class="lnf-ccp-row"><span>BaridiMob</span><code id="lnf-ccp-baridimob"><?php echo esc_html( lnf_baridimob() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-baridimob"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
-							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Titulaire', 'loginfennec' ); ?></span><strong><?php echo esc_html( lnf_ccp_name() ); ?></strong></div>
-							<div class="lnf-ccp-row"><span><?php esc_html_e( 'Montant exact', 'loginfennec' ); ?></span><strong id="lnf-ccp-amount"></strong><button type="button" class="button-link lnf-copy" data-copy="#lnf-ccp-amount"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+				<?php if ( ! $pro ) : ?>
+				<div class="lnf-modal lnf-wizard" id="lnf-checkout-modal" hidden>
+					<div class="lnf-modal-backdrop" data-close></div>
+					<div class="lnf-modal-box lnf-wz-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Achat de LoginFennec Pro', 'loginfennec' ); ?>">
+						<div class="lnf-modal-head">
+							<strong>🛒 LoginFennec Pro — <span id="lnf-wz-pack-label">—</span> · <span id="lnf-wz-billing-label">—</span></strong>
+							<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfennec' ); ?>">×</button>
 						</div>
-						<ol class="lnf-ccp-steps">
-							<li><?php esc_html_e( 'Payez le montant exact via l’application BaridiMob (virement vers le compte CCP ci-dessus).', 'loginfennec' ); ?></li>
-							<li><?php esc_html_e( 'Envoyez la capture du reçu par e-mail avec le bouton ci-dessous.', 'loginfennec' ); ?></li>
-							<li><?php esc_html_e( 'Recevez votre clé de licence, puis activez-la dans le formulaire « Débloquer Pro ».', 'loginfennec' ); ?></li>
-						</ol>
-						<a class="button lnf-proof-mailto" href="#"><span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Envoyer ma preuve de paiement', 'loginfennec' ); ?></a>
-					</div>
+						<div class="lnf-wz-steps" aria-hidden="true">
+							<span class="wz-step is-active" data-ws="1"><?php esc_html_e( '1 · Paiement', 'loginfennec' ); ?></span>
+							<span class="wz-step" data-ws="2"><?php esc_html_e( '2 · Clé de licence', 'loginfennec' ); ?></span>
+							<span class="wz-step" data-ws="3"><?php esc_html_e( '3 · Activé', 'loginfennec' ); ?></span>
+						</div>
+						<div class="lnf-wz-body">
 
-					<div class="lnf-pay-panel" data-panel="paypal" hidden>
-						<h4><?php esc_html_e( 'Payer avec PayPal', 'loginfennec' ); ?></h4>
-						<p class="lnf-inst-desc"><?php esc_html_e( 'Montant à payer :', 'loginfennec' ); ?> <strong id="lnf-paypal-amount">—</strong></p>
-						<a class="lnf-btn lnf-btn-pro" id="lnf-paypal-link" href="#" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-external"></span> <?php esc_html_e( 'Ouvrir PayPal', 'loginfennec' ); ?></a>
-						<p class="lnf-inst-desc" style="margin-top:10px"><?php esc_html_e( 'Après le paiement, collez la clé reçue par e-mail dans le formulaire « Débloquer Pro » ci-dessus.', 'loginfennec' ); ?></p>
-					</div>
+							<div class="lnf-wz-pane is-active" data-wpane="1">
+								<div class="lnf-wz-summary">
+									<div class="lnf-wz-sum-row"><span><?php esc_html_e( 'Pack', 'loginfennec' ); ?></span><strong id="lnf-wz-pack">—</strong></div>
+									<div class="lnf-wz-sum-row"><span><?php esc_html_e( 'Type', 'loginfennec' ); ?></span><strong id="lnf-wz-billing">—</strong></div>
+									<div class="lnf-wz-sum-row lnf-wz-total"><span><?php esc_html_e( 'Montant à payer', 'loginfennec' ); ?></span><strong id="lnf-wz-amount-da">—</strong></div>
+								</div>
+								<div class="lnf-wz-methods">
+									<button type="button" class="lnf-wz-method is-active" data-m="ccp"><span class="dashicons dashicons-bank"></span><strong>BaridiMob / CCP</strong><small><?php esc_html_e( 'en DA', 'loginfennec' ); ?></small></button>
+									<button type="button" class="lnf-wz-method" data-m="paypal"><span class="dashicons dashicons-money-alt"></span><strong>PayPal</strong><small><?php esc_html_e( 'international', 'loginfennec' ); ?></small></button>
+									<?php if ( '' !== $checkout ) : ?>
+										<button type="button" class="lnf-wz-method" data-m="card"><span class="dashicons dashicons-cart"></span><strong><?php esc_html_e( 'Carte bancaire', 'loginfennec' ); ?></strong><small><?php esc_html_e( 'en ligne', 'loginfennec' ); ?></small></button>
+									<?php endif; ?>
+								</div>
 
-					<div class="lnf-pay-panel" data-panel="card" hidden>
-						<h4><?php esc_html_e( 'Payer par carte bancaire', 'loginfennec' ); ?></h4>
-						<p class="lnf-inst-desc"><?php esc_html_e( 'Le paiement s’ouvre dans une fenêtre sécurisée.', 'loginfennec' ); ?></p>
-						<button type="button" class="lnf-btn lnf-btn-pro lnf-open-checkout" id="lnf-card-open" data-checkout=""><?php esc_html_e( 'Ouvrir le paiement par carte', 'loginfennec' ); ?></button>
-					</div>
+								<div class="lnf-wz-mbody" data-mbody="ccp">
+									<p class="lnf-inst-desc"><?php esc_html_e( 'Payez le montant exact via BaridiMob ou un virement CCP :', 'loginfennec' ); ?></p>
+									<div class="lnf-ccp-box">
+										<div class="lnf-ccp-row"><span><?php esc_html_e( 'Compte CCP', 'loginfennec' ); ?></span><code id="lnf-wz-ccp-rip"><?php echo esc_html( lnf_ccp_rip() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-wz-ccp-rip"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+										<div class="lnf-ccp-row"><span>BaridiMob</span><code id="lnf-wz-ccp-baridimob"><?php echo esc_html( lnf_baridimob() ); ?></code><button type="button" class="button-link lnf-copy" data-copy="#lnf-wz-ccp-baridimob"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+										<div class="lnf-ccp-row"><span><?php esc_html_e( 'Titulaire', 'loginfennec' ); ?></span><strong><?php echo esc_html( lnf_ccp_name() ); ?></strong></div>
+										<div class="lnf-ccp-row"><span><?php esc_html_e( 'Montant exact', 'loginfennec' ); ?></span><strong id="lnf-wz-ccp-amount">—</strong><button type="button" class="button-link lnf-copy" data-copy="#lnf-wz-ccp-amount"><?php esc_html_e( 'Copier', 'loginfennec' ); ?></button></div>
+									</div>
+									<ol class="lnf-ccp-steps">
+										<li><?php esc_html_e( 'Payez via l’application BaridiMob ou un virement CCP.', 'loginfennec' ); ?></li>
+										<li><?php esc_html_e( 'Envoyez la capture du reçu avec le bouton « Envoyer ma preuve ».', 'loginfennec' ); ?></li>
+										<li><?php esc_html_e( 'Recevez votre clé par e-mail, puis passez à l’étape 2.', 'loginfennec' ); ?></li>
+									</ol>
+									<a class="button lnf-proof-mailto" href="#"><span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Envoyer ma preuve de paiement', 'loginfennec' ); ?></a>
+									<div class="lnf-wz-actions"><button type="button" class="button button-primary lnf-wz-next"><?php esc_html_e( 'J’ai payé — saisir ma clé', 'loginfennec' ); ?></button></div>
+								</div>
 
-					<div class="lnf-pay-after">
-						<button type="button" class="button lnf-goto-activate"><span class="dashicons dashicons-editor-key"></span> <?php esc_html_e( 'J’ai ma clé — activer maintenant', 'loginfennec' ); ?></button>
+								<div class="lnf-wz-mbody" data-mbody="paypal" hidden>
+									<p class="lnf-inst-desc"><?php esc_html_e( 'Montant PayPal :', 'loginfennec' ); ?> <strong id="lnf-wz-paypal-amount">—</strong></p>
+									<p><a class="button button-primary" id="lnf-wz-paypal-link" href="#" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-external"></span> <?php esc_html_e( 'Payer sur PayPal', 'loginfennec' ); ?></a></p>
+									<p class="lnf-inst-desc"><?php esc_html_e( 'Après le paiement, collez la clé reçue par e-mail à l’étape 2.', 'loginfennec' ); ?></p>
+									<div class="lnf-wz-actions"><button type="button" class="button button-primary lnf-wz-next"><?php esc_html_e( 'J’ai payé — saisir ma clé', 'loginfennec' ); ?></button></div>
+								</div>
+
+								<div class="lnf-wz-mbody" data-mbody="card" hidden>
+									<iframe id="lnf-wz-card-frame" src="about:blank" title="<?php esc_attr_e( 'Paiement par carte', 'loginfennec' ); ?>"></iframe>
+									<p class="lnf-inst-desc"><a id="lnf-wz-card-newtab" href="#" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'La fenêtre ne s’affiche pas ? Ouvrir dans un nouvel onglet.', 'loginfennec' ); ?></a></p>
+									<div class="lnf-wz-actions"><button type="button" class="button button-primary lnf-wz-next"><?php esc_html_e( 'J’ai payé — saisir ma clé', 'loginfennec' ); ?></button></div>
+								</div>
+							</div>
+
+							<div class="lnf-wz-pane" data-wpane="2">
+								<h3><?php esc_html_e( 'Collez votre clé de licence', 'loginfennec' ); ?></h3>
+								<p class="lnf-inst-desc"><?php esc_html_e( 'Elle vous a été envoyée par e-mail après votre paiement.', 'loginfennec' ); ?></p>
+								<input type="text" id="lnf-modal-key" class="lnf-input" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off">
+								<p><button type="button" class="button button-primary lnf-modal-activate"><?php esc_html_e( 'Activer Pro', 'loginfennec' ); ?></button>
+								<button type="button" class="button-link lnf-wz-back2">← <?php esc_html_e( 'Revenir au paiement', 'loginfennec' ); ?></button></p>
+								<p class="lnf-license-status" aria-live="polite"></p>
+							</div>
+
+							<div class="lnf-wz-pane" data-wpane="3">
+								<div class="lnf-wz-success">✓</div>
+								<h3><?php esc_html_e( 'Pro activé — merci pour votre soutien !', 'loginfennec' ); ?></h3>
+								<p class="lnf-wz-success-msg"><?php esc_html_e( 'Votre licence est active sur ce site.', 'loginfennec' ); ?></p>
+								<p><button type="button" class="button button-primary" data-close><?php esc_html_e( 'Terminer', 'loginfennec' ); ?></button></p>
+							</div>
+
+						</div>
 					</div>
 				</div>
-
-				<?php if ( '' !== $checkout ) : ?>
-					<div class="lnf-modal" id="lnf-checkout-modal" hidden>
-						<div class="lnf-modal-backdrop" data-close></div>
-						<div class="lnf-modal-box" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Paiement sécurisé', 'loginfennec' ); ?>">
-							<div class="lnf-modal-head">
-								<strong><?php esc_html_e( 'Paiement sécurisé — LoginFennec Pro', 'loginfennec' ); ?></strong>
-								<button type="button" class="lnf-modal-close" data-close aria-label="<?php esc_attr_e( 'Fermer', 'loginfennec' ); ?>">×</button>
-							</div>
-							<iframe src="about:blank" title="<?php esc_attr_e( 'Paiement', 'loginfennec' ); ?>"></iframe>
-							<p class="lnf-modal-note"><?php esc_html_e( 'Paiement chiffré HTTPS. Après l’achat, collez votre clé de licence dans le formulaire ci-dessus.', 'loginfennec' ); ?></p>
-						</div>
-					</div>
 				<?php endif; ?>
-			<?php endif; ?>
+				<?php endif; ?>
 
-			<div class="lnf-pro-benefits">
+				<div class="lnf-pro-benefits">
 				<?php foreach ( $benefits as $benefit ) : ?>
 					<div class="lnf-pro-benefit">
 						<span class="dashicons <?php echo esc_attr( $benefit['icon'] ); ?>"></span>

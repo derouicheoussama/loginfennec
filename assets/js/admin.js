@@ -4,11 +4,10 @@
  * Copyright © 2026 Derouiche Oussama. Licence GPL v2+ —
  * toute copie ou modification doit conserver cette signature.
  */
-
 /**
  * LoginFennec Pro — dashboard.
  * Onglets, aperçu en direct (CSS injecté dans l'iframe), presets,
- * médiathèque, interrupteurs et curseurs.
+ * médiathèque, tunnel d'achat professionnel (pop-up), licence.
  */
 (function ($) {
 	'use strict';
@@ -327,13 +326,9 @@
 	}
 
 	/* Presets */
-	var chosenPreset = $('.lnf-preset.is-active .lnf-preset-name').first().text() || null;
-	var chosenTheme = $('.lnf-theme-card.is-active .lnf-preset-name').first().text() || null;
-
 	$(document).on('click', '.lnf-preset', function () {
 		var key = $(this).data('preset');
 		var values = PRESETS[key];
-		chosenPreset = $('.lnf-preset-name', this).text();
 		if (!values) {
 			// Style inconnu du navigateur : on active la carte sans écraser les couleurs.
 			$('.lnf-preset').removeClass('is-active');
@@ -435,6 +430,7 @@
 	$(document).on('keydown', function (e) {
 		if (e.key === 'Escape') {
 			exitFullscreenPreview();
+			closeCheckoutWizard();
 		}
 	});
 
@@ -443,7 +439,6 @@
 		$('.lnf-theme-card').removeClass('is-active');
 		$(this).addClass('is-active');
 		$('[name="lnf[form_theme]"]').val($(this).data('theme'));
-		chosenTheme = $('.lnf-preset-name', this).text();
 		schedulePreview();
 	});
 
@@ -461,18 +456,11 @@
 			var v = $(this).data(currentBilling);
 			if (v) { $(this).text(v); }
 		});
-		$('.lnf-buy').each(function () {
-			var url = $(this).data('url-' + currentBilling);
-			if (url) { $(this).attr('data-checkout', url); }
-		});
-		// Synchronise le formulaire d'activation avec le type choisi.
-		var $formBilling = $('#lnf-license-billing');
-		if ($formBilling.length) { $formBilling.val(currentBilling); }
 		updatePaySummary();
 	});
 
-	/* Packs : choix du pack → tunnel de paiement */
-	var selectedPack = null;
+	/* Achat : ouverture du tunnel professionnel (pop-up) */
+	var selectedPack = 'site1';
 
 	function fmtDA(n) {
 		return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -486,17 +474,15 @@
 	function payBillingLabel() {
 		return currentBilling === 'lifetime' ? 'À vie' : 'Annuelle';
 	}
+
 	function updatePaySummary() {
-		if (!selectedPack) {
-			return;
-		}
 		var amount = payAmountDA();
-		$('#lnf-pay-pack-label').text(payLabel());
-		$('#lnf-pay-billing-label').text(payBillingLabel());
+		$('#lnf-pay-pack-label, #lnf-wz-pack').text(payLabel());
+		$('#lnf-pay-billing-label, #lnf-wz-billing').text(payBillingLabel());
 		$('#lnf-pay-amount').text(fmtDA(amount) + ' DA');
-		$('#lnf-ccp-amount').text(fmtDA(amount) + ' DA');
+		$('#lnf-wz-amount-da, #lnf-ccp-amount').text(fmtDA(amount) + ' DA');
 		var usd = Math.round(amount * (parseFloat(cfg.paypalRate) || 0) * 100) / 100;
-		$('#lnf-paypal-amount').text(usd + ' ' + cfg.paypalCurrency);
+		$('#lnf-wz-amount-usd, #lnf-paypal-amount').text(usd + ' ' + cfg.paypalCurrency);
 		if (cfg.paypalEmail) {
 			var payUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick'
 				+ '&business=' + encodeURIComponent(cfg.paypalEmail)
@@ -505,67 +491,95 @@
 				+ '&currency_code=' + cfg.paypalCurrency
 				+ '&no_shipping=1'
 				+ '&custom=' + encodeURIComponent(cfg.siteUrl || '');
-			$('#lnf-paypal-link').attr('href', payUrl);
+			$('#lnf-wz-paypal-link, #lnf-paypal-link').attr('href', payUrl);
 		}
 		var cardUrl = cfg.checkoutUrl + (cfg.checkoutUrl.indexOf('?') > -1 ? '&' : '?') + 'pack=' + selectedPack + '&billing=' + currentBilling + '&site=' + encodeURIComponent(cfg.siteUrl || '');
-		$('#lnf-card-open').attr('data-checkout', cardUrl);
+		$('#lnf-card-open, #lnf-wz-card-open').attr('data-checkout', cardUrl);
 		var proof = 'Bonjour,\n\nJe viens de payer ' + fmtDA(amount) + ' DA pour ' + payLabel() + ' (' + payBillingLabel() + ') sur le site ' + (cfg.siteUrl || '') + '.\n\nVoici ma capture de reçu BaridiMob/CCP :\n';
 		$('.lnf-proof-mailto').attr('href', 'mailto:' + (cfg.contactEmail || '') + '?subject=' + encodeURIComponent('Preuve de paiement LoginFennec Pro — ' + payLabel()) + '&body=' + encodeURIComponent(proof));
 	}
 
-	$(document).on('click', '.lnf-choose-pack', function () {
-		selectedPack = $(this).data('pack');
+	$(document).on('click', '.lnf-choose-pack, .lnf-buy-open', function (e) {
+		if ($(this).is('a')) {
+			e.preventDefault();
+		}
+		selectedPack = $(this).data('pack') || 'site1';
 		$('.lnf-pack').removeClass('is-selected');
-		$(this).closest('.lnf-pack').addClass('is-selected');
+		$('.lnf-pack').each(function () {
+			if ($(this).find('.lnf-choose-pack[data-pack="' + selectedPack + '"], .lnf-buy-open[data-pack="' + selectedPack + '"]').length) {
+				$(this).addClass('is-selected');
+			}
+		});
 		$('#lnf-license-pack').val(selectedPack);
 		updatePaySummary();
 		$('#lnf-pay').removeAttr('hidden');
-		if ($('#lnf-pay')[0].scrollIntoView) {
+		if ($('#lnf-pay')[0] && $('#lnf-pay')[0].scrollIntoView) {
 			$('#lnf-pay')[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
 		}
 	});
 
-	/* Achat direct : le pack 1 site est présélectionné à l'ouverture */
-	if ($('#lnf-pay').length) {
-		selectedPack = 'site1';
-		var $defaultPack = $('.lnf-choose-pack[data-pack="' + selectedPack + '"]');
-		$('.lnf-pack').removeClass('is-selected');
-		$defaultPack.closest('.lnf-pack').addClass('is-selected');
-		updatePaySummary();
-		$('#lnf-pay').removeAttr('hidden');
+	/* Pop-up d'achat : assistant en 3 étapes */
+	function wzStep(n) {
+		$('.lnf-wz-pane').removeClass('is-active');
+		$('.lnf-wz-pane[data-wpane="' + n + '"]').addClass('is-active');
+		$('.lnf-wz-steps .wz-step').removeClass('is-active is-done');
+		$('.lnf-wz-steps .wz-step').each(function () {
+			var s = parseInt($(this).data('ws'), 10);
+			if (s < n) { $(this).addClass('is-done'); }
+			if (s === n) { $(this).addClass('is-active'); }
+		});
 	}
 
-	$(document).on('click', '.lnf-pay-tile', function () {
-		$('.lnf-pay-tile').removeClass('is-active');
+	function openCheckoutWizard(pack) {
+		selectedPack = pack || 'site1';
+		wzStep(1);
+		updatePaySummary();
+		$('#lnf-checkout-modal').removeAttr('hidden');
+		$('#lnf-modal-key').val('');
+	}
+
+	function closeCheckoutWizard(reload) {
+		$('#lnf-checkout-modal').attr('hidden', '');
+		$('#lnf-wz-card-frame').attr('src', 'about:blank');
+		if (reload) {
+			window.location.reload();
+		}
+	}
+
+	$(document).on('click', '.lnf-buy-open', function (e) {
+		e.preventDefault();
+		openCheckoutWizard($(this).data('pack') || 'site1');
+	});
+
+	$(document).on('click', '.lnf-wz-method', function () {
+		$('.lnf-wz-method').removeClass('is-active');
 		$(this).addClass('is-active');
-		$('.lnf-pay-panel').attr('hidden', '');
-		$('.lnf-pay-panel[data-panel="' + $(this).data('method') + '"]').removeAttr('hidden');
+		$('.lnf-wz-mbody').attr('hidden', '');
+		$('.lnf-wz-mbody[data-mbody="' + $(this).data('m') + '"]').removeAttr('hidden');
 	});
 
-	$(document).on('click', '.lnf-copy', function () {
-		var text = $.trim($($(this).data('copy')).text());
-		if (navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard.writeText(text);
+	$(document).on('click', '.lnf-wz-next', function () {
+		wzStep(2);
+	});
+
+	$(document).on('click', '.lnf-wz-back2', function () {
+		wzStep(1);
+	});
+
+	$(document).on('click', '#lnf-checkout-modal [data-close]', function () {
+		if ($('.lnf-wz-pane[data-wpane="3"]').hasClass('is-active')) {
+			window.location.reload();
+			return;
 		}
-		var $btn = $(this);
-		$btn.text('✓');
-		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
+		closeCheckoutWizard(false);
+		$('#lnf-checkout-modal').attr('hidden', '');
 	});
 
-	$(document).on('click', '.lnf-goto-activate', function () {
-		var el = $('#lnf-license-key')[0];
-		if (el && el.scrollIntoView) {
-			el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-		}
-		$('#lnf-license-key').trigger('focus');
-	});
-
-	/* Activer une licence (avec pack et type) */
-	$(document).on('click', '.lnf-activate-license', function () {
+	/* Activer une licence depuis la fenêtre d'achat */
+	$(document).on('click', '.lnf-modal-activate', function () {
 		var $btn = $(this);
-		var $key = $('#lnf-license-key');
-		var $out = $('.lnf-license-status');
-		var key = $.trim($key.val());
+		var key = $.trim($('#lnf-modal-key').val());
+		var $out = $('.lnf-wz-pane[data-wpane="2"] .lnf-license-status');
 		if (!key) {
 			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
 			return;
@@ -576,13 +590,13 @@
 			action: 'lnf_activate_license',
 			nonce: cfg.nonce,
 			license_key: key,
-			plan: $('#lnf-license-pack').val() || 'site1',
-			billing: $('#lnf-license-billing').val() || 'yearly'
+			plan: selectedPack,
+			billing: currentBilling
 		})
 			.done(function (res) {
 				if (res && res.success) {
-					$out.text('✓ ' + res.data.message).addClass('is-ok').removeClass('is-err');
-					window.location.reload();
+					wzStep(3);
+					$('.lnf-wz-pane[data-wpane="3"] .lnf-wz-success-msg').text(res.data.message || 'Pro activé.');
 				} else {
 					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
 					$out.text(msg).addClass('is-err').removeClass('is-ok');
@@ -592,6 +606,17 @@
 			.fail(function () {
 				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
 				$btn.prop('disabled', false);
+			});
+	});
+
+	/* Désactiver la licence */
+	$(document).on('click', '.lnf-deactivate-license', function () {
+		if (!window.confirm('Désactiver la licence sur ce site ?')) {
+			return;
+		}
+		$.post(cfg.ajaxUrl, { action: 'lnf_deactivate_license', nonce: cfg.nonce })
+			.done(function (res) {
+				if (res && res.success) { window.location.reload(); }
 			});
 	});
 
@@ -608,6 +633,66 @@
 			})
 			.fail(function () {
 				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
+			});
+	});
+
+	/* Copier (coordonnées de paiement) */
+	$(document).on('click', '.lnf-copy', function () {
+		var text = $.trim($($(this).data('copy')).text());
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(text);
+		}
+		var $btn = $(this);
+		$btn.text('✓');
+		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
+	});
+
+	/* Vider le journal de sécurité */
+	$(document).on('click', '.lnf-purge-log', function () {
+		var $btn = $(this);
+		if (!window.confirm('Vider le journal de sécurité ?')) {
+			return;
+		}
+		$btn.prop('disabled', true);
+		$.post(cfg.ajaxUrl, { action: 'lnf_purge_log', nonce: cfg.nonce })
+			.always(function () { $btn.prop('disabled', false); })
+			.done(function (res) {
+				if (res && res.success) {
+					var $journal = $('.lnf-journal');
+					$journal.find('table, p.lnf-desc, .lnf-purge-log').remove();
+					$journal.append('<p class="lnf-desc">Aucun événement enregistré pour le moment.</p>');
+				}
+			});
+	});
+
+	/* Vérifier les mises à jour */
+	$(document).on('click', '.lnf-check-updates', function () {
+		var $btn = $(this);
+		if ($btn.prop('disabled')) {
+			return;
+		}
+		var $out = $btn.closest('.infcl-card, .lnf-card, .lnf-about-card').find('.lnf-update-status').first();
+		$btn.prop('disabled', true).addClass('is-loading');
+		$out.html('<span class="lnf-update-msg">…</span>');
+
+		$.post(cfg.ajaxUrl, { action: 'lnf_check_updates', nonce: cfg.nonce })
+			.always(function () {
+				$btn.prop('disabled', false).removeClass('is-loading');
+			})
+			.done(function (res) {
+				if (!res || !res.success) {
+					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
+					$out.html('<span class="lnf-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
+					return;
+				}
+				if (res.data.status === 'up_to_date') {
+					$out.html('<span class="lnf-update-msg is-ok">✓ À jour — v' + res.data.version + '</span>');
+				} else {
+					$out.html('<span class="lnf-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="lnf-update-link" href="' + res.data.url + '">Mettre à jour</a>');
+				}
+			})
+			.fail(function () {
+				$out.html('<span class="lnf-update-msg is-err">Erreur réseau</span>');
 			});
 	});
 
@@ -628,126 +713,11 @@
 			});
 	});
 
-	/* Paiement intégré : modale de checkout */
-	function closeCheckoutModal() {
-		var $modal = $('#lnf-checkout-modal');
-		if ($modal.length) {
-			$modal.attr('hidden', '');
-			$modal.find('iframe').attr('src', 'about:blank');
+	/* Vider le journal : bouton plus */
+	$(document).on('click', '#lnf-reset', function () {
+		if (!window.confirm('Réinitialiser tous les réglages aux valeurs par défaut ?')) {
+			e && e.preventDefault ? e.preventDefault() : null;
 		}
-	}
-
-	$(document).on('click', '.lnf-open-checkout', function (e) {
-		e.preventDefault();
-		var url = $(this).data('checkout');
-		var $modal = $('#lnf-checkout-modal');
-		if (!url || !$modal.length) {
-			return;
-		}
-		$modal.find('iframe').attr('src', url);
-		$modal.removeAttr('hidden');
-	});
-
-	$(document).on('click', '#lnf-checkout-modal [data-close]', closeCheckoutModal);
-
-	$(document).on('keydown', function (e) {
-		if (e.key === 'Escape') {
-			closeCheckoutModal();
-		}
-	});
-
-	/* Activation / désactivation de la licence Pro */
-	$(document).on('click', '.lnf-activate-license', function () {
-		var $btn = $(this);
-		var $key = $('#lnf-license-key');
-		var $out = $('.lnf-license-status');
-		var key = $.trim($key.val());
-		if (!key) {
-			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
-			return;
-		}
-		$btn.prop('disabled', true);
-		$out.text('…').removeClass('is-err is-ok');
-		$.post(cfg.ajaxUrl, { action: 'lnf_activate_license', nonce: cfg.nonce, license_key: key })
-			.done(function (res) {
-				if (res && res.success) {
-					$out.text('✓ ' + res.data.message).addClass('is-ok').removeClass('is-err');
-					window.location.reload();
-				} else {
-					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
-					$out.text(msg).addClass('is-err').removeClass('is-ok');
-					$btn.prop('disabled', false);
-				}
-			})
-			.fail(function () {
-				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
-				$btn.prop('disabled', false);
-			});
-	});
-
-	$(document).on('click', '.lnf-deactivate-license', function () {
-		if (!window.confirm('Désactiver la licence sur ce site ?')) {
-			return;
-		}
-		$.post(cfg.ajaxUrl, { action: 'lnf_deactivate_license', nonce: cfg.nonce })
-			.done(function (res) {
-				if (res && res.success) {
-					window.location.reload();
-				}
-			});
-	});
-
-	/* Vider le journal de sécurité */
-	$(document).on('click', '.lnf-purge-log', function () {
-		var $btn = $(this);
-		var $out = $btn.closest('.lnf-journal').find('.lnf-purge-status');
-		if (!window.confirm('Vider le journal de sécurité ?')) {
-			return;
-		}
-		$btn.prop('disabled', true);
-		$.post(cfg.ajaxUrl, { action: 'lnf_purge_log', nonce: cfg.nonce })
-			.always(function () {
-				$btn.prop('disabled', false);
-			})
-			.done(function (res) {
-				if (res && res.success) {
-					var $journal = $('.lnf-journal');
-					$journal.find('table, p.lnf-desc, .lnf-purge-log').remove();
-					$journal.append('<p class="lnf-desc">Aucun événement enregistré pour le moment.</p>');
-					$out.text('✓ Journal vidé');
-				}
-			});
-	});
-
-	/* Vérifier les mises à jour */
-	$(document).on('click', '.lnf-check-updates', function () {
-		var $btn = $(this);
-		if ($btn.prop('disabled')) {
-			return;
-		}
-		var $out = $btn.closest('.lnf-card, .lnf-about-card, .lnf-installer').find('.lnf-update-status').first();
-		$btn.prop('disabled', true).addClass('is-loading');
-		$out.html('<span class="lnf-update-msg">…</span>');
-
-		$.post(cfg.ajaxUrl, { action: 'lnf_check_updates', nonce: cfg.nonce })
-			.always(function () {
-				$btn.prop('disabled', false).removeClass('is-loading');
-			})
-			.done(function (res) {
-				if (!res || !res.success) {
-					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
-					$out.html('<span class="lnf-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
-					return;
-				}
-				if (res.data.status === 'up_to_date') {
-					$out.html('<span class="lnf-update-msg is-ok">✓ ' + 'À jour — v' + res.data.version + '</span>');
-				} else {
-					$out.html('<span class="lnf-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="lnf-update-link" href="' + res.data.url + '">Mettre à jour</a>');
-				}
-			})
-			.fail(function () {
-				$out.html('<span class="lnf-update-msg is-err">Erreur réseau</span>');
-			});
 	});
 
 	/* Installateur : navigation entre les étapes */
@@ -767,12 +737,6 @@
 		$('.lnf-step-prev').toggle(wizardStep > 1);
 		$('.lnf-step-next').toggle(wizardStep < wizardTotal);
 		$('.lnf-step-finish').toggle(wizardStep === wizardTotal);
-		if (wizardStep === wizardTotal) {
-			$('#lnf-recap-style').text(chosenPreset || '—');
-			$('#lnf-recap-theme').text(chosenTheme || '—');
-			var secOn = $('[name="lnf[sec_enable]"]').first().prop('checked');
-			$('#lnf-recap-sec').text(secOn ? 'activée ✓' : 'désactivée');
-		}
 	}
 
 	$(document).on('click', '.lnf-step-next', function () {
@@ -785,13 +749,6 @@
 	if ($('.lnf-installer').length) {
 		wizardShow(1);
 	}
-
-	/* Réinitialisation : confirmation */
-	$(document).on('click', '#lnf-reset', function (e) {
-		if (!window.confirm('Réinitialiser tous les réglages aux valeurs par défaut ?')) {
-			e.preventDefault();
-		}
-	});
 
 	/* Initialisation */
 	refreshShowIf();

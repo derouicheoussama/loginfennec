@@ -2134,7 +2134,7 @@ body.lnf-preview-lock {
 }
 
 .lnf-pack.is-featured {
-	border-color: var(--inls-accent, #6d5df6);
+	border-color: var(--lnf-accent, #6d5df6);
 	box-shadow: 0 16px 40px -16px rgba(109, 93, 246, .5);
 }
 
@@ -2163,11 +2163,11 @@ body.lnf-preview-lock {
 .lnf-pack-price .lnf-price {
 	font-size: 26px;
 	font-weight: 800;
-	color: var(--inls-ink, #23213d);
+	color: var(--lnf-ink, #23213d);
 }
 
 .lnf-pack-per {
-	color: var(--inls-muted, #7a7796);
+	color: var(--lnf-muted, #7a7796);
 	font-size: 12.5px;
 	font-weight: 600;
 	margin: 0 0 12px;
@@ -2211,7 +2211,7 @@ body.lnf-preview-lock {
 	margin: 10px 0 0;
 	text-align: center;
 	font-size: 12px;
-	color: var(--inls-muted, #7a7796);
+	color: var(--lnf-muted, #7a7796);
 	font-weight: 600;
 }
 
@@ -2375,7 +2375,7 @@ body.lnf-preview-lock {
 /* ---------- Achat : pack sélectionné ---------- */
 
 .lnf-pack.is-selected {
-	border-color: var(--inls-accent, #6d5df6);
+	border-color: var(--lnf-accent, #6d5df6);
 	box-shadow: 0 0 0 3px rgba(109, 93, 246, .22);
 }
 
@@ -2383,4 +2383,183 @@ body.lnf-preview-lock {
 	background: linear-gradient(120deg, #1d4ed8, #3b82f6);
 	color: #fff;
 	border-color: transparent;
+}
+
+/* ---------- Pop-up d'achat professionnelle (wizard) ---------- */
+
+.lnf-wz-box {
+	width: min(760px, 100%);
+	height: auto;
+	max-height: 92vh;
+	overflow-y: auto;
+	display: block;
+}
+
+.lnf-wz-steps {
+	display: flex;
+	gap: 8px;
+	padding: 12px 18px;
+	background: #fafaff;
+	border-bottom: 1px solid var(--lnf-line);
+	flex-wrap: wrap;
+}
+
+.lnf-wz-steps .wz-step {
+	font-size: 11.5px;
+	font-weight: 700;
+	color: var(--lnf-muted);
+	background: #f1effa;
+	border-radius: 999px;
+	padding: 5px 14px;
+}
+
+.lnf-wz-steps .wz-step.is-active {
+	color: #fff;
+	background: var(--lnf-grad, linear-gradient(120deg, #6d5df6, #b16cea));
+}
+
+.lnf-wz-steps .wz-step.is-done {
+	color: var(--lnf-green, #00a32a);
+	background: rgba(0, 163, 42, .12);
+}
+
+.lnf-wz-body {
+	padding: 20px 24px 26px;
+}
+
+.lnf-wz-pane {
+	display: none;
+}
+
+.lnf-wz-pane.is-active {
+	display: block;
+	animation: lnf-fade-in .2s ease;
+}
+
+.lnf-wz-summary {
+	border: 1px solid var(--lnf-line);
+	border-radius: 12px;
+	padding: 14px 18px;
+	background: #fafaff;
+	margin-bottom: 16px;
+}
+
+.lnf-wz-sum-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 14px;
+	padding: 5px 0;
+	font-size: 13.5px;
+}
+
+.lnf-wz-sum-row.lnf-wz-total {
+	border-top: 1px dashed var(--lnf-line);
+	margin-top: 4px;
+	padding-top: 10px;
+	font-size: 15px;
+}
+
+.lnf-wz-sum-row.lnf-wz-total strong {
+	color: var(--lnf-accent, #6d5df6);
+	font-size: 17px;
+}
+
+.lnf-wz-methods {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.lnf-wz-method {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+	border: 2px solid var(--lnf-line);
+	border-radius: 12px;
+	background: #fff;
+	padding: 14px 10px;
+	cursor: pointer;
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.lnf-wz-method:hover {
+	border-color: var(--lnf-accent, #6d5df6);
+}
+
+.lnf-wz-method.is-active {
+	border-color: var(--lnf-accent, #6d5df6);
+	box-shadow: 0 0 0 3px rgba(109, 93, 246, .2);
+}
+
+.lnf-wz-method .dashicons {
+	font-size: 22px;
+	width: 22px;
+	height: 22px;
+	color: var(--lnf-accent, #6d5df6);
+}
+
+.lnf-wz-method strong {
+	font-size: 13px;
+}
+
+.lnf-wz-method small {
+	color: var(--lnf-muted);
+	font-size: 11px;
+}
+
+.lnf-wz-mbody[hidden] {
+	display: none;
+}
+
+.lnf-wz-actions {
+	margin-top: 16px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.lnf-wz-box iframe {
+	width: 100%;
+	height: 420px;
+	border: 1px solid var(--lnf-line);
+	border-radius: 10px;
+	background: #fff;
+}
+
+.lnf-wz-success {
+	width: 84px;
+	height: 84px;
+	margin: 10px auto 16px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 42px;
+	font-weight: 700;
+	color: #fff;
+	background: linear-gradient(120deg, #00a86b, #00c48c);
+	box-shadow: 0 16px 36px -14px #00a86b;
+	text-align: center;
+}
+
+.lnf-wz-pane[data-wpane="3"] {
+	text-align: center;
+}
+
+.lnf-wz-pane[data-wpane="3"] h3 {
+	font-size: 20px;
+	margin: 0 0 6px;
+}
+
+.lnf-wz-pane[data-wpane="2"] .lnf-input {
+	max-width: 380px;
+	font-family: Consolas, Monaco, monospace;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+.lnf-wz-pane[data-wpane="2"] .button-link {
+	margin-left: 10px;
+	color: var(--lnf-muted);
 }
