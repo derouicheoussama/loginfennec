@@ -112,7 +112,6 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 = 2.6.0 =
 * Security: code integrity verification — signature checked on every admin load
 * Security: tamper notification (email to admin + developer + webhook)
-* New: deploy.sh script for one-command GitHub deployment
 * Improved: fennec logo in admin menu, dashboard header, and all hero sections
 * Improved: VS Code setup with recommended extensions and PHP 8.3 portable
 

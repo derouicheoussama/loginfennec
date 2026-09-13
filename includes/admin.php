@@ -1068,11 +1068,11 @@ class Lnf_Admin {
 			array(
 				'icon'   => 'dashicons-download',
 				'title'  => __( 'Mises à jour', 'loginfennec' ),
-				'state'  => sprintf(
-					/* translators: %s : dépôt GitHub. */
-					__( 'Version %s — GitHub : ', 'loginfennec' ),
-					LOGINFENNEC_VERSION
-				) . LOGINFENNEC_GITHUB_REPO,
+					'state'  => sprintf(
+						/* translators: %s : version du plugin. */
+						__( 'Version %s', 'loginfennec' ),
+						LOGINFENNEC_VERSION
+					),
 				'ok'     => true,
 				'goto'   => '',
 				'button' => __( 'Vérifier les mises à jour', 'loginfennec' ),
@@ -1692,10 +1692,10 @@ class Lnf_Admin {
 							/* translators: %s : dépôt GitHub. */
 							esc_html__( 'Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :', 'loginfennec' )
 						);
-						echo ' <code>' . esc_html( LOGINFENNEC_GITHUB_REPO ) . '</code>';
+						echo ' <code>derouicheoussama/loginfennec</code>';
 						?>
 					</p>
-					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v1.2.1) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'loginfennec' ); ?></p>
+					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v2.6.2) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'loginfennec' ); ?></p>
 					<div class="lnf-about-actions">
 						<button type="button" class="lnf-btn lnf-btn-ghost lnf-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'loginfennec' ); ?></button>
 						<span class="lnf-update-status" aria-live="polite"></span>

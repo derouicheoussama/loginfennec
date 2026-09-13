@@ -44,7 +44,6 @@ function lnf_integrity_critical_files() {
 		'includes/admin.php'           => 'INFINITY CODER',
 		'includes/login-appearance.php' => 'INFINITY CODER',
 		'includes/login-security.php'  => 'INFINITY CODER',
-		'includes/github-updater.php'  => 'INFINITY CODER',
 		'includes/license.php'         => 'INFINITY CODER',
 		'includes/trial.php'           => 'INFINITY CODER',
 		'assets/js/admin.js'           => 'INFINITY CODER',

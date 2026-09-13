@@ -28,7 +28,6 @@
  *
  * Pas d'en-tête « Update URI » volontairement : une fois le plugin accepté
  * sur WordPress.org, c'est le référentiel officiel qui sert les mises à jour.
- * En attendant, l'updater intégré utilise GitHub (voir includes/github-updater.php).
  *
  * @package LoginFennecPro
  */
@@ -88,10 +87,6 @@ define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
  * le référentiel officiel dès que le plugin y est détecté. Forçage manuel :
  * add_filter( 'loginfennec_update_source', function () { return 'github'; } );
  */
-if ( ! defined( 'LOGINFENNEC_GITHUB_REPO' ) ) {
-	define( 'LOGINFENNEC_GITHUB_REPO', 'derouicheoussama/loginfennec' );
-}
-
 require_once LOGINFENNEC_DIR . 'includes/settings.php';
 require_once LOGINFENNEC_DIR . 'includes/trial.php';
 require_once LOGINFENNEC_DIR . 'includes/login-appearance.php';
