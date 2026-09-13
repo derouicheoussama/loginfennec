@@ -67,13 +67,17 @@ class Lnf_Admin {
 	 * Menu : personnalisation, page Pro et installateur (page cachée).
 	 */
 	public static function menu() {
+		// Icône fennec custom pour le menu admin.
+		$fennec_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><path fill="#a7aaad" d="M3.2 1.2 8.2 3.6 6.4 9.4 2.8 11zM16.8 1.2 11.8 3.6 13.6 9.4 17.2 11z"/><path fill="#a7aaad" d="M5.6 8.2c0-.2.1-.3.1-.5.5-2.3 2.1-4.1 4.3-4.1s3.8 1.8 4.3 4.1c.1.2.1.3.1.5.4 1.7.1 3.5-.9 4.9-.7 1-1.7 1.8-2.9 2.2-.2.1-.4.1-.6.1-.2 0-.4 0-.6-.1-1.2-.4-2.2-1.2-2.9-2.2-1-1.4-1.3-3.2-.9-4.9z"/><circle fill="#1d2327" cx="7.6" cy="10.2" r="1"/><circle fill="#1d2327" cx="12.4" cy="10.2" r="1"/><path fill="#1d2327" d="M10 12.8c-.6 0-1.2.2-1.6.6-.1.1-.1.2 0 .3.1.1.2.1.3 0 .3-.3.8-.5 1.3-.5s1 .2 1.3.5c.1.1.2.1.3 0 .1-.1.1-.2 0-.3-.4-.4-1-.6-1.6-.6z"/></svg>';
+		$menu_icon  = 'data:image/svg+xml;base64,' . base64_encode( $fennec_svg );
+
 		add_menu_page(
 			__( 'LoginFennec Pro', 'loginfennec' ),
 			__( 'LoginFennec Pro', 'loginfennec' ),
 			'manage_options',
 			'loginfennec',
 			array( __CLASS__, 'render_page' ),
-			'dashicons-admin-customizer',
+			$menu_icon,
 			3
 		);
 		add_submenu_page(
@@ -775,10 +779,10 @@ class Lnf_Admin {
 
 		$s = lnf_settings();
 		?>
-		<div class="wrap lnf-wrap">
+			<div class="wrap lnf-wrap">
 			<div class="lnf-topbar">
 				<div class="lnf-brand">
-					<span class="lnf-brand-mark" aria-hidden="true">&#8734;</span>
+					<img class="lnf-brand-logo" src="<?php echo esc_url( LOGINFENNEC_URL . 'assets/img/logo-fennec.png' ); ?>" alt="LoginFennec" />
 					<span class="lnf-brand-text">
 						<strong>LoginFennec Pro</strong>
 						<em class="lnf-version"><?php echo esc_html( 'v' . LOGINFENNEC_VERSION ); ?></em>
@@ -1539,7 +1543,7 @@ class Lnf_Admin {
 		?>
 		<div class="wrap lnf-wrap lnf-about">
 			<div class="lnf-hero">
-				<span class="lnf-hero-mark" aria-hidden="true">&#8734;</span>
+				<img class="lnf-hero-logo" src="<?php echo esc_url( LOGINFENNEC_URL . "assets/img/logo-fennec.png" ); ?>" alt="LoginFennec" />
 				<h1><?php esc_html_e( 'LoginFennec Pro', 'loginfennec' ); ?></h1>
 				<p>
 					<?php esc_html_e( 'La page de connexion de WordPress, enfin à votre image.', 'loginfennec' ); ?><br>
@@ -1840,7 +1844,7 @@ class Lnf_Admin {
 		?>
 		<div class="wrap lnf-installer">
 			<header class="lnf-inst-hero">
-				<span class="lnf-inst-mark" aria-hidden="true">&#8734;</span>
+				<img class="lnf-hero-logo" src="<?php echo esc_url( LOGINFENNEC_URL . "assets/img/logo-fennec.png" ); ?>" alt="LoginFennec" />
 				<span class="lnf-version"><?php esc_html_e( 'Configuration guidée', 'loginfennec' ); ?></span>
 				<h1><?php esc_html_e( 'Bienvenue dans LoginFennec Pro', 'loginfennec' ); ?></h1>
 				<p><?php esc_html_e( 'Transformez votre page de connexion en 3 étapes : choisissez un style et un thème d’interface, activez la protection anti force brute, et c’est parti. Tout reste modifiable ensuite.', 'loginfennec' ); ?></p>
@@ -2043,7 +2047,7 @@ class Lnf_Admin {
 		?>
 		<div class="wrap lnf-wrap lnf-pro">
 			<div class="lnf-hero lnf-pro-hero">
-				<span class="lnf-hero-mark" aria-hidden="true">&#8734;</span>
+				<img class="lnf-hero-logo" src="<?php echo esc_url( LOGINFENNEC_URL . "assets/img/logo-fennec.png" ); ?>" alt="LoginFennec" />
 				<h1><?php esc_html_e( 'LoginFennec Pro', 'loginfennec' ); ?></h1>
 				<p><?php esc_html_e( 'Poussez la sécurité de votre page de connexion au niveau supérieur : protection avancée, surveillance complète et contrôle total.', 'loginfennec' ); ?></p>
 				<div class="lnf-hero-actions">

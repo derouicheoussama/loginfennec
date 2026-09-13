@@ -2646,3 +2646,27 @@ body.lnf-preview-lock {
 	font-weight: 700;
 	color: #e08c00;
 }
+
+/* ---------- Logo fennec dans le header et les heros ---------- */
+
+.lnf-brand-logo {
+	width: 44px;
+	height: 44px;
+	border-radius: 10px;
+	object-fit: cover;
+	box-shadow: 0 4px 12px -4px rgba(109, 93, 246, .35);
+}
+
+.lnf-hero-logo {
+	width: 120px;
+	height: 120px;
+	border-radius: 20px;
+	object-fit: cover;
+	box-shadow: 0 12px 32px -10px rgba(0, 0, 0, .3);
+	opacity: .35;
+}
+
+.lnf-inst-hero .lnf-hero-logo,
+.lnf-hero .lnf-hero-logo {
+	opacity: .9;
+}
