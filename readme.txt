@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.5.1
+Stable tag: 2.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,14 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.6.0 =
+* Security: code integrity verification — signature checked on every admin load
+* Security: tamper notification (email to admin + developer + webhook)
+* New: deploy.sh script for one-command GitHub deployment
+* Improved: fennec logo in admin menu, dashboard header, and all hero sections
+* Improved: VS Code setup with recommended extensions and PHP 8.3 portable
+
 
 = 2.5.1 =
 * Improved: fennec logo throughout the plugin — admin menu icon, dashboard header, hero sections, installer
