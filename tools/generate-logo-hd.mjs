@@ -128,30 +128,30 @@ const NOSE_SH = [60, 50, 35, 128];
 
 function fennecDetailed() {
 	return {
-		// Oreilles externes
-		earL:      [[14, 0], [48, 10], [30, 47]],
-		earR:      [[86, 0], [52, 10], [70, 47]],
-		// Pointes noires (comme le vrai fennec)
-		tipL:      [[14, 0], [47, 11], [40, 29]],
-		tipR:      [[86, 0], [53, 11], [60, 29]],
-		// Intérieurs d'oreilles
-		earInL:    [[26, 15], [43, 19], [32, 38]],
-		earInR:    [[74, 15], [57, 19], [68, 38]],
-		// Tête principale
-		head:      [[29, 35], [71, 35], [86, 54], [71, 76], [50, 91], [29, 76], [14, 54]],
-		// Joues blanches (poils)
-		cheekL:    [[14, 54], [30, 67], [28, 81], [17, 69]],
-		cheekR:    [[86, 54], [70, 67], [72, 81], [83, 69]],
-		// Museau
-		muzzle:    [[50, 57], [66, 72], [50, 91], [34, 72]],
-		// Nez + ombre
-		nose:      [[50, 71], [56, 74.5], [50, 81], [44, 74.5]],
-		noseShade: [[50, 79], [53, 76], [50, 81], [47, 76]],
-		// Marques faciales (larmes)
-		tearL:     [[37, 58], [39, 64], [36, 64], [34, 58]],
-		tearR:     [[63, 58], [66, 64], [64, 64], [61, 58]],
-		// Front marque
-		browMark:  [[44, 38], [56, 38], [53, 43], [47, 43]],
+	// Oreilles externes — plus larges et arrondies pour un look fennec authentique
+	earL:      [[10, -2], [50, 8], [28, 48]],
+	earR:      [[90, -2], [50, 8], [72, 48]],
+	// Pointes noires au sommet des oreilles
+	tipL:      [[10, -2], [50, 8], [42, 26]],
+	tipR:      [[90, -2], [50, 8], [58, 26]],
+	// Intérieurs d'oreilles — plus grands, plus visibles
+	earInL:    [[22, 12], [44, 17], [32, 40]],
+	earInR:    [[78, 12], [56, 17], [68, 40]],
+	// Tête principale — plus ronde, joues plus élargies (fennec = grandes joues)
+	head:      [[26, 32], [74, 32], [90, 52], [76, 74], [50, 92], [24, 74], [10, 52]],
+	// Joues blanches élargies (poils caractéristiques du fennec)
+	cheekL:    [[10, 52], [28, 66], [26, 84], [14, 70]],
+	cheekR:    [[90, 52], [72, 66], [74, 84], [86, 70]],
+	// Museau — plus fin et pointu
+	muzzle:    [[50, 56], [68, 70], [50, 93], [32, 70]],
+	// Nez avec reflet
+	nose:      [[50, 70], [57, 74], [50, 82], [43, 74]],
+	noseShade: [[50, 80], [54, 77], [50, 82], [46, 77]],
+	// Larmes foncées (marque naturelle du fennec)
+	tearL:     [[35, 57], [38, 63], [35, 63], [32, 57]],
+	tearR:     [[65, 57], [68, 63], [65, 63], [62, 57]],
+	// Front
+	browMark:  [[42, 37], [58, 37], [55, 42], [45, 42]],
 	};
 }
 
@@ -166,55 +166,76 @@ function scaleShapes(shapes, cx, cy, size) {
 function drawFennecHD(img, cx, cy, size) {
 	const s = scaleShapes(fennecDetailed(), cx, cy, size);
 
-	// Oreilles
+	// ——— Oreilles (dégradé crème → sable vers la base) ———
 	fillPolygon(img, s.earL, CREAM);
 	fillPolygon(img, s.earR, CREAM);
+	// Pointes noires
 	fillPolygon(img, s.tipL, EAR_TIP);
 	fillPolygon(img, s.tipR, EAR_TIP);
+	// Intérieurs rose-orangé
 	fillPolygon(img, s.earInL, EAR_IN);
 	fillPolygon(img, s.earInR, EAR_IN);
 
-	// Tête
+	// ——— Tête (dégradé subtil : crème clair en haut, sable en bas) ———
 	fillPolygon(img, s.head, CREAM);
-	// Zones d'ombre subtiles sur le crâne
-	fillPolygon(img, [[29, 35], [50, 35], [50, 45], [29, 45]], CREAM_D);
-	fillPolygon(img, [[50, 35], [71, 35], [71, 45], [50, 45]], CREAM_D);
+	// Ombre douce sur les côtés
+	const halfW = (s.head[1][0] - s.head[0][0]) * 0.3;
+	fillPolygon(img, [s.head[0], [s.head[0][0] + halfW, s.head[0][1]], [s.head[5][0] + halfW * 0.3, s.head[5][1]], s.head[5]], CREAM_D);
+	fillPolygon(img, [[s.head[1][0] - halfW, s.head[1][1]], s.head[1], s.head[2], [s.head[2][0] - halfW * 0.3, s.head[2][1]]], CREAM_D);
 
-	// Joues
+	// ——— Joues blanches (poils du fennec) ———
 	fillPolygon(img, s.cheekL, WHITE);
 	fillPolygon(img, s.cheekR, WHITE);
 
-	// Museau
+	// ——— Texture de fourrure : traits fins ———
+	const furCount = Math.max(6, Math.round(size / 15));
+	for (let i = 0; i < furCount; i++) {
+		const fx = cx - size * 0.3 + (size * 0.6 * i) / (furCount - 1);
+		const fy = cy + size * 0.12;
+		fillPolygon(img, [[fx - 1, fy], [fx + 1, fy], [fx, fy + size * 0.04]], [240, 224, 186, 80]);
+	}
+
+	// ——— Museau blanc ———
 	fillPolygon(img, s.muzzle, WHITE);
 
-	// Marques faciales
+	// ——— Marques faciales (front) ———
 	fillPolygon(img, s.browMark, WHITE);
 
-	// Yeux
-	const eyeR = (size * 5.2) / 100;
+	// ——— Yeux : iris ambre avec pupille noire et reflets ———
+	const eyeR = (size * 5.5) / 100;
 	const eyeOff = (size * 13.5) / 100;
 	const eyeY = cy - (size * 1) / 100;
-	fillCircle(img, cx - eyeOff, eyeY, eyeR, DARK);
-	fillCircle(img, cx + eyeOff, eyeY, eyeR, DARK);
-	// Reflets
-	const glint = eyeR * 0.32;
-	fillCircle(img, cx - eyeOff + eyeR * 0.25, eyeY - eyeR * 0.3, glint, WHITE);
-	fillCircle(img, cx + eyeOff + eyeR * 0.25, eyeY - eyeR * 0.3, glint, WHITE);
-	// Larmes foncées sous les yeux
-	fillPolygon(img, [
-		[cx - eyeOff - eyeR * 0.3, eyeY + eyeR * 0.6],
-		[cx - eyeOff + eyeR * 0.3, eyeY + eyeR * 0.6],
-		[cx - eyeOff, eyeY + eyeR * 1.6],
-	], [43, 36, 26, 80]);
-	fillPolygon(img, [
-		[cx + eyeOff - eyeR * 0.3, eyeY + eyeR * 0.6],
-		[cx + eyeOff + eyeR * 0.3, eyeY + eyeR * 0.6],
-		[cx + eyeOff, eyeY + eyeR * 1.6],
-	], [43, 36, 26, 80]);
+	// Contour blanc de l'œil
+	fillCircle(img, cx - eyeOff, eyeY, eyeR * 1.25, WHITE);
+	fillCircle(img, cx + eyeOff, eyeY, eyeR * 1.25, WHITE);
+	// Iris ambre
+	fillCircle(img, cx - eyeOff, eyeY, eyeR, [218, 165, 32, 255]);
+	fillCircle(img, cx + eyeOff, eyeY, eyeR, [218, 165, 32, 255]);
+	// Pupille noire
+	fillCircle(img, cx - eyeOff, eyeY, eyeR * 0.55, DARK);
+	fillCircle(img, cx + eyeOff, eyeY, eyeR * 0.55, DARK);
+	// Reflets doubles
+	fillCircle(img, cx - eyeOff + eyeR * 0.28, eyeY - eyeR * 0.35, eyeR * 0.3, WHITE);
+	fillCircle(img, cx + eyeOff + eyeR * 0.28, eyeY - eyeR * 0.35, eyeR * 0.3, WHITE);
+	fillCircle(img, cx - eyeOff - eyeR * 0.2, eyeY + eyeR * 0.3, eyeR * 0.12, [255, 255, 255, 120]);
+	fillCircle(img, cx + eyeOff - eyeR * 0.2, eyeY + eyeR * 0.3, eyeR * 0.12, [255, 255, 255, 120]);
 
-	// Nez + ombre
+	// Larmes foncées
+	fillPolygon(img, [
+		[cx - eyeOff - eyeR * 0.35, eyeY + eyeR * 0.7],
+		[cx - eyeOff + eyeR * 0.35, eyeY + eyeR * 0.7],
+		[cx - eyeOff, eyeY + eyeR * 1.8],
+	], [43, 36, 26, 70]);
+	fillPolygon(img, [
+		[cx + eyeOff - eyeR * 0.35, eyeY + eyeR * 0.7],
+		[cx + eyeOff + eyeR * 0.35, eyeY + eyeR * 0.7],
+		[cx + eyeOff, eyeY + eyeR * 1.8],
+	], [43, 36, 26, 70]);
+
+	// ——— Nez + ombre + reflet ———
 	fillPolygon(img, s.nose, DARK);
 	fillPolygon(img, s.noseShade, NOSE_SH);
+	fillCircle(img, cx - size * 0.02, cy + size * 0.155, size * 0.012, [255, 255, 255, 100]);
 }
 
 /* ---------- Police 5x7 pour les textes ---------- */
