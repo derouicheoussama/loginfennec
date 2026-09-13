@@ -1144,7 +1144,19 @@ body.lnf-preview-lock {
 
 /* ---------- Installateur (assistant de bienvenue) ---------- */
 
+/* Variables CSS : la page installateur n'hérite pas de .lnf-wrap */
 .lnf-installer {
+	--lnf-ink: #23213d;
+	--lnf-muted: #7a7796;
+	--lnf-panel: #ffffff;
+	--lnf-line: #e7e5f4;
+	--lnf-accent: #6d5df6;
+	--lnf-accent-2: #b16cea;
+	--lnf-green: #00a32a;
+	--lnf-red: #d63638;
+	--lnf-radius: 16px;
+	--lnf-shadow: 0 10px 40px -18px rgba(35, 33, 61, .25);
+	--lnf-grad: linear-gradient(120deg, #6d5df6, #b16cea);
 	max-width: 1080px;
 	margin: 0 auto;
 }
@@ -1334,7 +1346,39 @@ body.lnf-preview-lock {
 	display: flex;
 	gap: 10px;
 	justify-content: flex-end;
-	margin-top: 16px;
+	align-items: center;
+	margin-top: 20px;
+	padding-top: 16px;
+	border-top: 1px solid #e7e5f4;
+}
+
+.lnf-inst-footer .lnf-btn {
+	font-size: 14px;
+	padding: 10px 24px;
+	border-radius: 8px;
+}
+
+.lnf-inst-footer .lnf-btn-primary {
+	background: linear-gradient(120deg, #6d5df6, #b16cea) !important;
+	color: #fff !important;
+	box-shadow: 0 8px 20px -8px #6d5df6;
+	border: none;
+}
+
+.lnf-inst-footer .lnf-btn-primary:hover {
+	background: linear-gradient(120deg, #5b4bd6, #a15ce0) !important;
+	color: #fff !important;
+}
+
+.lnf-inst-footer .lnf-btn-ghost {
+	background: #fff;
+	color: #23213d !important;
+	border: 1px solid #d5d3e8;
+}
+
+.lnf-inst-footer .lnf-btn-ghost:hover {
+	border-color: #6d5df6;
+	color: #6d5df6 !important;
 }
 
 .lnf-step-prev,
