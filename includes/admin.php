@@ -467,6 +467,7 @@ class Lnf_Admin {
 					)
 				);
 			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- export CSV temporaire.
 			fclose( $out );
 		}
 		exit;
@@ -536,31 +537,39 @@ class Lnf_Admin {
 	 * Notices de confirmation.
 	 */
 	public static function notices() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- lecture seule GET pour affichage.
+		$page = isset( $_GET["page"] ) ? sanitize_text_field( wp_unslash( $_GET["page"] ) ) : "";
+		if ( empty( $page ) ) {
+			return;
+		}
 		if ( ! isset( $_GET['page'] ) ) {
 			return;
 		}
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-welcome'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-welcome'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p><strong>🎉 ' . esc_html__( 'Bienvenue dans LoginFennec Pro !', 'loginfennec' ) . '</strong> ' . esc_html__( 'Votre page de connexion est prête — explorez les onglets pour la personnaliser.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-saved'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-saved'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages enregistrés.', 'loginfennec' ) . '</strong> ' . esc_html__( 'Votre page de connexion est à jour.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-reset'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-reset'] ) ) {
 			echo '<div class="notice notice-info is-dismissible"><p>' . esc_html__( 'Réglages réinitialisés aux valeurs par défaut.', 'loginfennec' ) . '</p></div>';
 		}
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-imported'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-imported'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'Réglages importés avec succès.', 'loginfennec' ) . '</strong></p></div>';
 		}
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-import-error'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-import-error'] ) ) {
 			echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Import impossible : fichier JSON invalide ou illisible.', 'loginfennec' ) . '</p></div>';
 		}
 
-		if ( 'loginfennec' === $_GET['page'] && isset( $_GET['lnf-cache'] ) ) {
+		if ( 'loginfennec' === $page && isset( $_GET['lnf-cache'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Cache du plugin vidé : vérifications de mises à jour réinitialisées et assets rafraîchis.', 'loginfennec' ) . '</p></div>';
 		}
 
 		// Demande d'avis : une seule fois, après 14 jours d'utilisation.
-		if ( 'loginfennec' !== $_GET['page'] ) {
+		if ( 'loginfennec' !== $page ) {
+			return;
+		}
+		if ( 'loginfennec' !== $page ) {
 			return;
 		}
 		$first = (int) get_option( 'lnf_first_activated', 0 );
@@ -604,7 +613,7 @@ class Lnf_Admin {
 	 */
 	protected static function field_range( $s, $key, $label, $min, $max, $unit = '', $desc = '', $showif = array() ) {
 		$value = (int) $s[ $key ];
-		echo '<div class="lnf-field"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		echo '<div class="lnf-range-row">';
 		printf(
@@ -630,7 +639,7 @@ class Lnf_Admin {
 	 * Champ couleur.
 	 */
 	protected static function field_color( $s, $key, $label, $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		printf(
 			'<input type="text" class="lnf-color" id="lnf-f-%1$s" name="lnf[%1$s]" value="%2$s" data-default-color="%2$s">',
@@ -647,7 +656,7 @@ class Lnf_Admin {
 	 * Champ texte / url.
 	 */
 	protected static function field_text( $s, $key, $label, $type = 'text', $placeholder = '', $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		printf(
 			'<input type="%1$s" class="lnf-input" id="lnf-f-%2$s" name="lnf[%2$s]" value="%3$s" placeholder="%4$s" autocomplete="off">',
@@ -666,7 +675,7 @@ class Lnf_Admin {
 	 * Champ zone de texte.
 	 */
 	protected static function field_textarea( $s, $key, $label, $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field lnf-field-wide"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field lnf-field-wide"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		printf(
 			'<textarea class="lnf-input" id="lnf-f-%1$s" name="lnf[%1$s]" rows="2">%2$s</textarea>',
@@ -683,7 +692,7 @@ class Lnf_Admin {
 	 * Champ liste déroulante.
 	 */
 	protected static function field_select( $s, $key, $label, $options, $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		echo '<select class="lnf-input" id="lnf-f-' . esc_attr( $key ) . '" name="lnf[' . esc_attr( $key ) . ']">';
 		foreach ( $options as $value => $text ) {
@@ -705,7 +714,7 @@ class Lnf_Admin {
 	 * Champ interrupteur.
 	 */
 	protected static function field_toggle( $s, $key, $label, $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field lnf-toggle-field"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field lnf-toggle-field"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-switch"><input type="checkbox" name="lnf[' . esc_attr( $key ) . ']" value="1"' . checked( ! empty( $s[ $key ] ), true, false ) . '><span class="lnf-switch-ui"></span></label>';
 		echo '<div class="lnf-toggle-text"><span class="lnf-label">' . esc_html( $label ) . '</span>';
 		if ( $desc ) {
@@ -718,7 +727,7 @@ class Lnf_Admin {
 	 * Champ image (médiathèque).
 	 */
 	protected static function field_media( $s, $key, $label, $desc = '', $showif = array() ) {
-		echo '<div class="lnf-field lnf-field-wide"' . self::showif( $showif ) . '>';
+		echo '<div class="lnf-field lnf-field-wide"' . esc_html( self::showif( $showif ) ) . '>';
 		echo '<label class="lnf-label">' . esc_html( $label ) . '</label>';
 		echo '<div class="lnf-media">';
 		if ( ! empty( $s[ $key ] ) ) {
@@ -1575,7 +1584,7 @@ class Lnf_Admin {
 						<?php foreach ( self::dev_socials() as $network ) : ?>
 							<a class="lnf-dev-icon" href="<?php echo esc_url( $network['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $network['label'] ); ?>" title="<?php echo esc_attr( $network['label'] ); ?>" style="<?php echo esc_attr( ! empty( $network['color'] ) ? 'color:' . $network['color'] : '' ); ?>">
 								<?php if ( ! empty( $network['svg'] ) ) : ?>
-									<?php echo $network['svg']; // SVG de marque (simple-icons), statique et sûr. ?>
+									<?php echo wp_kses( $network['svg'], array('svg' => array('viewbox' => array(),'width' => array(),'height' => array(),'fill' => array(),'aria-hidden' => array()),'path' => array('d' => array(),'fill' => array())) ); // SVG de marque (simple-icons), statique et sûr. ?>
 								<?php else : ?>
 									<span class="dashicons <?php echo esc_attr( $network['icon'] ); ?>"></span>
 								<?php endif; ?>

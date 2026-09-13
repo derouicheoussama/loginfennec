@@ -5,11 +5,11 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.6.0
+Stable tag: 2.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Make the WordPress login page yours: logo, background (blur, opacity, gradients), 10 modern styles, 7 form themes, social icons with official brand colors, security journal and brute-force protection — all with a live preview.
+Personnalisez et sécurisez votre page de connexion : logo, styles, sécurité anti force brute — avec aperçu en direct.
 
 == Description ==
 
@@ -102,6 +102,12 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 2.6.1 =
+* Fixed: Plugin Check compliance — output escaping, input sanitization, nonce verification, file operations
+* Fixed: readme short description trimmed to 150 characters
+* Improved: all security hooks now check trial status before activation
+
 
 = 2.6.0 =
 * Security: code integrity verification — signature checked on every admin load

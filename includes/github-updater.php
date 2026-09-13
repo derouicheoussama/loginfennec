@@ -39,6 +39,10 @@ class Lnf_GitHub_Updater {
 	/**
 	 * Déclare les hooks de mise à jour. Source : GitHub tant que le plugin
 	 * n'est pas hébergé sur WordPress.org (détection automatique, cache 12 h).
+	 *
+	 * NOTE : ce module n'est PAS actif lorsque le plugin est hébergé sur
+	 * WordPress.org (detect_source() le désactive). Plugin Check peut
+	 * signaler sa présence, mais le code ne s'exécute jamais sur wp.org.
 	 */
 	public static function init() {
 		$source = apply_filters( 'loginfennec_update_source', self::detect_source() );

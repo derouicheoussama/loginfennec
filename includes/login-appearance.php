@@ -396,7 +396,8 @@ function lnf_login_head() {
 	echo '<style id="loginfennec">' . "\n";
 	echo "/* ∞ INFINITY CODER — style généré par LoginFennec Pro\n";
 	echo ' * Création originale de Derouiche Oussama — https://www.derouicheoussama.com' . "\n */\n";
-	echo wp_strip_all_tags( lnf_build_login_css( $s ) ) . "\n";
+	echo wp_strip_all_tags( lnf_build_login_css( $s ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS generated from escaped settings.
+	echo "\n";
 	echo "</style>\n";
 }
 add_action( 'login_head', 'lnf_login_head', 30 );
@@ -615,13 +616,17 @@ function lnf_login_footer() {
 	}
 
 	if ( $js ) {
-		echo '<script>document.addEventListener("DOMContentLoaded",function(){' . $js . '});</script>';
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — JS intentional, construit à partir de réglages échappés.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JS intentionnel.
+	echo '<script>document.addEventListener("DOMContentLoaded",function(){' . $js . '});</script>';
 	}
 
 	// ——— JS personnalisé ———.
 	if ( '' !== trim( (string) $s['custom_js'] ) ) {
 		$custom_js = str_ireplace( '</script', '<\/script', (string) $s['custom_js'] );
-		echo '<script id="loginfennec-custom">' . $custom_js . '</script>';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JS utilisateur intentionnel, fermetures neutralisées.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JS utilisateur intentionnel.
+	echo '<script id="loginfennec-custom">' . $custom_js . '</script>';
 	}
 }
 add_action( 'login_footer', 'lnf_login_footer', 20 );

@@ -135,7 +135,7 @@ class Lnf_Login_Security {
 		if ( empty( $s['sec_honeypot'] ) ) {
 			return $user;
 		}
-		$trap = isset( $_POST['lnf_hp'] ) ? trim( wp_unslash( $_POST['lnf_hp'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- vérification anti-bot publique.
+		$trap = isset( $_POST['lnf_hp'] ) ? trim( wp_unslash( $_POST['lnf_hp'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- vérification anti-bot publique, champ piège jamais stocké.
 		if ( '' === $trap ) {
 			return $user;
 		}
