@@ -96,7 +96,6 @@ require_once LOGINFENNEC_DIR . 'includes/settings.php';
 require_once LOGINFENNEC_DIR . 'includes/trial.php';
 require_once LOGINFENNEC_DIR . 'includes/login-appearance.php';
 require_once LOGINFENNEC_DIR . 'includes/login-security.php';
-require_once LOGINFENNEC_DIR . 'includes/github-updater.php';
 require_once LOGINFENNEC_DIR . 'includes/license.php';
 require_once LOGINFENNEC_DIR . 'includes/integrity.php';
 

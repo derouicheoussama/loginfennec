@@ -9,7 +9,7 @@ Stable tag: 2.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Personnalisez et sécurisez votre page de connexion : logo, styles, sécurité anti force brute — avec aperçu en direct.
+Customize and secure your WordPress login page: logo, styles, brute-force protection, security journal — with a live preview.
 
 == Description ==
 
