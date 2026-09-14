@@ -30,6 +30,28 @@ defined( 'ABSPATH' ) || exit;
 function lnf_build_login_css( $s ) {
 	$css = '';
 
+	// ——— Google Fonts ———.
+	if ( ! empty( $s['font_google'] ) ) {
+		$css .= sprintf(
+			'body.login,body.login form .input,body.login #wp-submit{font-family:"%1$s",sans-serif !important;}',
+			esc_html( $s['font_google'] )
+		);
+	}
+
+	// ——— Layout 2 colonnes ———.
+	if ( 'two-column' === ( $s['layout'] ?? 'single' ) && ! empty( $s['side_image'] ) ) {
+		$css .= sprintf(
+			'body.login #login{display:grid;grid-template-columns:1fr 1fr;width:%1$dpx !important;max-width:calc(100%% - 40px);border-radius:%2$dpx;overflow:hidden;}',
+			(int) $s['form_width'] * 2,
+			(int) $s['form_radius']
+		);
+		$css .= sprintf(
+			'body.login #login::before{content:"";display:block;background:url(%s) center / cover no-repeat;min-height:400px;}',
+			esc_url( $s['side_image'] )
+		);
+		$css .= 'body.login #login > *{grid-column:2;}';
+	}
+
 	// Mise en page : largeur du formulaire centrée.
 	$css .= sprintf(
 		'body.login #login{width:%1$dpx;max-width:calc(100%% - 40px);margin:8%% auto 0;padding-inline:0;box-sizing:border-box;}',
@@ -389,6 +411,19 @@ function lnf_login_head() {
 		return;
 	}
 	$s = lnf_settings();
+
+	// Google Fonts.
+	if ( ! empty( $s['font_google'] ) ) {
+		$gf = str_replace( ' ', '+', $s['font_google'] );
+		$weights = ! empty( $s['font_google_weight'] ) ? ':wght@' . $s['font_google_weight'] : '';
+		wp_enqueue_style(
+			'lnf-google-font',
+			'https://fonts.googleapis.com/css2?family=' . rawurlencode( $gf ) . $weights . '&display=swap',
+			array(),
+			null
+		);
+	}
+
 	// Rapidité : précharge l'image de fond avant le CSS (moins de flash visuel).
 	if ( 'image' === $s['bg_type'] && ! empty( $s['bg_image'] ) ) {
 		printf( '<link rel="preload" as="image" href="%s">' . "\n", esc_url( $s['bg_image'] ) );

@@ -52,6 +52,8 @@ function lnf_get_defaults() {
 
 		// Thème d'interface du formulaire.
 		'form_theme' => 'glass', // glass | classic | outline | pill | elevated | accent | minimal.
+		'layout'     => 'single', // single | two-column.
+		'side_image' => '',
 
 		// Arrière-plan.
 		'bg_type'            => 'gradient', // color | gradient | image.
@@ -84,6 +86,8 @@ function lnf_get_defaults() {
 		'form_padding'  => 36,
 		'form_shadow'   => true,
 		'input_height'  => 0,
+		'layout'        => 'single', // single | two-column.
+		'side_image'    => '',
 		'text_color'    => '#ffffff',
 		'label_color'   => '#ffffff',
 		'input_bg'      => '#ffffff',
@@ -125,12 +129,19 @@ function lnf_get_defaults() {
 		'welcome_enable'   => false,
 		'welcome_title'    => 'Bienvenue ✨',
 		'welcome_subtitle' => 'Connectez-vous pour accéder à votre espace.',
-		'font_family'      => 'system', // system | serif | rounded | mono.
+$		'font_google'      => 'Poppins',
+		'font_google_weight' => '400;500;700',
+		'font_google'      => 'Poppins',
+		'font_google_weight' => '400;500;700',
 		'font_size'        => 13,
 		'anim'             => 'none', // none | fade | slide | zoom.
 		'custom_css'       => '',
 		'custom_js'        => '',
 		'login_redirect'   => '',
+		'recaptcha_site_key' => '',
+		'recaptcha_secret_key' => '',
+		'recaptcha_enabled' => false,
+		'white_label'      => false,
 		'field_placeholder_user' => '',
 		'field_placeholder_pass' => '',
 		'field_label_user' => '',
@@ -146,7 +157,14 @@ function lnf_get_defaults() {
 		'sec_disable_xmlrpc'       => false,
 		'sec_honeypot'             => true,
 		'sec_disable_authors'      => true,
-		'sec_disable_app_passwords' => false,
+$		'recaptcha_site_key'       => '',
+		'recaptcha_secret_key'     => '',
+		'recaptcha_enabled'        => false,
+		'white_label'              => false,
+		'recaptcha_site_key'       => '',
+		'recaptcha_secret_key'     => '',
+		'recaptcha_enabled'        => false,
+		'white_label'              => false,
 		'sec_alert_email'          => '',
 		'sec_whitelist'            => '',
 	);
@@ -184,20 +202,21 @@ function lnf_get_option( $key ) {
  */
 function lnf_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'font_google'  'layout', 'font_google'),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
 			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
 			'sec_disable_xmlrpc', 'sec_honeypot', 'sec_disable_authors',
+			'recaptcha_enabled', 'white_label',
 			'sec_disable_app_passwords',
-		),
+		 'recaptcha_enabled', 'white_label'),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
 			'social_facebook', 'social_twitter', 'social_instagram',
-			'social_linkedin', 'social_youtube', 'login_redirect',
-		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email' ),
+			'social_linkedin', 'social_youtube', 'login_redirect', 'side_image',
+		 'side_image'),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image'  'side_image', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key'),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',

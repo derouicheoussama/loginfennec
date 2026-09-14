@@ -55,6 +55,9 @@ class Lnf_Admin {
 	 * @return string
 	 */
 	public static function footer_signature( $text ) {
+		if ( ! empty( lnf_settings()['white_label'] ) ) {
+			return '';
+		}
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		if ( $screen && false !== strpos( (string) $screen->id, 'loginfennec' ) ) {
 			return '∞ <strong>Infinity Coder</strong> — conçu par Derouiche Oussama · '
@@ -1439,6 +1442,9 @@ class Lnf_Admin {
 		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfennec' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfennec' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_app_passwords', __( 'Désactiver les mots de passe d’application', 'loginfennec' ), __( 'Coupe l’accès des applications externes (appli mobile, éditeurs) — durcissement recommandé si vous ne les utilisez pas.', 'loginfennec' ) );
+		self::field_toggle( $s, 'recaptcha_enabled', __( 'Activer reCAPTCHA v3', 'loginfennec' ), __( 'Protection invisible anti-bot sur la page de connexion. Nécessite des clés reCAPTCHA de Google.', 'loginfennec' ) );
+		self::field_text( $s, 'recaptcha_site_key', __( 'Clé Site reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );
+		self::field_text( $s, 'recaptcha_secret_key', __( 'Clé Secrète reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );
 		self::field_text(
 			$s,
 			'sec_alert_email',

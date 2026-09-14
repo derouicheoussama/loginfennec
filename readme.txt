@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 2.6.1
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,17 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.0.0 =
+* New: Google Fonts integration (20+ fonts with live preview)
+* New: layout two-column mode with side image
+* New: reCAPTCHA v3 integration for login protection
+* New: custom login URL support
+* New: white-label mode
+* New: CSS file cache for better performance
+* New: side image upload for two-column layout
+* Improved: major performance optimization
+
 
 = 2.6.1 =
 * Fixed: Plugin Check compliance — output escaping, input sanitization, nonce verification, file operations

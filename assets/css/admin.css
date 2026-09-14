@@ -2714,3 +2714,39 @@ body.lnf-preview-lock {
 .lnf-hero .lnf-hero-logo {
 	opacity: .9;
 }
+
+/* ---------- Layout 2 colonnes ---------- */
+
+body.login.lnf-two-col #login {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	max-width: 900px;
+	border-radius: 18px;
+	overflow: hidden;
+}
+
+body.login.lnf-two-col #login::before {
+	content: "";
+	display: block;
+	background-size: cover;
+	background-position: center;
+	min-height: 100%;
+}
+
+body.login.lnf-two-col #login > * {
+	grid-column: 2;
+}
+
+body.login.lnf-two-col #login form {
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/* ---------- White-label ---------- */
+
+body.lnf-white-label #backtoblog,
+body.lnf-white-label #nav a[href*="action=register"] .lnf-brand-mark,
+body.lnf-white-label .lnf-brand-logo {
+	display: none !important;
+}
