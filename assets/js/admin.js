@@ -678,6 +678,29 @@
 		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
 	});
 
+	/* Test d'envoi SMS (onglet SMS) */
+	$(document).on('click', '.lnf-sms-test', function () {
+		var $btn = $(this);
+		var $out = $('.lnf-sms-test-status');
+		var phone = $('#lnf-sms-test-number').val().trim();
+		if (!phone) {
+			$out.text('Entrez votre numéro de téléphone.');
+			return;
+		}
+		$btn.prop('disabled', true);
+		$out.text('…');
+		$.post(cfg.ajaxUrl, { action: 'lnf_sms_test', nonce: cfg.nonce, phone: phone })
+			.always(function () { $btn.prop('disabled', false); })
+			.done(function (res) {
+				if (res && res.success) {
+					$out.text(res.data && res.data[0] ? res.data[0].message : 'SMS de test envoyé.');
+				} else {
+					$out.text(res && res.data && res.data[0] ? res.data[0].message : 'Échec de l’envoi.');
+				}
+			})
+			.fail(function () { $out.text('Erreur réseau.'); });
+	});
+
 	/* Vider le journal de sécurité */
 	$(document).on('click', '.lnf-purge-log', function () {
 		var $btn = $(this);

@@ -36,6 +36,17 @@ function lnf_uninstall_site() {
 	delete_option( LOGINFENNEC_VERSION_KEY );
 	delete_transient( LOGINFENNEC_TRANSIENT );
 	delete_transient( LOGINFENNEC_WPORG_CHECK );
+
+	// Connexion par SMS : numéros de téléphone et codes OTP (transients).
+	delete_metadata( 'user', 0, 'lnf_phone', '', true );
+	global $wpdb;
+	$wpdb->query(
+		$wpdb->prepare(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+			$wpdb->esc_like( '_transient_lnf_sms_' ) . '%',
+			$wpdb->esc_like( '_transient_timeout_lnf_sms_' ) . '%'
+		)
+	);
 }
 
 lnf_uninstall_site();

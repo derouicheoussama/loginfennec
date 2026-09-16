@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.1.0
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,13 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.2.0 =
+* New: SMS login — users sign in with their phone number and a one-time code
+* New: SMS gateways Twilio, Vonage and generic HTTP webhook (local providers)
+* New: phone number field on user profiles
+* New: "SMS" tab with a test-send button and anti-abuse limits (per phone and per IP)
+* New: OTP codes are salted and hashed, never stored in plain text
 
 = 3.1.0 =
 * New: full WordPress admin color customization (sidebar menu, hover, active item, admin bar, accent color)

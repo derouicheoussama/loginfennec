@@ -155,6 +155,22 @@ function lnf_get_defaults() {
 		'adminbar_bg'        => '#1d2327',
 		'adminbar_text'      => '#c3c4c7',
 		'adminbar_hover'     => '#72aee6',
+
+		// Connexion par SMS.
+		'sms_enabled'      => false,
+		'sms_provider'     => 'twilio',
+		'sms_twilio_sid'   => '',
+		'sms_twilio_token' => '',
+		'sms_vonage_key'   => '',
+		'sms_vonage_secret' => '',
+		'sms_webhook_url'  => '',
+		'sms_webhook_token' => '',
+		'sms_from'         => '',
+		'sms_country'      => '213',
+		'sms_template'     => 'Votre code de connexion : {code} (valable {minutes} min).',
+		'sms_otp_length'   => 6,
+		'sms_otp_ttl'      => 5,
+		'sms_max_attempts' => 3,
 		// Sécurité.
 		'sec_enable'               => true,
 		'sec_max_attempts'         => 5,
@@ -206,21 +222,22 @@ function lnf_get_option( $key ) {
  */
 function lnf_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'font_google' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'font_google', 'sms_provider' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
 			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
 			'sec_disable_xmlrpc', 'sec_honeypot', 'sec_disable_authors',
 			'recaptcha_enabled', 'white_label', 'admin_enable',
-			'sec_disable_app_passwords',
+			'sec_disable_app_passwords', 'sms_enabled',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
 			'social_facebook', 'social_twitter', 'social_instagram',
 			'social_linkedin', 'social_youtube', 'login_redirect', 'side_image',
+			'sms_webhook_url',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image', 'sms_twilio_sid', 'sms_twilio_token', 'sms_vonage_key', 'sms_vonage_secret', 'sms_webhook_token', 'sms_from', 'sms_country', 'sms_template' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -250,6 +267,9 @@ function lnf_field_spec() {
 			'social_icon_bg_opacity' => array( 0, 100 ),
 			'sec_max_attempts'     => array( 1, 20 ),
 			'sec_lockout_minutes'  => array( 1, 1440 ),
+			'sms_otp_length'       => array( 4, 8 ),
+			'sms_otp_ttl'          => array( 1, 15 ),
+			'sms_max_attempts'     => array( 1, 10 ),
 		),
 	);
 }
@@ -280,6 +300,7 @@ function lnf_sanitize_settings( $input, $base = null ) {
 			'social_style' => array( 'circle', 'rounded', 'square' ),
 			'font_family'  => array( 'system', 'serif', 'rounded', 'mono' ),
 			'anim'         => array( 'none', 'fade', 'slide', 'zoom' ),
+			'sms_provider' => array( 'twilio', 'vonage', 'webhook' ),
 		);
 		$field_allowed = isset( $allowed[ $key ] ) ? $allowed[ $key ] : array();
 		$value         = isset( $input[ $key ] ) ? sanitize_key( $input[ $key ] ) : '';

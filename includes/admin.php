@@ -770,6 +770,7 @@ class Lnf_Admin {
 			'copyright' => array( __( 'Copyright', 'loginfennec' ), 'dashicons-text' ),
 			'extras'    => array( __( 'Extras', 'loginfennec' ), 'dashicons-star-filled' ),
 			'security'  => array( __( 'Sécurité', 'loginfennec' ), 'dashicons-shield-alt' ),
+			'sms'       => array( __( 'SMS', 'loginfennec' ), 'dashicons-smartphone' ),
 			'admin'     => array( __( 'Admin', 'loginfennec' ), 'dashicons-admin-appearance' ),
 		);
 	}
@@ -857,6 +858,7 @@ class Lnf_Admin {
 						<?php self::panel_copyright( $s ); ?>
 						<?php self::panel_extras( $s ); ?>
 						<?php self::panel_security( $s ); ?>
+						<?php self::panel_sms( $s ); ?>
 						<?php self::panel_admin( $s ); ?>
 					</div>
 
@@ -981,6 +983,7 @@ class Lnf_Admin {
 				'failed'  => array( __( 'Échec', 'loginfennec' ), 'is-fail' ),
 				'blocked' => array( __( 'Bloqué', 'loginfennec' ), 'is-blocked' ),
 				'login'   => array( __( 'Connexion', 'loginfennec' ), 'is-login' ),
+				'sms'     => array( __( 'SMS', 'loginfennec' ), 'is-login' ),
 			);
 			echo '<ul class="lnf-activity-list">';
 			foreach ( array_slice( $log, 0, 5 ) as $event ) {
@@ -1532,6 +1535,54 @@ class Lnf_Admin {
 	}
 
 	/**
+	 * Panneau : connexion par SMS.
+	 */
+	protected static function panel_sms( $s ) {
+		self::panel_open( 'sms', __( 'Connexion par SMS', 'loginfennec' ), __( 'Vos utilisateurs se connectent avec leur numéro de téléphone et un code à usage unique envoyé par SMS.', 'loginfennec' ) );
+
+		self::field_toggle( $s, 'sms_enabled', __( 'Activer la connexion par SMS', 'loginfennec' ), __( 'Ajoute un lien « Se connecter par SMS » sous le formulaire de connexion. Chaque utilisateur doit renseigner son numéro dans son profil.', 'loginfennec' ) );
+
+		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1 ) ) ) . '">' . esc_html__( 'Passerelle SMS', 'loginfennec' ) . '</h3>';
+		self::field_select(
+			$s,
+			'sms_provider',
+			__( 'Fournisseur', 'loginfennec' ),
+			array(
+				'twilio'  => 'Twilio',
+				'vonage'  => 'Vonage (Nexmo)',
+				'webhook' => __( 'Webhook HTTP (passerelle locale)', 'loginfennec' ),
+			),
+			__( 'Le webhook envoie {to, from, message} en JSON — compatible avec la plupart des passerelles algériennes exposant une API.', 'loginfennec' ),
+			array( 'sms_enabled' => 1 )
+		);
+		self::field_text( $s, 'sms_from', __( 'Expéditeur', 'loginfennec' ), 'text', 'LoginFennec', __( 'Nom d’expéditeur validé par l’opérateur ou numéro d’envoi (Twilio et Vonage).', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
+		self::field_text( $s, 'sms_twilio_sid', __( 'Twilio — Account SID', 'loginfennec' ), 'text', 'AC…', '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
+		self::field_text( $s, 'sms_twilio_token', __( 'Twilio — Auth Token', 'loginfennec' ), 'password', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
+		self::field_text( $s, 'sms_vonage_key', __( 'Vonage — API Key', 'loginfennec' ), 'text', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
+		self::field_text( $s, 'sms_vonage_secret', __( 'Vonage — API Secret', 'loginfennec' ), 'password', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
+		self::field_text( $s, 'sms_webhook_url', __( 'Webhook — URL d’envoi', 'loginfennec' ), 'url', 'https://sms.exemple.dz/api/send', __( 'Reçoit un POST JSON {to, from, message}.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );
+		self::field_text( $s, 'sms_webhook_token', __( 'Webhook — Jeton secret (optionnel)', 'loginfennec' ), 'password', '', __( 'Envoyé dans l’en-tête X-Lnf-Token pour authentifier la requête.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );
+
+		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1 ) ) ) . '">' . esc_html__( 'Code à usage unique', 'loginfennec' ) . '</h3>';
+		self::field_text( $s, 'sms_country', __( 'Indicatif pays', 'loginfennec' ), 'text', '213', __( 'Chiffres seulement, sans « + ». Les numéros saisis au format local sont convertis automatiquement.', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
+		self::field_range( $s, 'sms_otp_length', __( 'Longueur du code', 'loginfennec' ), 4, 8, __( ' chiffres', 'loginfennec' ), '', array( 'sms_enabled' => 1 ) );
+		self::field_range( $s, 'sms_otp_ttl', __( 'Validité du code', 'loginfennec' ), 1, 15, ' min', '', array( 'sms_enabled' => 1 ) );
+		self::field_range( $s, 'sms_max_attempts', __( 'Tentatives autorisées par code', 'loginfennec' ), 1, 10, '', __( 'Au-delà, le code est détruit et il faut en redemander un.', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
+		self::field_textarea( $s, 'sms_template', __( 'Modèle de message', 'loginfennec' ), __( 'Jetons disponibles : {code} et {minutes}.', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
+
+		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1 ) ) ) . '">' . esc_html__( 'Test d’envoi', 'loginfennec' ) . '</h3>';
+		echo '<div class="lnf-field lnf-field-wide" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1 ) ) ) . '">';
+		echo '<label class="lnf-label" for="lnf-sms-test-number">' . esc_html__( 'Votre numéro', 'loginfennec' ) . '</label>';
+		echo '<div style="display:flex;gap:8px;align-items:center">';
+		echo '<input type="tel" class="lnf-input" id="lnf-sms-test-number" placeholder="05 XX XX XX XX" autocomplete="off">';
+		echo '<button type="button" class="button lnf-sms-test">' . esc_html__( 'Envoyer un SMS de test', 'loginfennec' ) . '</button>';
+		echo '</div><p class="lnf-sms-test-status lnf-desc" role="status" aria-live="polite"></p>';
+		echo '</div>';
+
+		self::panel_close();
+	}
+
+	/**
 	 * Panneau : sécurité.
 	 */
 	protected static function panel_security( $s ) {
@@ -1576,6 +1627,7 @@ class Lnf_Admin {
 				'failed'  => array( __( 'Échec', 'loginfennec' ), 'is-fail' ),
 				'blocked' => array( __( 'Bloqué', 'loginfennec' ), 'is-blocked' ),
 				'login'   => array( __( 'Connexion', 'loginfennec' ), 'is-login' ),
+				'sms'     => array( __( 'SMS', 'loginfennec' ), 'is-login' ),
 			);
 			echo '<table class="lnf-journal-table"><thead><tr><th>' . esc_html__( 'Date', 'loginfennec' ) . '</th><th>IP</th><th>' . esc_html__( 'Identifiant', 'loginfennec' ) . '</th><th>' . esc_html__( 'Action', 'loginfennec' ) . '</th></tr></thead><tbody>';
 			foreach ( array_slice( $log, 0, 20 ) as $event ) {

@@ -94,15 +94,30 @@ function get_bloginfo( $k ) { return 'Test'; }
 function wp_get_theme() { return (object) array( 'Name' => 'Test' ); }
 function date_i18n( $f, $t ) { return date( $f, $t ); }
 function get_date_from_gmt( ...$a ) { return date( 'Y-m-d H:i:s' ); }
-function get_transient( ...$a ) { return false; }
-function set_transient( ...$a ) { return true; }
-function delete_transient( ...$a ) { return true; }
+$GLOBALS['__transients'] = array();
+function get_transient( $k ) {
+	if ( ! isset( $GLOBALS['__transients'][ $k ] ) ) { return false; }
+	$t = $GLOBALS['__transients'][ $k ];
+	if ( $t['x'] < time() ) { unset( $GLOBALS['__transients'][ $k ] ); return false; }
+	return $t['v'];
+}
+function set_transient( $k, $v, $e = 0 ) { $GLOBALS['__transients'][ $k ] = array( 'v' => $v, 'x' => $e > 0 ? time() + $e : PHP_INT_MAX ); return true; }
+function delete_transient( $k ) { unset( $GLOBALS['__transients'][ $k ] ); return true; }
 function wp_remote_post( ...$a ) { return array( 'response' => array( 'code' => 200 ), 'body' => '{}' ); }
 function wp_remote_get( ...$a ) { return array( 'response' => array( 'code' => 200 ), 'body' => '{}' ); }
 function wp_remote_retrieve_response_code( ...$a ) { return 200; }
 function wp_remote_retrieve_body( $r ) { return isset( $r['body'] ) ? $r['body'] : ''; }
 function is_wp_error( $t ) { return $t instanceof WP_Error; }
-class WP_Error {}
+class WP_Error {
+	protected $code    = '';
+	protected $message = '';
+	public function __construct( $code = '', $message = '' ) {
+		$this->code    = $code;
+		$this->message = $message;
+	}
+	public function get_error_code() { return $this->code; }
+	public function get_error_message() { return $this->message; }
+}
 function add_role( ...$a ) {}
 function remove_role( ...$a ) {}
 function get_role( ...$a ) { return null; }
@@ -114,8 +129,46 @@ function has_filter( ...$a ) { return false; }
 function did_action( ...$a ) { return 0; }
 function wpautop( $s ) { return '<p>' . $s . '</p>'; }
 function shortcode_atts( $d, $a ) { return array_merge( $d, (array) $a ); }
-function get_userdata( ...$a ) { return false; }
+function get_userdata( $id ) {
+	if ( ! isset( $GLOBALS['__users'][ $id ] ) ) { return false; }
+	$u           = (object) $GLOBALS['__users'][ $id ];
+	$u->ID       = $id;
+	$u->roles    = array( 'subscriber' );
+	$u->allcaps  = array( 'read' => true );
+	return $u;
+}
 function get_user_by( ...$a ) { return false; }
+function get_user_meta( $id, $k, $single ) { return isset( $GLOBALS['__usermeta'][ $id ][ $k ] ) ? $GLOBALS['__usermeta'][ $id ][ $k ] : ''; }
+function update_user_meta( $id, $k, $v ) { $GLOBALS['__usermeta'][ $id ][ $k ] = $v; return true; }
+function delete_user_meta( $id, $k ) { unset( $GLOBALS['__usermeta'][ $id ][ $k ] ); return true; }
+$GLOBALS['__users']     = array();
+$GLOBALS['__usermeta']  = array();
+function get_users( $args = array() ) {
+	$out = array();
+	foreach ( $GLOBALS['__users'] as $id => $u ) {
+		if ( isset( $args['meta_key'] ) && ! isset( $GLOBALS['__usermeta'][ $id ][ $args['meta_key'] ] ) ) { continue; }
+		if ( isset( $args['meta_key'], $args['meta_value'] ) && $GLOBALS['__usermeta'][ $id ][ $args['meta_key'] ] !== $args['meta_value'] ) { continue; }
+		$out[] = $id;
+	}
+	return $out;
+}
+function wp_set_current_user( $id ) { $GLOBALS['__current_user'] = $id; }
+function wp_set_auth_cookie( ...$a ) { $GLOBALS['__auth_cookie'] = $a; }
+function wp_validate_redirect( $to, $default ) {
+	$to = (string) $to;
+	if ( '' !== $to && 0 === strpos( $to, 'http://test.local' ) ) { return $to; }
+	return $default;
+}
+function wp_sanitize_redirect( $to ) { return preg_replace( '/[\r\n\t]/', '', (string) $to ); }
+function wp_rand( $min = 0, $max = 0 ) { return 0 === $max ? mt_rand() : mt_rand( $min, $max ); }
+function wp_generate_password( $len = 12, $special = true, $extra = false ) {
+	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	$out   = '';
+	for ( $i = 0; $i < $len; $i++ ) { $out .= $chars[ wp_rand( 0, strlen( $chars ) - 1 ) ]; }
+	return $out;
+}
+function wp_strip_all_tags( $s ) { return trim( strip_tags( (string) $s ) ); }
+function sanitize_user( $s, $strict = false ) { return trim( strip_tags( (string) $s ) ); }
 function username_exists( ...$a ) { return false; }
 function email_exists( ...$a ) { return false; }
 function wp_get_admin_colors() { return array(); }
@@ -124,7 +177,6 @@ function load_template( ...$a ) {}
 function get_temp_dir() { return sys_get_temp_dir() . '/'; }
 function wp_is_writable( ...$a ) { return true; }
 function wp_hash( $d ) { return hash( 'sha256', $d ); }
-function wp_generate_password( ...$a ) { return 'pass'; }
 function get_home_url( ...$a ) { return 'http://test.local'; }
 function network_site_url( ...$a ) { return 'http://test.local'; }
 function is_email( $s ) { return filter_var( $s, FILTER_VALIDATE_EMAIL ) ? $s : false; }
@@ -134,14 +186,32 @@ function wp_read_image_metadata( ...$a ) { return array(); }
 
 define( 'LOGINFENNEC_FILE', __DIR__ . '/loginfennec.php' );
 
-// État « activé » passé en argument : l'option est posée AVANT le chargement
-// du plugin, car lnf_settings() met ses réglages en cache statique.
-$enabled = isset( $argv[1] ) && 'enabled' === $argv[1];
-if ( $enabled ) {
-	$GLOBALS['__options']['loginfennec_settings'] = array(
+// État passé en argument : l'option est posée AVANT le chargement du plugin,
+// car lnf_settings() met ses réglages en cache statique.
+$mode    = isset( $argv[1] ) ? $argv[1] : '';
+$enabled = 'enabled' === $mode;
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+if ( $enabled || 'sms' === $mode ) {
+	$base = array(
 		'admin_enable' => '1',
 		'admin_bg'     => '#ABCDEF',
 	);
+	if ( 'sms' === $mode ) {
+		$base = array_merge(
+			$base,
+			array(
+				'sms_enabled'   => '1',
+				'sms_provider'  => 'webhook',
+				'sms_webhook_url' => 'https://sms.exemple.dz/api/send',
+				'sms_from'      => 'LoginFennec',
+				'sms_country'   => '213',
+				'sms_otp_length' => 6,
+				'sms_otp_ttl'   => 5,
+				'sms_max_attempts' => 3,
+			)
+		);
+	}
+	$GLOBALS['__options']['loginfennec_settings'] = $base;
 }
 
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) { define( 'HOUR_IN_SECONDS', 3600 ); }
@@ -188,18 +258,83 @@ check( 'admin_text rejeté → défaut', '#c3c4c7' === $out['admin_text'] );
 check( 'admin_hover_bg 3 digits accepté', '#123' === $out['admin_hover_bg'] );
 
 echo "== Module admin colors ==\n";
-if ( $enabled ) {
-	$c = lnf_admin_colors();
-	check( 'admin_enable actif', ! empty( $c['admin_enable'] ) );
-	check( 'admin_bg lu des réglages', '#ABCDEF' === $c['admin_bg'] );
-	check( 'admin_text retombé sur défaut sûr', '#c3c4c7' === $c['admin_text'] );
-	$css = lnf_admin_colors_css();
-	check( 'CSS généré non vide', is_string( $css ) && strlen( $css ) > 100 );
-	check( 'CSS contient #adminmenu', false !== strpos( $css, '#adminmenu' ) );
-	check( 'CSS contient #ABCDEF', false !== strpos( $css, '#ABCDEF' ) );
-	check( 'CSS sans balise script', false === stripos( $css, '<script' ) );
-} else {
-	check( 'CSS vide si désactivé (defaults)', '' === lnf_admin_colors_css() );
+if ( 'sms' !== $mode ) {
+	if ( $enabled ) {
+		$c = lnf_admin_colors();
+		check( 'admin_enable actif', ! empty( $c['admin_enable'] ) );
+		check( 'admin_bg lu des réglages', '#ABCDEF' === $c['admin_bg'] );
+		check( 'admin_text retombé sur défaut sûr', '#c3c4c7' === $c['admin_text'] );
+		$css = lnf_admin_colors_css();
+		check( 'CSS généré non vide', is_string( $css ) && strlen( $css ) > 100 );
+		check( 'CSS contient #adminmenu', false !== strpos( $css, '#adminmenu' ) );
+		check( 'CSS contient #ABCDEF', false !== strpos( $css, '#ABCDEF' ) );
+		check( 'CSS sans balise script', false === stripos( $css, '<script' ) );
+	} else {
+		check( 'CSS vide si désactivé (defaults)', '' === lnf_admin_colors_css() );
+	}
+}
+
+echo "== SMS ==\n";
+if ( 'sms' !== $mode ) {
+	check( 'module SMS chargé', function_exists( 'lnf_sms_active' ) );
+	check( 'SMS inactif par défaut', ! lnf_sms_active() );
+	check( 'gateway non prête par défaut', ! lnf_sms_gateway_ready() );
+}
+if ( 'sms' === $mode ) {
+	$out = lnf_sanitize_settings( array( 'sms_provider' => 'evil', 'sms_enabled' => '1', 'sms_otp_length' => '99', 'sms_otp_ttl' => '0' ) );
+	check( 'sanitize : provider inconnu → twilio', 'twilio' === $out['sms_provider'] );
+	check( 'sanitize : sms_enabled = true', true === $out['sms_enabled'] );
+	check( 'sanitize : longueur clampée à 8', 8 === $out['sms_otp_length'] );
+	check( 'sanitize : validité clampée à 1', 1 === $out['sms_otp_ttl'] );
+
+	check( 'normalize local → international', '213555123456' === lnf_sms_normalize_phone( '0555 12-34 56', '213' ) );
+	check( 'normalize déjà international', '213555123456' === lnf_sms_normalize_phone( '+213 555 12 34 56', '213' ) );
+	check( 'normalize 00 international', '213555123456' === lnf_sms_normalize_phone( '00213555123456', '213' ) );
+	check( 'normalize numéro étranger inchangé', '33612345678' === lnf_sms_normalize_phone( '33612345678', '213' ) );
+	check( 'normalize vide → vide', '' === lnf_sms_normalize_phone( '   ', '213' ) );
+
+	check( 'gateway prête (webhook avec URL)', lnf_sms_gateway_ready() );
+
+	$GLOBALS['__users'][7]    = array( 'ID' => 7, 'user_login' => 'oussama' );
+	$GLOBALS['__usermeta'][7] = array( 'lnf_phone' => '213555123456' );
+	check( 'utilisateur trouvé par numéro', false !== lnf_sms_find_user( '213555123456' ) );
+	check( 'numéro inconnu → false', false === lnf_sms_find_user( '213999999999' ) );
+
+	$code = lnf_sms_otp_create( '213555123456' );
+	check( 'code OTP à 6 chiffres', (bool) preg_match( '/^\d{6}$/', $code ) );
+	$wrong = lnf_sms_otp_verify( '213555123456', '000000' );
+	check( 'mauvais code → erreur', is_wp_error( $wrong ) );
+	check( 'tentatives restantes indiquées', is_wp_error( $wrong ) && false !== strpos( $wrong->get_error_message(), '2' ) );
+	$ok = lnf_sms_otp_verify( '213555123456', $code );
+	check( 'bon code → utilisateur', is_object( $ok ) && ! is_wp_error( $ok ) && 7 === $ok->ID );
+	check( 'code à usage unique (consommé)', is_wp_error( lnf_sms_otp_verify( '213555123456', $code ) ) );
+
+	// Verrouillage après trop de tentatives (max = 3).
+	lnf_sms_otp_create( '213555123457' );
+	lnf_sms_otp_verify( '213555123457', '111111' );
+	lnf_sms_otp_verify( '213555123457', '111111' );
+	lnf_sms_otp_verify( '213555123457', '111111' );
+	$locked = lnf_sms_otp_verify( '213555123457', '111111' );
+	check( 'verrouillage après 3 échecs', is_wp_error( $locked ) && false !== strpos( $locked->get_error_message(), 'Trop de tentatives' ) );
+
+	lnf_sms_rate_hit( '213555123458' );
+	check( 'rate limit par numéro', is_wp_error( lnf_sms_rate_ok( '213555123458' ) ) );
+	check( 'autre numéro non limité', true === lnf_sms_rate_ok( '213999000111' ) );
+
+	$sent = lnf_sms_dispatch( '213555123456', 'Message de test' );
+	check( 'envoi via webhook → true', true === $sent );
+
+	$user = lnf_sms_find_user( '213555123456' );
+	$url  = lnf_sms_login_user( $user, '' );
+	check( 'connexion → URL admin par défaut', 'http://test.local/wp-admin/' === $url );
+	check( 'cookie d’authentification posé', isset( $GLOBALS['__auth_cookie'] ) );
+	$log = Lnf_Login_Security::get_log();
+	check( 'connexion notée au journal (sms)', ! empty( $log ) && 'sms' === $log[0]['a'] && 'oussama' === $log[0]['u'] );
+
+	$redirect = lnf_sms_login_user( $user, 'http://evil.example.com/back' );
+	check( 'redirection externe rejetée', 'http://test.local/wp-admin/' === $redirect );
+	$redirect2 = lnf_sms_login_user( $user, 'http://test.local/bienvenue' );
+	check( 'redirection locale acceptée', 'http://test.local/bienvenue' === $redirect2 );
 }
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
