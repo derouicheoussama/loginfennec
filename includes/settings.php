@@ -151,7 +151,7 @@ function lnf_get_defaults() {
 		'admin_hover_text'   => '#72aee6',
 		'admin_active_bg'    => '#2271b1',
 		'admin_active_text'  => '#ffffff',
-		'admin_accent'       => '#e88018',
+		'admin_accent'       => '#0f5aa8',
 		'adminbar_bg'        => '#1d2327',
 		'adminbar_text'      => '#c3c4c7',
 		'adminbar_hover'     => '#72aee6',

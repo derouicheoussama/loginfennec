@@ -303,7 +303,7 @@ if ( ! empty( $GLOBALS['__hook_errors'] ) ) {
 }
 if ( 'sms' === $mode || $enabled ) {
 	// $before inutilisé
-	foreach ( array( 'panel_sms', 'panel_admin', 'panel_security', 'panel_extras', 'panel_styles', 'panel_form' ) as $panel ) {
+	foreach ( array( 'panel_sms', 'panel_admin', 'panel_security', 'panel_extras', 'panel_styles', 'panel_form', 'render_about', 'render_pro' ) as $panel ) {
 		$GLOBALS['__hook_errors'] = array();
 		if ( ! class_exists( 'Lnf_Admin' ) || ! method_exists( 'Lnf_Admin', $panel ) ) {
 			check( 'panneau ' . $panel . ' introuvable', false );

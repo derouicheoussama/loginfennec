@@ -570,6 +570,7 @@ class Lnf_Admin {
 		}
 		$meta[] = '<a href="https://github.com/derouicheoussama/loginfennec" target="_blank" rel="noopener noreferrer">GitHub</a>';
 		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfennec' ) . '</a>';
+		$meta[] = '<a href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener noreferrer">★★★★★ ' . esc_html__( 'Noter le plugin', 'loginfennec' ) . '</a>';
 		return $meta;
 	}
 
@@ -1196,11 +1197,11 @@ class Lnf_Admin {
 		$themes = array(
 			'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
 			'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-			'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #e88018;border-radius:8px;' ),
+			'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #0f5aa8;border-radius:8px;' ),
 			'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
 			'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #e88018;border-radius:8px;' ),
-			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #e88018;border-radius:0;' ),
+			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #0f5aa8;border-radius:8px;' ),
+			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #0f5aa8;border-radius:0;' ),
 		);
 		foreach ( $themes as $key => $theme ) {
 			printf(
@@ -1526,9 +1527,9 @@ class Lnf_Admin {
 				'admin_text'      => '#f9f0d8',
 				'admin_hover_bg'  => '#0a427f',
 				'admin_hover_text' => '#f2a444',
-				'admin_active_bg' => '#e88018',
+				'admin_active_bg' => '#0f5aa8',
 				'admin_active_text' => '#ffffff',
-				'admin_accent'    => '#e88018',
+				'admin_accent'    => '#0f5aa8',
 				'adminbar_bg'     => '#00234a',
 				'adminbar_text'   => '#f9f0d8',
 				'adminbar_hover'  => '#f2a444',
@@ -1894,19 +1895,21 @@ class Lnf_Admin {
 
 				<section class="lnf-about-card">
 					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'loginfennec' ); ?></h2>
-					<p>
-						<?php
-						printf(
-							/* translators: %s : dépôt GitHub. */
-							esc_html__( 'Ce plugin se met à jour automatiquement depuis les releases GitHub du dépôt :', 'loginfennec' )
-						);
-						echo ' <code>derouicheoussama/loginfennec</code>';
-						?>
-					</p>
-					<p><?php esc_html_e( 'Publiez un nouveau tag (ex. v2.6.2) : l’action GitHub construit le zip et propage la mise à jour à tous les sites.', 'loginfennec' ); ?></p>
+					<p><?php esc_html_e( 'Les mises à jour sont servies par le répertoire officiel WordPress.org : l’extension apparaît dans Extensions → Mises à jour comme n’importe quel plugin natif. Rien à configurer.', 'loginfennec' ); ?></p>
 					<div class="lnf-about-actions">
 						<button type="button" class="lnf-btn lnf-btn-ghost lnf-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'loginfennec' ); ?></button>
 						<span class="lnf-update-status" aria-live="polite"></span>
+					</div>
+				</section>
+
+				<section class="lnf-about-card lnf-about-review">
+					<h2><span class="dashicons dashicons-star-filled"></span> <?php esc_html_e( 'Vous aimez LoginFennec Pro ?', 'loginfennec' ); ?></h2>
+					<p class="lnf-about-stars" aria-hidden="true">★★★★★</p>
+					<p><?php esc_html_e( 'Votre note sur WordPress.org aide le plugin à être découvert par des milliers d’utilisateurs — et nous motive à livrer toujours plus. Ça ne prend qu’une minute.', 'loginfennec' ); ?></p>
+					<div class="lnf-hero-actions">
+						<a class="lnf-btn lnf-btn-primary" href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener noreferrer">
+							<span class="dashicons dashicons-star-filled"></span> <?php esc_html_e( 'Laisser un avis ★★★★★', 'loginfennec' ); ?>
+						</a>
 					</div>
 				</section>
 
@@ -2132,11 +2135,11 @@ class Lnf_Admin {
 						$themes = array(
 							'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
 							'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-							'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #e88018;border-radius:8px;' ),
+							'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #0f5aa8;border-radius:8px;' ),
 							'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
 							'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #e88018;border-radius:8px;' ),
-							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #e88018;border-radius:0;' ),
+							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #0f5aa8;border-radius:8px;' ),
+							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #0f5aa8;border-radius:0;' ),
 						);
 						foreach ( $themes as $key => $theme ) {
 							printf(
@@ -2204,23 +2207,41 @@ class Lnf_Admin {
 	 * Page « Passer en Pro » : niveaux de sécurité avancés.
 	 */
 	public static function render_pro() {
+		// Comparatif : array( libellé, inclus gratuit ?, inclus Pro ? ).
 		$groups = array(
-			__( 'Protection', 'loginfennec' )        => array(
-				array( __( 'Limitation des tentatives + blocage IP', 'loginfennec' ), true, true ),
-				array( __( 'Messages de sécurité personnalisés', 'loginfennec' ), true, true ),
-				array( __( 'reCAPTCHA v3 / hCaptcha sur la connexion', 'loginfennec' ), false, true ),
+			__( 'Design & personnalisation', 'loginfennec' ) => array(
+				array( __( 'Logo, arrière-plan (image, dégradé, flou), 10 styles et 7 thèmes', 'loginfennec' ), true, true ),
+				array( __( 'Aperçu en direct bureau / tablette / mobile', 'loginfennec' ), true, true ),
+				array( __( 'Icônes sociales aux couleurs officielles des marques', 'loginfennec' ), true, true ),
+				array( __( 'Message de bienvenue, copyright, CSS et JS personnalisés', 'loginfennec' ), true, true ),
+				array( __( 'Couleurs de l’admin WordPress + 4 palettes prêtes à l’emploi', 'loginfennec' ), true, true ),
+			),
+			__( 'Connexion & utilisateurs', 'loginfennec' )  => array(
+				array( __( 'Connexion par SMS : code OTP (Twilio, Vonage, webhook local)', 'loginfennec' ), true, true ),
+				array( __( 'Anti-abus SMS : délai par numéro, plafond horaire par IP', 'loginfennec' ), true, true ),
+				array( __( 'Numéro de téléphone sur les profils utilisateurs', 'loginfennec' ), true, true ),
+			),
+			__( 'Sécurité incluse', 'loginfennec' )          => array(
+				array( __( 'Limitation des tentatives : blocage progressif IP + identifiant', 'loginfennec' ), true, true ),
+				array( __( 'Honeypot anti-robots et liste blanche d’adresses de confiance', 'loginfennec' ), true, true ),
+				array( __( 'Anti-énumération : balayage des auteurs bloqué, REST des users fermé', 'loginfennec' ), true, true ),
+				array( __( 'reCAPTCHA v3 sur la connexion', 'loginfennec' ), true, true ),
+				array( __( 'Restriction de la connexion par pays (GEO)', 'loginfennec' ), true, true ),
+				array( __( 'Alertes e-mail après chaque blocage', 'loginfennec' ), true, true ),
+				array( __( 'Journal de sécurité : 50 derniers événements, export CSV', 'loginfennec' ), true, true ),
 				array( __( 'Double authentification (2FA)', 'loginfennec' ), false, true ),
 				array( __( 'URL de connexion personnalisée', 'loginfennec' ), false, true ),
-				array( __( 'Protection dédiée de /wp-admin (liste blanche IP)', 'loginfennec' ), false, true ),
+				array( __( 'Verrouillage dédié de /wp-admin (liste blanche IP)', 'loginfennec' ), false, true ),
 			),
-			__( 'Surveillance', 'loginfennec' )      => array(
-				array( __( 'Journal des tentatives (audit complet)', 'loginfennec' ), false, true ),
-				array( __( 'Alertes e-mail après chaque blocage', 'loginfennec' ), false, true ),
-				array( __( 'Détection avancée des activités suspectes', 'loginfennec' ), false, true ),
+			__( 'Référencement & données', 'loginfennec' )   => array(
+				array( __( 'noindex, nofollow sur la page de connexion + titre SEO', 'loginfennec' ), true, true ),
+				array( __( 'Export / import des réglages (secrets jamais exportés)', 'loginfennec' ), true, true ),
+				array( __( 'Journal d’audit étendu (au-delà de 50 événements)', 'loginfennec' ), false, true ),
 			),
-			__( 'Contrôle', 'loginfennec' )          => array(
-				array( __( 'Blocage géographique (pays)', 'loginfennec' ), false, true ),
-				array( __( 'Sessions & appareils de confiance', 'loginfennec' ), false, true ),
+			__( 'Accompagnement', 'loginfennec' )            => array(
+				array( __( 'Appareils et sessions de confiance', 'loginfennec' ), false, true ),
+				array( __( 'Support prioritaire par e-mail', 'loginfennec' ), false, true ),
+				array( __( 'Mises à jour à vie (licence à vie)', 'loginfennec' ), false, true ),
 			),
 		);
 
@@ -2497,8 +2518,8 @@ class Lnf_Admin {
 							<?php foreach ( $group_rows as $row ) : ?>
 								<tr>
 									<td><?php echo esc_html( $row[0] ); ?></td>
-									<td><?php echo $row[1] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-no-alt is-no"></span>'; ?></td>
-									<td class="lnf-pro-col"><span class="dashicons dashicons-yes-alt is-yes"></span></td>
+									<td><?php echo $row[1] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-minus is-no"></span>'; ?></td>
+									<td class="lnf-pro-col"><?php echo $row[2] ? '<span class="dashicons dashicons-yes-alt is-yes"></span>' : '<span class="dashicons dashicons-minus is-no"></span>'; ?></td>
 								</tr>
 							<?php endforeach; ?>
 						<?php endforeach; ?>

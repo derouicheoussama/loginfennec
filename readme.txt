@@ -1,11 +1,11 @@
 === LoginFennec Pro – Personnalisation page login et Security ===
 Contributors: derouicheoussama
 Donate link: https://www.paypal.com/donate
-Tags: login, customizer, login page, security, brute force, sms, otp, recaptcha, geo, seo
+Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.3.1
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,13 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.4.0 =
+* Changed: dashboard refreshed with a professional blue palette (derived from the fennec logo navy)
+* Improved: detailed Free vs Pro comparison now covers every area — design, SMS login, security, GEO/SEO, support
+* New: "Rate ★★★★★ on WordPress.org" link in the plugin row meta and a review card on the About page
+* Updated: About page now documents WordPress.org-powered updates (no more GitHub updater references)
+* Commercial release readiness: full audit, no known issues
 
 = 3.3.1 =
 * New: two more feature boxes in the onboarding overview (SMS login, GEO & SEO)
