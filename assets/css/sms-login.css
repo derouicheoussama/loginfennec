@@ -1,0 +1,56 @@
+/**
+ * ∞ INFINITY CODER — création originale de Derouiche Oussama
+ * LoginFennec Pro — panneau « Connexion par SMS » de la page de connexion.
+ */
+
+.lnf-sms {
+	margin: 16px 0 0;
+	text-align: center;
+	font-size: 13px;
+}
+
+.lnf-sms-open,
+.lnf-link {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: inherit;
+	font-size: inherit;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.lnf-sms-panel {
+	margin-top: 12px;
+	padding: 16px;
+	border-radius: 8px;
+	background: var(--lnf-form-bg, rgba(255, 255, 255, .92));
+	color: var(--lnf-form-color, #2c3338);
+	text-align: left;
+}
+
+.lnf-sms-panel label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+.lnf-sms-panel input[type=tel],
+.lnf-sms-panel input[type=text] {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.lnf-sms-step {
+	margin-bottom: 6px;
+}
+
+.lnf-sms-resend-row {
+	margin: 8px 0 0;
+}
+
+.lnf-sms-status {
+	min-height: 18px;
+	margin: 8px 0 0;
+	font-size: 12.5px;
+}

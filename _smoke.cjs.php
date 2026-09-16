@@ -123,8 +123,46 @@ function remove_role( ...$a ) {}
 function get_role( ...$a ) { return null; }
 function wp_mail( ...$a ) { return true; }
 function wp_next_scheduled_hook( ...$a ) { return false; }
-function do_action( ...$a ) {}
-function apply_filters( $t, $v ) { return isset( $GLOBALS['__filters'][ $t ] ) ? array_reduce( $GLOBALS['__filters'][ $t ], function ( $c, $cb ) { return $cb( $c ); }, $v ) : $v; }
+function do_action( $tag, ...$args ) {
+	if ( empty( $GLOBALS['__actions'][ $tag ] ) ) { return; }
+	foreach ( $GLOBALS['__actions'][ $tag ] as $cb ) {
+		__invoke_cb( $cb, $args, $tag );
+	}
+}
+function apply_filters( $t, $v ) {
+	if ( empty( $GLOBALS['__filters'][ $t ] ) ) { return $v; }
+	foreach ( $GLOBALS['__filters'][ $t ] as $cb ) {
+		$v = __invoke_cb( $cb, array( $v ), $t, $v );
+	}
+	return $v;
+}
+/**
+ * Invoque un callback de hook avec le bon nombre d'arguments.
+ * Une Error fatale (classe/fonction introuvable…) fait ÉCHOUER le harnais :
+ * c'est exactement la classe de bug qui a tué l'activation en production.
+ */
+function __invoke_cb( $cb, $args, $tag, $default = null ) {
+	try {
+		if ( $cb instanceof Closure || is_string( $cb ) ) {
+			$ref = new ReflectionFunction( $cb );
+			$n   = $ref->getNumberOfParameters();
+			while ( count( $args ) < $n ) { $args[] = $default; }
+			return $ref->invokeArgs( $args );
+		}
+		if ( is_array( $cb ) && 2 === count( $cb ) ) {
+			$ref = new ReflectionMethod( $cb[0], $cb[1] );
+			$n   = $ref->getNumberOfParameters();
+			while ( count( $args ) < $n ) { $args[] = $default; }
+			return $ref->invokeArgs( is_object( $cb[0] ) ? $cb[0] : null, $args );
+		}
+		return call_user_func( $cb );
+	} catch ( Throwable $e ) {
+		echo '  ✘ ERREUR HOOK ' . $tag . ' : ' . $e->getMessage() . "\n";
+		$GLOBALS['__hook_errors'][] = $tag . ': ' . $e->getMessage();
+		return $default;
+	}
+}
+$GLOBALS['__hook_errors'] = array();
 function has_filter( ...$a ) { return false; }
 function did_action( ...$a ) { return 0; }
 function wpautop( $s ) { return '<p>' . $s . '</p>'; }
@@ -169,6 +207,13 @@ function wp_generate_password( $len = 12, $special = true, $extra = false ) {
 }
 function wp_strip_all_tags( $s ) { return trim( strip_tags( (string) $s ) ); }
 function sanitize_user( $s, $strict = false ) { return trim( strip_tags( (string) $s ) ); }
+function wp_doing_ajax() { return false; }
+function wp_doing_cron() { return false; }
+function wp_is_json_request() { return false; }
+function nocache_headers() {}
+function wp_safe_redirect( $u ) { return false; }
+function remove_filter( ...$a ) { return true; }
+function has_action( ...$a ) { return false; }
 function username_exists( ...$a ) { return false; }
 function email_exists( ...$a ) { return false; }
 function wp_get_admin_colors() { return array(); }
@@ -213,6 +258,15 @@ if ( $enabled || 'sms' === $mode ) {
 	}
 	$GLOBALS['__options']['loginfennec_settings'] = $base;
 }
+if ( 'geo' === $mode ) {
+	$GLOBALS['__options']['loginfennec_settings'] = array(
+		'geo_enable'      => '1',
+		'geo_countries'   => 'DZ, fr; tn|us',
+		'seo_noindex'     => '0',
+		'seo_login_title' => 'Espace {site}',
+		'sec_whitelist'   => '10.0.0.1',
+	);
+}
 
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) { define( 'HOUR_IN_SECONDS', 3600 ); }
 if ( ! defined( 'DAY_IN_SECONDS' ) ) { define( 'DAY_IN_SECONDS', 86400 ); }
@@ -228,9 +282,48 @@ function load_plugin_textdomain_retry( ...$a ) {}
 function get_plugin_data( ...$a ) { return array( 'Version' => LOGINFENNEC_VERSION ); }
 
 require __DIR__ . '/loginfennec.php';
+$fail = 0;
+
+// --- Déclenche les hooks de chargement comme WordPress le fait ---
+// (c'est ici qu'une classe manquante — ex. updater supprimé — devient fatale).
+do_action( 'plugins_loaded' );
+do_action( 'init' );
+do_action( 'wp_loaded' );
+// Après une activation réelle, le plugin redirige vers l'installateur (exit).
+// On simule un admin ayant déjà passé l'installateur pour continuer les tests.
+delete_option( 'lnf_pending_installer' );
+do_action( 'admin_init' );
+
+echo "== Chargement & panneaux ==\n";
+check( 'hooks de chargement sans erreur fatale', empty( $GLOBALS['__hook_errors'] ) );
+if ( ! empty( $GLOBALS['__hook_errors'] ) ) {
+	foreach ( $GLOBALS['__hook_errors'] as $err ) {
+		echo '    → ' . $err . "\n";
+	}
+}
+if ( 'sms' === $mode || $enabled ) {
+	// $before inutilisé
+	foreach ( array( 'panel_sms', 'panel_admin', 'panel_security', 'panel_extras', 'panel_styles', 'panel_form' ) as $panel ) {
+		$GLOBALS['__hook_errors'] = array();
+		if ( ! class_exists( 'Lnf_Admin' ) || ! method_exists( 'Lnf_Admin', $panel ) ) {
+			check( 'panneau ' . $panel . ' introuvable', false );
+			continue;
+		}
+		ob_start();
+		try {
+			$ref = new ReflectionMethod( 'Lnf_Admin', $panel );
+			$ref->setAccessible( true );
+			$ref->invoke( null, lnf_settings() );
+			$html = ob_get_clean();
+			check( 'panneau ' . $panel . ' rendu (' . strlen( $html ) . ' o)', strlen( $html ) > 50 && empty( $GLOBALS['__hook_errors'] ) );
+		} catch ( Throwable $e ) {
+			ob_end_clean();
+			check( 'panneau ' . $panel . ' : ' . $e->getMessage(), false );
+		}
+	}
+}
 
 // --- Tests ---
-$fail = 0;
 function check( $label, $cond ) {
 	global $fail;
 	echo ( $cond ? '  ✔ ' : '  ✘ ' ) . $label . "\n";
@@ -335,6 +428,37 @@ if ( 'sms' === $mode ) {
 	check( 'redirection externe rejetée', 'http://test.local/wp-admin/' === $redirect );
 	$redirect2 = lnf_sms_login_user( $user, 'http://test.local/bienvenue' );
 	check( 'redirection locale acceptée', 'http://test.local/bienvenue' === $redirect2 );
+}
+
+echo "== SEO / GEO / Anti-fuite ==\n";
+check( 'index.php dans les dossiers (anti-listing)', file_exists( 'includes/index.php' ) && file_exists( 'assets/js/index.php' ) && file_exists( 'assets/css/index.php' ) );
+check( 'assets SMS versionnés présents', file_exists( 'assets/js/sms-login.js' ) && file_exists( 'assets/css/sms-login.css' ) );
+check( 'clés secrètes identifiées', 4 === count( lnf_secret_keys() ) );
+$sec = lnf_sanitize_settings( array( 'sms_twilio_token' => 'TOPSECRET', 'sms_vonage_secret' => 'VSEC' ) );
+check( 'sanitize conserve les secrets', 'TOPSECRET' === $sec['sms_twilio_token'] && 'VSEC' === $sec['sms_vonage_secret'] );
+
+if ( 'geo' === $mode ) {
+	check( 'pays autorisés normalisés', array( 'DZ', 'FR', 'TN', 'US' ) === lnf_geo_allowed_countries() );
+	$GLOBALS['__mock_country'] = 'DZ';
+	add_filter( 'lnf_geo_country', function () { return $GLOBALS['__mock_country']; } );
+	check( 'pays autorisé → non bloqué', ! lnf_geo_blocked() );
+	$GLOBALS['__mock_country'] = 'JP';
+	check( 'pays hors liste → bloqué', lnf_geo_blocked() );
+	$GLOBALS['__mock_country'] = '';
+	check( 'détection impossible → fail-open', ! lnf_geo_blocked() );
+	$_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+	$GLOBALS['__mock_country'] = 'JP';
+	check( 'IP en liste blanche → jamais bloquée', ! lnf_geo_blocked() );
+	$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+	ob_start();
+	lnf_seo_noindex();
+	check( 'noindex désactivé → aucune balise', '' === ob_get_clean() );
+	check( 'titre login personnalisé', 'Espace Test' === lnf_seo_login_title( 'Log In' ) );
+} else {
+	ob_start();
+	lnf_seo_noindex();
+	check( 'noindex actif par défaut', false !== strpos( ob_get_clean(), 'noindex' ) );
+	check( 'titre login inchangé si vide', 'Log In' === lnf_seo_login_title( 'Log In' ) );
 }
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";

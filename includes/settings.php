@@ -171,6 +171,14 @@ function lnf_get_defaults() {
 		'sms_otp_length'   => 6,
 		'sms_otp_ttl'      => 5,
 		'sms_max_attempts' => 3,
+
+		// SEO de la page de connexion.
+		'seo_noindex'      => true,
+		'seo_login_title'  => '',
+
+		// GEO : restriction par pays.
+		'geo_enable'       => false,
+		'geo_countries'    => '',
 		// Sécurité.
 		'sec_enable'               => true,
 		'sec_max_attempts'         => 5,
@@ -230,6 +238,7 @@ function lnf_field_spec() {
 			'sec_disable_xmlrpc', 'sec_honeypot', 'sec_disable_authors',
 			'recaptcha_enabled', 'white_label', 'admin_enable',
 			'sec_disable_app_passwords', 'sms_enabled',
+			'seo_noindex', 'geo_enable',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
@@ -237,7 +246,7 @@ function lnf_field_spec() {
 			'social_linkedin', 'social_youtube', 'login_redirect', 'side_image',
 			'sms_webhook_url',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image', 'sms_twilio_sid', 'sms_twilio_token', 'sms_vonage_key', 'sms_vonage_secret', 'sms_webhook_token', 'sms_from', 'sms_country', 'sms_template' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image', 'sms_twilio_sid', 'sms_twilio_token', 'sms_vonage_key', 'sms_vonage_secret', 'sms_webhook_token', 'sms_from', 'sms_country', 'sms_template', 'seo_login_title', 'geo_countries' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -345,6 +354,21 @@ function lnf_sanitize_settings( $input, $base = null ) {
 	}
 
 	return $out;
+}
+
+/**
+ * Clés de réglages contenant des secrets (jamais exportées, jamais écrasées
+ * par un import qui n'en fournit pas).
+ *
+ * @return array
+ */
+function lnf_secret_keys() {
+	return array(
+		'sms_twilio_token',
+		'sms_vonage_secret',
+		'sms_webhook_token',
+		'recaptcha_secret_key',
+	);
 }
 
 /**

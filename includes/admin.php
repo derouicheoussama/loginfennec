@@ -300,7 +300,7 @@ class Lnf_Admin {
 	}
 
 	/**
-	 * Vérifie les mises à jour à la demande (interroge GitHub immédiatement).
+	 * Vérifie les mises à jour à la demande (interroge WordPress.org).
 	 */
 	public static function ajax_check_updates() {
 		check_ajax_referer( 'lnf_admin', 'nonce' );
@@ -308,14 +308,34 @@ class Lnf_Admin {
 			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
 
-		$release = Lnf_GitHub_Updater::fetch_latest_release( true );
-		if ( ! $release || empty( $release['version'] ) || '' === $release['download'] ) {
-			wp_send_json_error(
-				array( 'message' => __( 'Impossible de joindre GitHub pour le moment. Réessayez plus tard.', 'loginfennec' ) )
+		// Tant que le plugin n'est pas encore publié sur WordPress.org,
+		// la version locale est la référence : rien à mettre à jour.
+		$latest = get_transient( 'lnf_wporg_latest' );
+		if ( false === $latest ) {
+			if ( ! function_exists( 'plugins_api' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			}
+			$info = plugins_api(
+				'plugin_information',
+				array(
+					'slug'   => 'loginfennec',
+					'fields' => array( 'versions' => false, 'sections' => false, 'banners' => false ),
+				)
 			);
+			if ( is_wp_error( $info ) || empty( $info->version ) ) {
+				wp_send_json_success(
+					array(
+						'status'  => 'up_to_date',
+						'version' => LOGINFENNEC_VERSION,
+						'message' => __( 'Le plugin est à jour. (Les mises à jour seront servies par WordPress.org dès la publication.)', 'loginfennec' ),
+					)
+				);
+			}
+			$latest = (string) $info->version;
+			set_transient( 'lnf_wporg_latest', $latest, 12 * HOUR_IN_SECONDS );
 		}
 
-		if ( version_compare( LOGINFENNEC_VERSION, $release['version'], '>=' ) ) {
+		if ( '' === $latest || version_compare( LOGINFENNEC_VERSION, $latest, '>=' ) ) {
 			wp_send_json_success(
 				array(
 					'status'  => 'up_to_date',
@@ -324,7 +344,7 @@ class Lnf_Admin {
 			);
 		}
 
-		// Force la reconstruction du transient puis prépare le lien de mise à jour.
+		// Une version plus récente existe : rafraîchit la liste des extensions.
 		if ( function_exists( 'wp_update_plugins' ) ) {
 			wp_update_plugins();
 		}
@@ -337,7 +357,7 @@ class Lnf_Admin {
 		wp_send_json_success(
 			array(
 				'status'  => 'available',
-				'version' => $release['version'],
+				'version' => $latest,
 				'url'     => $update_url,
 			)
 		);
@@ -367,7 +387,13 @@ class Lnf_Admin {
 		nocache_headers();
 		header( 'Content-Type: application/json; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename=loginfennec-settings-' . gmdate( 'Ymd-Hi' ) . '.json' );
-		echo wp_json_encode( lnf_settings(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+
+		// Anti-fuite : les secrets (tokens SMS, clés reCAPTCHA) ne sortent jamais du site.
+		$settings = lnf_settings();
+		foreach ( lnf_secret_keys() as $secret ) {
+			unset( $settings[ $secret ] );
+		}
+		echo wp_json_encode( $settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
 		exit;
 	}
 
@@ -413,7 +439,18 @@ class Lnf_Admin {
 			exit;
 		}
 
-		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $data, null ), 'yes' );
+		$imported = lnf_sanitize_settings( $data, null );
+
+		// Anti-fuite (sens inverse) : un import sans secrets ne doit pas effacer
+		// ceux déjà enregistrés sur le site.
+		$stored = lnf_settings();
+		foreach ( lnf_secret_keys() as $secret ) {
+			if ( '' === (string) $imported[ $secret ] && '' !== (string) $stored[ $secret ] ) {
+				$imported[ $secret ] = $stored[ $secret ];
+			}
+		}
+
+		update_option( LOGINFENNEC_OPTION, $imported, 'yes' );
 		wp_safe_redirect( $redirect_ok );
 		exit;
 	}
@@ -1414,6 +1451,10 @@ class Lnf_Admin {
 			__( 'Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée).', 'loginfennec' )
 		);
 
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Référencement (SEO)', 'loginfennec' ) . '</h3>';
+		self::field_toggle( $s, 'seo_noindex', __( 'Empêcher l’indexation de la page de connexion', 'loginfennec' ), __( 'Ajoute noindex, nofollow : Google n’affiche jamais la page de connexion dans les résultats (recommandé).', 'loginfennec' ) );
+		self::field_text( $s, 'seo_login_title', __( 'Titre de l’onglet', 'loginfennec' ), 'text', __( 'ex. : Espace client — {site}', 'loginfennec' ), __( 'Laisser vide pour le titre WordPress par défaut. Jeton : {site}.', 'loginfennec' ) );
+
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'CSS personnalisé', 'loginfennec' ) . '</h3>';
 		self::field_textarea(
 			$s,
@@ -1598,6 +1639,10 @@ class Lnf_Admin {
 		self::field_toggle( $s, 'sec_honeypot', __( 'Honeypot anti-robots', 'loginfennec' ), __( 'Ajoute un champ caché que seuls les robots remplissent — la connexion est alors refusée et notée dans le journal.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_authors', __( 'Bloquer le balayage des auteurs', 'loginfennec' ), __( 'Masque les identifiants : « ?author=N » est redirigé vers l’accueil et l’endpoint REST des utilisateurs est fermé aux visiteurs.', 'loginfennec' ) );
 		self::field_toggle( $s, 'sec_disable_app_passwords', __( 'Désactiver les mots de passe d’application', 'loginfennec' ), __( 'Coupe l’accès des applications externes (appli mobile, éditeurs) — durcissement recommandé si vous ne les utilisez pas.', 'loginfennec' ) );
+
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Restriction par pays (GEO)', 'loginfennec' ) . '</h3>';
+		self::field_toggle( $s, 'geo_enable', __( 'Limiter la connexion à certains pays', 'loginfennec' ), __( 'Désactivé par défaut. Activée, cette option envoie l’adresse IP du visiteur au service gratuit geojs.io (HTTPS, sans clé) pour déterminer le pays ; le résultat est mis en cache 24 h. Mentionnez-le dans votre politique de confidentialité.', 'loginfennec' ) );
+		self::field_text( $s, 'geo_countries', __( 'Pays autorisés (codes ISO)', 'loginfennec' ), 'text', 'DZ, FR', __( 'Codes à 2 lettres séparés par des virgules — ex. DZ pour l’Algérie. Vide = tous les pays. En cas d’échec de détection, l’accès reste autorisé pour ne jamais vous enfermer dehors.', 'loginfennec' ), array( 'geo_enable' => 1 ) );
 		self::field_toggle( $s, 'recaptcha_enabled', __( 'Activer reCAPTCHA v3', 'loginfennec' ), __( 'Protection invisible anti-bot sur la page de connexion. Nécessite des clés reCAPTCHA de Google.', 'loginfennec' ) );
 		self::field_text( $s, 'recaptcha_site_key', __( 'Clé Site reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );
 		self::field_text( $s, 'recaptcha_secret_key', __( 'Clé Secrète reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );

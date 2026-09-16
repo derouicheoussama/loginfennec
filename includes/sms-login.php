@@ -376,8 +376,31 @@ function lnf_sms_login_user( $user, $redirect_to = '' ) {
 }
 
 /* ---------------------------------------------------------------------
- * Page de connexion : panneau + script
+ * Page de connexion : panneau + assets
  * ------------------------------------------------------------------- */
+
+/**
+ * Charge le CSS/JS du panneau SMS (fichiers versionnés, cache-friendly).
+ */
+function lnf_sms_enqueue() {
+	if ( ! lnf_sms_active() || ! lnf_sms_gateway_ready() ) {
+		return;
+	}
+	wp_enqueue_style( 'lnf-sms', LOGINFENNEC_URL . 'assets/css/sms-login.css', array(), LOGINFENNEC_VERSION );
+	wp_enqueue_script( 'lnf-sms', LOGINFENNEC_URL . 'assets/js/sms-login.js', array(), LOGINFENNEC_VERSION, true );
+	wp_localize_script(
+		'lnf-sms',
+		'LNF_SMS_CFG',
+		array(
+			'ajax'  => admin_url( 'admin-ajax.php' ),
+			'nonce' => wp_create_nonce( 'lnf_sms' ),
+			'wait'   => __( 'Patientez…', 'loginfennec' ),
+			'sent'   => __( 'Code envoyé par SMS si ce numéro est enregistré.', 'loginfennec' ),
+			'ttl'    => max( 1, (int) lnf_get_option( 'sms_otp_ttl' ) ),
+		)
+	);
+}
+add_action( 'login_enqueue_scripts', 'lnf_sms_enqueue' );
 
 /**
  * Affiche le panneau SMS (déplacé sous le formulaire par le script).
@@ -386,15 +409,8 @@ function lnf_sms_render_panel() {
 	if ( ! lnf_sms_active() || ! lnf_sms_gateway_ready() ) {
 		return;
 	}
-	$config = array(
-		'ajax'   => admin_url( 'admin-ajax.php' ),
-		'nonce'  => wp_create_nonce( 'lnf_sms' ),
-		'wait'   => __( 'Patientez…', 'loginfennec' ),
-		'sent'   => __( 'Code envoyé par SMS si ce numéro est enregistré.', 'loginfennec' ),
-		'ttl'    => max( 1, (int) lnf_get_option( 'sms_otp_ttl' ) ),
-	);
 	?>
-	<div id="lnf-sms" class="lnf-sms" hidden data-config="<?php echo esc_attr( wp_json_encode( $config ) ); ?>">
+	<div id="lnf-sms" class="lnf-sms" hidden>
 		<button type="button" class="lnf-sms-open"><?php esc_html_e( '📱 Se connecter par SMS', 'loginfennec' ); ?></button>
 		<div class="lnf-sms-panel" hidden>
 			<div class="lnf-sms-step lnf-sms-step-phone">
@@ -413,120 +429,7 @@ function lnf_sms_render_panel() {
 		</div>
 	</div>
 	<?php
-	$js = <<<'JS'
-(function () {
-	var root = document.getElementById('lnf-sms');
-	if (!root) { return; }
-	var form = document.getElementById('loginform');
-	if (form && form.parentNode) { form.parentNode.insertBefore(root, form.nextSibling); }
-	root.hidden = false;
-	var cfg = {};
-	try { cfg = JSON.parse(root.getAttribute('data-config') || '{}'); } catch (e) { return; }
-	var openBtn = root.querySelector('.lnf-sms-open'),
-		panel = root.querySelector('.lnf-sms-panel'),
-		stepPhone = root.querySelector('.lnf-sms-step-phone'),
-		stepCode = root.querySelector('.lnf-sms-step-code'),
-		phoneEl = root.querySelector('#lnf-sms-phone'),
-		codeEl = root.querySelector('#lnf-sms-code'),
-		statusEl = root.querySelector('.lnf-sms-status'),
-		sendBtn = root.querySelector('.lnf-sms-send'),
-		verifyBtn = root.querySelector('.lnf-sms-verify'),
-		resendBtn = root.querySelector('.lnf-sms-resend'),
-		backBtn = root.querySelector('.lnf-sms-back'),
-		timer = null,
-		busy = false;
-
-	function show(el) { el.hidden = false; }
-	function hide(el) { el.hidden = true; }
-	function say(msg) { statusEl.textContent = msg || ''; }
-
-	function openPanel() {
-		hide(openBtn); show(panel); hide(backBtn);
-		show(stepPhone); hide(stepCode);
-		say('');
-		try { phoneEl.focus(); } catch (e) {}
-	}
-
-	function reset() {
-		hide(stepCode); show(stepPhone); hide(resendBtn); hide(backBtn);
-		say('');
-		if (timer) { window.clearInterval(timer); timer = null; }
-	}
-
-	function post(action, data, done) {
-		if (busy) { return; }
-		busy = true;
-		say(cfg.wait);
-		var body = new window.FormData();
-		body.append('action', action);
-		body.append('nonce', cfg.nonce || '');
-		Object.keys(data || {}).forEach(function (k) { body.append(k, data[k]); });
-		var redirectInput = document.querySelector('input[name=redirect_to]');
-		body.append('redirect_to', redirectInput ? redirectInput.value : '');
-		window.fetch(cfg.ajax, { method: 'POST', credentials: 'same-origin', body: body })
-			.then(function (r) { return r.json(); })
-			.then(function (j) { busy = false; done(j); })
-			.catch(function () { busy = false; say('Erreur réseau, réessayez.'); });
-	}
-
-	function countdown(seconds) {
-		if (timer) { window.clearInterval(timer); }
-		var left = seconds;
-		timer = window.setInterval(function () {
-			left -= 1;
-			if (left <= 0) { window.clearInterval(timer); timer = null; show(resendBtn); resendBtn.textContent = 'Renvoyer le code'; return; }
-			resendBtn.textContent = 'Renvoyer le code (' + left + 's)';
-		}, 1000);
-		resendBtn.textContent = 'Renvoyer le code (' + left + 's)';
-	}
-
-	function requestCode() {
-		var phone = phoneEl.value.trim();
-		if (!phone) { say('Entrez votre numéro de téléphone.'); return; }
-		hide(resendBtn);
-		post('lnfsms_send', { phone: phone }, function (j) {
-			if (!j || !j.success) {
-				say(j && j.data && j.data[0] && j.data[0].message ? j.data[0].message : 'Envoi impossible, réessayez.');
-				return;
-			}
-			say(j.data && j.data.message ? j.data.message : cfg.sent);
-			hide(stepPhone); show(stepCode);
-			try { codeEl.focus(); } catch (e) {}
-			show(backBtn);
-			countdown(60);
-		});
-	}
-
-	function verifyCode() {
-		var code = codeEl.value.trim();
-		if (!code) { say('Entrez le code reçu par SMS.'); return; }
-		post('lnfsms_verify', { phone: phoneEl.value.trim(), code: code }, function (j) {
-			if (!j || !j.success) {
-				say(j && j.data && j.data[0] && j.data[0].message ? j.data[0].message : 'Connexion impossible.');
-				return;
-			}
-			say('Connexion…');
-			window.location.assign(j.data && j.data.redirect ? j.data.redirect : (cfg.ajax || '').replace('admin-ajax.php', ''));
-		});
-	}
-
-	openBtn.addEventListener('click', openPanel);
-	backBtn.addEventListener('click', reset);
-	sendBtn.addEventListener('click', requestCode);
-	resendBtn.addEventListener('click', requestCode);
-	verifyBtn.addEventListener('click', verifyCode);
-	root.addEventListener('keydown', function (e) {
-		if (e.key !== 'Enter') { return; }
-		e.preventDefault();
-		e.stopPropagation();
-		if (!stepCode.hidden) { verifyCode(); } else { requestCode(); }
-	});
-}());
-JS;
-	echo '<style id="lnf-sms-css">.lnf-sms{margin:16px 0 0;text-align:center;font-size:13px}.lnf-sms-open,.lnf-link{background:none;border:0;padding:0;color:inherit;font-size:inherit;cursor:pointer;text-decoration:underline}.lnf-sms-panel{margin-top:12px;padding:16px;border-radius:8px;background:var(--lnf-form-bg,rgba(255,255,255,.92));color:var(--lnf-form-color,#2c3338);text-align:left}.lnf-sms-panel label{display:block;margin-bottom:6px;font-weight:600}.lnf-sms-panel input[type=tel],.lnf-sms-panel input[type=text]{width:100%;margin-bottom:10px}.lnf-sms-step{margin-bottom:6px}.lnf-sms-resend-row{margin:8px 0 0}.lnf-sms-status{min-height:18px;margin:8px 0 0;font-size:12.5px}</style>' . "\n";
-	echo '<script id="lnf-sms-js">' . $js . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JS statique embarqué, aucune donnée dynamique.
 }
-add_action( 'login_footer', 'lnf_sms_render_panel', 5 );
 
 /* ---------------------------------------------------------------------
  * AJAX
@@ -538,6 +441,9 @@ add_action( 'login_footer', 'lnf_sms_render_panel', 5 );
 function lnf_sms_ajax_send() {
 	check_ajax_referer( 'lnf_sms', 'nonce' );
 	$generic = array( 'message' => __( 'Code envoyé par SMS si ce numéro est enregistré.', 'loginfennec' ) );
+	if ( function_exists( 'lnf_geo_blocked' ) && lnf_geo_blocked() ) {
+		wp_send_json_error( array( array( 'message' => __( 'Demande impossible depuis votre région.', 'loginfennec' ) ) ) );
+	}
 	if ( ! lnf_sms_active() || ! lnf_sms_gateway_ready() ) {
 		wp_send_json_success( $generic );
 	}
@@ -577,6 +483,9 @@ add_action( 'wp_ajax_nopriv_lnfsms_send', 'lnf_sms_ajax_send' );
  */
 function lnf_sms_ajax_verify() {
 	check_ajax_referer( 'lnf_sms', 'nonce' );
+	if ( function_exists( 'lnf_geo_blocked' ) && lnf_geo_blocked() ) {
+		wp_send_json_error( array( array( 'message' => __( 'Connexion impossible depuis votre région.', 'loginfennec' ) ) ) );
+	}
 	if ( ! lnf_sms_active() ) {
 		wp_send_json_error( array( array( 'message' => __( 'Connexion par SMS désactivée.', 'loginfennec' ) ) ) );
 	}

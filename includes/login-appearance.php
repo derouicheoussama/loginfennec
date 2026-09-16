@@ -452,6 +452,35 @@ function lnf_login_honeypot() {
 add_action( 'login_form', 'lnf_login_honeypot' );
 
 /**
+ * SEO : la page de connexion ne doit jamais être indexée par les moteurs
+ * (contenu dupliqué, fuite du nom du site dans les résultats).
+ */
+function lnf_seo_noindex() {
+	$s = lnf_settings();
+	if ( empty( $s['seo_noindex'] ) ) {
+		return;
+	}
+	echo '<meta name="robots" content="noindex, nofollow">' . "\n";
+}
+add_action( 'login_head', 'lnf_seo_noindex', 1 );
+
+/**
+ * SEO : titre de l'onglet de la page de connexion personnalisable.
+ * Jeton disponible : {site} (nom du site).
+ *
+ * @param string $title Titre par défaut.
+ * @return string
+ */
+function lnf_seo_login_title( $title ) {
+	$custom = trim( (string) lnf_get_option( 'seo_login_title' ) );
+	if ( '' === $custom ) {
+		return $title;
+	}
+	return str_replace( '{site}', get_bloginfo( 'name' ), $custom );
+}
+add_filter( 'login_title', 'lnf_seo_login_title' );
+
+/**
  * Charge Dashicons (icônes sociales) sur la page de connexion,
  * uniquement lorsque les icônes sont activées (performance).
  */

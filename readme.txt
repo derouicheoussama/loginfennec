@@ -1,11 +1,11 @@
 === LoginFennec Pro – Personnalisation page login et Security ===
 Contributors: derouicheoussama
 Donate link: https://www.paypal.com/donate
-Tags: login, customizer, login page, security, social icons
+Tags: login, customizer, login page, security, brute force, sms, otp, recaptcha, geo, seo
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.2.0
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,20 +47,49 @@ LoginFennec Pro — Personnalisation page login et Security. It redesigns your W
 * Security score (0-5) with a one-click "recommended pack"
 * Security headers on the login page (X-Frame-Options, nosniff, no-cache)
 
+<strong>📱 SMS Login (OTP)</strong>
+
+* Users sign in with their phone number and a one-time code — no password
+* SMS gateways: Twilio, Vonage, or any local provider through a generic HTTP webhook
+* Codes are salted and hashed, single-use, with limited attempts
+* Anti-abuse: minimum delay between sends per phone, hourly cap per IP
+* Phone number field on user profiles; test-send button in the dashboard
+
+<strong>🌍 GEO Restriction</strong>
+
+* Allow login only from selected countries (ISO codes, e.g. DZ)
+* Free HTTPS geolocation (geojs.io), result cached 24 h per IP, no API key
+* Fail-open on detection failure — you can never be locked out
+* IP whitelist always bypasses the country check
+
+<strong>🔎 SEO &amp; Admin</strong>
+
+* noindex, nofollow on the login page so it never shows up in Google (recommended)
+* Custom login page title
+* Full WordPress admin color customization: sidebar menu, hover, active item, admin bar, accent color
+* 4 ready-made admin palettes: Nuit fennec, Désert, Océan, Clair
+
 <strong>⚡ Experience</strong>
 
 * Elegant dashboard: tabs, toggles, sliders, color pickers and live preview (desktop / tablet / mobile, fullscreen)
 * Security statistics and recent activity right on the dashboard
-* Onboarding wizard on activation; export / import of settings as JSON
+* Onboarding wizard on activation; export / import of settings as JSON (secrets never exported)
 * In-plugin purchase and license activation for the upcoming Pro
-* Auto-updates from your GitHub releases — switches to WordPress.org automatically once hosted there
+* Updates served by WordPress.org once published (nothing to configure)
 * Translation-ready, multisite-compatible, no ads, no tracking
 
-<strong>Why LoginShield?</strong>
+<strong>Why LoginFennec Pro?</strong>
 
-* Most login customizers only style the page. LoginShield styles it AND protects it.
+* Most login customizers only style the page. LoginFennec Pro styles it AND protects it.
 * Everything above is free — no feature paywalled inside the free plugin.
 * Built by Derouiche Oussama, signed "∞ Infinity Coder" in every source file.
+
+== Privacy ==
+
+LoginFennec Pro does not send any data to third parties by default. Two optional features contact external services, only when enabled:
+
+* SMS login: one HTTP request to your own configured SMS gateway (Twilio, Vonage or your webhook) when a user requests a code. The phone number and the message are sent to that gateway only.
+* GEO restriction: when enabled, the visitor IP address is sent to geojs.io (HTTPS, free, no account) to determine the country; the result is cached locally for 24 hours and no other data leaves your site.
 
 == Installation ==
 
@@ -102,6 +131,17 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.3.0 =
+* Fixed: fatal error at activation — removed a leftover call to the deleted GitHub updater class (now checks WordPress.org)
+* New: GEO restriction — allow login only from selected countries (opt-in, free HTTPS geolocation, 24 h cache, fail-open)
+* New: SEO — noindex/nofollow on the login page (recommended, on by default) and custom login page title
+* New: SMS login (3.2.0) hardened — CSS/JS moved to versioned asset files
+* Security: settings export no longer contains secrets (SMS tokens, reCAPTCHA secret); import never wipes stored secrets
+* Security: index.php guards added to every plugin folder (no directory listing)
+* Updated: readme privacy section documenting the optional external requests (SMS gateway, geojs.io)
+
+= 3.2.0 =
 
 = 3.2.0 =
 * New: SMS login — users sign in with their phone number and a one-time code
