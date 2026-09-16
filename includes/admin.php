@@ -222,7 +222,10 @@ class Lnf_Admin {
 		check_admin_referer( 'lnf_save', 'lnf_nonce' );
 
 		$input = isset( $_POST['lnf'] ) && is_array( $_POST['lnf'] ) ? wp_unslash( $_POST['lnf'] ) : array();
-		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $input, null ), 'yes' );
+		// Mise à jour partielle : tout champ absent du POST (formulaire tronqué
+		// par max_input_vars, extension de sécurité…) conserve sa valeur
+		// enregistrée au lieu d'être réinitialisée aux défauts.
+		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $input, lnf_settings() ), 'yes' );
 
 		wp_safe_redirect(
 			add_query_arg(
@@ -756,7 +759,9 @@ class Lnf_Admin {
 	 */
 	protected static function field_toggle( $s, $key, $label, $desc = '', $showif = array() ) {
 		echo '<div class="lnf-field lnf-toggle-field"' . esc_html( self::showif( $showif ) ) . '>';
-		echo '<label class="lnf-switch"><input type="checkbox" name="lnf[' . esc_attr( $key ) . ']" value="1"' . checked( ! empty( $s[ $key ] ), true, false ) . '><span class="lnf-switch-ui"></span></label>';
+		// Sentinelle « 0 » : garantit que la clé est toujours soumise, même case
+		// décochée — indispensable à la mise à jour partielle de save().
+		echo '<label class="lnf-switch"><input type="hidden" name="lnf[' . esc_attr( $key ) . ']" value="0"><input type="checkbox" name="lnf[' . esc_attr( $key ) . ']" value="1"' . checked( ! empty( $s[ $key ] ), true, false ) . '><span class="lnf-switch-ui"></span></label>';
 		echo '<div class="lnf-toggle-text"><span class="lnf-label">' . esc_html( $label ) . '</span>';
 		if ( $desc ) {
 			echo '<p class="lnf-desc">' . esc_html( $desc ) . '</p>';
@@ -830,6 +835,22 @@ class Lnf_Admin {
 		}
 
 		$s = lnf_settings();
+
+		// Alerte : un serveur limitant max_input_vars sous le volume de ce
+		// formulaire (~130 champs) tronque silencieusement le POST en fin de
+		// formulaire — précisément les derniers onglets (SMS, Admin).
+		$vars_limit = (int) ini_get( 'max_input_vars' );
+		if ( $vars_limit > 0 && $vars_limit < 200 ) {
+			echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Sauvegarde incomplète possible :', 'loginfennec' ) . '</strong> '
+				. esc_html(
+					sprintf(
+						/* translators: %d : limite actuelle du serveur. */
+						__( 'votre serveur limite les formulaires à %d champs (max_input_vars) alors que cette page en envoie environ 130. Demandez à votre hébergeur (ou augmentez dans wp-config.php) une limite de 300 ou plus, puis réessayez.', 'loginfennec' ),
+						$vars_limit
+					)
+				)
+				. '</p></div>';
+		}
 		?>
 			<div class="wrap lnf-wrap">
 			<div class="lnf-topbar">
@@ -2161,7 +2182,7 @@ class Lnf_Admin {
 					<p class="lnf-inst-desc"><?php esc_html_e( 'Recommandé : activez toutes les protections dès maintenant — vous pourrez les ajuster dans l’onglet Sécurité.', 'loginfennec' ); ?></p>
 
 					<div class="lnf-inst-security">
-						<label class="lnf-switch"><input type="checkbox" name="lnf[sec_enable]" value="1" <?php checked( ! empty( $s['sec_enable'] ) ); ?>><span class="lnf-switch-ui"></span></label>
+						<label class="lnf-switch"><input type="hidden" name="lnf[sec_enable]" value="0"><input type="checkbox" name="lnf[sec_enable]" value="1" <?php checked( ! empty( $s['sec_enable'] ) ); ?>><span class="lnf-switch-ui"></span></label>
 						<div>
 							<strong><?php esc_html_e( 'Limiter les tentatives de connexion', 'loginfennec' ); ?></strong>
 							<p class="lnf-inst-desc"><?php esc_html_e( 'Après N échecs, l’adresse IP et l’identifiant sont bloqués temporairement.', 'loginfennec' ); ?></p>
@@ -2175,9 +2196,9 @@ class Lnf_Admin {
 					</div>
 
 					<div class="lnf-inst-checks">
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_honeypot]" value="1" <?php checked( ! empty( $s['sec_honeypot'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Honeypot anti-robots', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Un champ caché piège les bots avant même la connexion.', 'loginfennec' ); ?></p></div></div>
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'loginfennec' ); ?></p></div></div>
-						<div class="lnf-inst-check"><label class="lnf-switch"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfennec' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="hidden" name="lnf[sec_honeypot]" value="0"><input type="checkbox" name="lnf[sec_honeypot]" value="1" <?php checked( ! empty( $s['sec_honeypot'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Honeypot anti-robots', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Un champ caché piège les bots avant même la connexion.', 'loginfennec' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="hidden" name="lnf[sec_disable_authors]" value="0"><input type="checkbox" name="lnf[sec_disable_authors]" value="1" <?php checked( ! empty( $s['sec_disable_authors'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Anti-énumération des auteurs', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Vos identifiants restent invisibles aux scanners.', 'loginfennec' ); ?></p></div></div>
+						<div class="lnf-inst-check"><label class="lnf-switch"><input type="hidden" name="lnf[sec_disable_xmlrpc]" value="0"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfennec' ); ?></p></div></div>
 					</div>
 					<p class="lnf-inst-desc"><strong><?php esc_html_e( 'Votre IP actuelle', 'loginfennec' ); ?></strong> : <code><?php echo esc_html( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' ); ?></code> — <?php esc_html_e( 'ajoutez-la à la liste blanche (onglet Sécurité) pour ne jamais être verrouillé lors de vos tests.', 'loginfennec' ); ?></p>
 					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'loginfennec' ); ?></p>

@@ -475,5 +475,23 @@ check( 'aperçu admin : accent propagé (thème + dérivés)', false !== strpos(
 check( 'aperçu admin : désactivé → CSS vide', '' === lnf_admin_colors_css( array( 'admin_enable' => false ) ) );
 check( 'aperçu admin : aucune injection HTML', false === stripos( (string) $preview, '<script' ) );
 
+// Sauvegarde partielle (save) : les champs absents du POST conservent leur
+// valeur enregistrée au lieu d'être réinitialisés aux défauts.
+$base    = array_merge( lnf_get_defaults(), array( 'admin_enable' => true, 'admin_bg' => '#112233', 'admin_text' => '#fedcba' ) );
+$partial = lnf_sanitize_settings( array( 'admin_bg' => '#445566', 'admin_enable' => '0' ), $base );
+check( 'save partiel : champ fourni enregistré', '#445566' === $partial['admin_bg'] );
+check( 'save partiel : champ absent conservé (pas de reset)', '#fedcba' === $partial['admin_text'] );
+check( 'save partiel : sentinelle 0 → case décochée', false === $partial['admin_enable'] );
+$partial2 = lnf_sanitize_settings( array( 'admin_bg' => '#445566', 'admin_enable' => '1' ), $base );
+check( 'save partiel : sentinelle 1 → case cochée', true === $partial2['admin_enable'] );
+$full = lnf_sanitize_settings( array(
+	'admin_enable' => '1', 'admin_bg' => '#112233', 'admin_text' => '#fedcba',
+	'admin_hover_bg' => '#0a427f', 'admin_hover_text' => '#f2a444',
+	'admin_active_bg' => '#e88018', 'admin_active_text' => '#ffffff',
+	'admin_accent' => '#e88018', 'adminbar_bg' => '#00234a',
+	'adminbar_text' => '#f9f0d8', 'adminbar_hover' => '#f2a444',
+), null );
+check( 'save complet (base null) : toutes les couleurs passent', '#112233' === $full['admin_bg'] && true === $full['admin_enable'] && '#f2a444' === $full['adminbar_hover'] );
+
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

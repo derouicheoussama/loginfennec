@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.4.1
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,11 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.4.2 =
+* Fixed: admin colors (and any field) could silently reset when the server truncated the form submission — saving is now a partial update that keeps stored values for fields missing from the request
+* Added: hidden sentinel values on every toggle so unchecking still works with partial updates
+* Added: automatic warning when the server low-limits max_input_vars below what this settings page needs
 
 = 3.4.1 =
 * New: real-time preview in the Admin tab — every color and palette restyles the live WordPress admin menu instantly, before saving
