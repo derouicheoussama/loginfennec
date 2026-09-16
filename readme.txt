@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, social icons
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,12 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.1.0 =
+* New: full WordPress admin color customization (sidebar menu, hover, active item, admin bar, accent color)
+* New: 4 ready-made admin palettes (Nuit fennec, Désert, Océan, Clair)
+* New: dedicated "Admin" tab in the dashboard with color pickers
+* Fixed: corrupted white-label login body class filter
 
 = 3.0.0 =
 * New: Google Fonts integration (20+ fonts with live preview)

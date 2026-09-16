@@ -770,6 +770,7 @@ class Lnf_Admin {
 			'copyright' => array( __( 'Copyright', 'loginfennec' ), 'dashicons-text' ),
 			'extras'    => array( __( 'Extras', 'loginfennec' ), 'dashicons-star-filled' ),
 			'security'  => array( __( 'Sécurité', 'loginfennec' ), 'dashicons-shield-alt' ),
+			'admin'     => array( __( 'Admin', 'loginfennec' ), 'dashicons-admin-appearance' ),
 		);
 	}
 
@@ -856,6 +857,7 @@ class Lnf_Admin {
 						<?php self::panel_copyright( $s ); ?>
 						<?php self::panel_extras( $s ); ?>
 						<?php self::panel_security( $s ); ?>
+						<?php self::panel_admin( $s ); ?>
 					</div>
 
 					<aside class="lnf-preview" aria-label="<?php esc_attr_e( 'Aperçu en direct', 'loginfennec' ); ?>">
@@ -1424,6 +1426,109 @@ class Lnf_Admin {
 		);
 
 		self::panel_close();
+	}
+
+	/**
+	 * Panneau : couleurs de l’administration WordPress.
+	 */
+	protected static function panel_admin( $s ) {
+		self::panel_open( 'admin', __( 'Administration', 'loginfennec' ), __( 'Personnalisez les couleurs du menu latéral et de la barre d’admin de WordPress.', 'loginfennec' ) );
+
+		self::field_toggle( $s, 'admin_enable', __( 'Activer la personnalisation', 'loginfennec' ), __( 'Remplace les couleurs natives de l’interface d’administration.', 'loginfennec' ) );
+
+		echo '<div class="lnf-admin-presets" data-showif="' . esc_attr( wp_json_encode( array( 'admin_enable' => 1 ) ) ) . '">';
+		echo '<span class="lnf-label">' . esc_html__( 'Palettes prêtes à l’emploi', 'loginfennec' ) . '</span>';
+		echo '<div class="lnf-admin-preset-row">';
+		foreach ( self::admin_presets() as $id => $preset ) {
+			printf(
+				'<button type="button" class="lnf-admin-preset" data-lnf-admin-preset="%1$s" title="%2$s"><span class="lnf-admin-preset-swatch" style="background:%3$s"></span><span class="lnf-admin-preset-swatch" style="background:%4$s"></span><span class="lnf-admin-preset-swatch" style="background:%5$s"></span>%6$s</button>',
+				esc_attr( $id ),
+				esc_attr( $preset['label'] ),
+				esc_attr( $preset['admin_bg'] ),
+				esc_attr( $preset['admin_active_bg'] ),
+				esc_attr( $preset['admin_accent'] ),
+				esc_html( $preset['label'] )
+			);
+		}
+		echo '</div></div>';
+
+		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'admin_enable' => 1 ) ) ) . '">' . esc_html__( 'Menu latéral', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'admin_bg', __( 'Fond du menu', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'admin_text', __( 'Texte et icônes', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'admin_hover_bg', __( 'Fond au survol', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'admin_hover_text', __( 'Texte au survol', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'admin_active_bg', __( 'Fond de la page active', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'admin_active_text', __( 'Texte de la page active', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+
+		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'admin_enable' => 1 ) ) ) . '">' . esc_html__( 'Accent et barre d’admin', 'loginfennec' ) . '</h3>';
+		self::field_color( $s, 'admin_accent', __( 'Couleur d’accent (boutons, liens, cases à cocher)', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'adminbar_bg', __( 'Fond de la barre d’admin', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'adminbar_text', __( 'Texte de la barre d’admin', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+		self::field_color( $s, 'adminbar_hover', __( 'Survol de la barre d’admin', 'loginfennec' ), '', array( 'admin_enable' => 1 ) );
+
+		self::panel_close();
+	}
+
+	/**
+	 * Palettes prêtes à l’emploi pour l’admin.
+	 *
+	 * @return array
+	 */
+	protected static function admin_presets() {
+		return array(
+			'nuit'   => array(
+				'label'           => __( 'Nuit fennec', 'loginfennec' ),
+				'admin_bg'        => '#1d2327',
+				'admin_text'      => '#c3c4c7',
+				'admin_hover_bg'  => '#2c3338',
+				'admin_hover_text' => '#9d7bff',
+				'admin_active_bg' => '#6d5df6',
+				'admin_active_text' => '#ffffff',
+				'admin_accent'    => '#6d5df6',
+				'adminbar_bg'     => '#1d2327',
+				'adminbar_text'   => '#c3c4c7',
+				'adminbar_hover'  => '#9d7bff',
+			),
+			'desert' => array(
+				'label'           => __( 'Désert', 'loginfennec' ),
+				'admin_bg'        => '#2f2417',
+				'admin_text'      => '#f0e6d2',
+				'admin_hover_bg'  => '#43321f',
+				'admin_hover_text' => '#f5c26b',
+				'admin_active_bg' => '#c2762b',
+				'admin_active_text' => '#ffffff',
+				'admin_accent'    => '#e08b3d',
+				'adminbar_bg'     => '#241b10',
+				'adminbar_text'   => '#f0e6d2',
+				'adminbar_hover'  => '#f5c26b',
+			),
+			'ocean'  => array(
+				'label'           => __( 'Océan', 'loginfennec' ),
+				'admin_bg'        => '#0f2838',
+				'admin_text'      => '#cfe6f5',
+				'admin_hover_bg'  => '#16405a',
+				'admin_hover_text' => '#6fc3ff',
+				'admin_active_bg' => '#2271b1',
+				'admin_active_text' => '#ffffff',
+				'admin_accent'    => '#38a3e0',
+				'adminbar_bg'     => '#0b1e2b',
+				'adminbar_text'   => '#cfe6f5',
+				'adminbar_hover'  => '#6fc3ff',
+			),
+			'clair'  => array(
+				'label'           => __( 'Clair', 'loginfennec' ),
+				'admin_bg'        => '#ffffff',
+				'admin_text'      => '#2c3338',
+				'admin_hover_bg'  => '#e8eaec',
+				'admin_hover_text' => '#2271b1',
+				'admin_active_bg' => '#2271b1',
+				'admin_active_text' => '#ffffff',
+				'admin_accent'    => '#2271b1',
+				'adminbar_bg'     => '#1d2327',
+				'adminbar_text'   => '#c3c4c7',
+				'adminbar_hover'  => '#72aee6',
+			),
+		);
 	}
 
 	/**

@@ -361,6 +361,37 @@
 		updatePreview();
 	});
 
+	/* Palettes de l'admin (onglet Admin) */
+	var ADMIN_PRESETS = {
+		nuit:   { admin_bg: '#1d2327', admin_text: '#c3c4c7', admin_hover_bg: '#2c3338', admin_hover_text: '#9d7bff', admin_active_bg: '#6d5df6', admin_active_text: '#ffffff', admin_accent: '#6d5df6', adminbar_bg: '#1d2327', adminbar_text: '#c3c4c7', adminbar_hover: '#9d7bff' },
+		desert: { admin_bg: '#2f2417', admin_text: '#f0e6d2', admin_hover_bg: '#43321f', admin_hover_text: '#f5c26b', admin_active_bg: '#c2762b', admin_active_text: '#ffffff', admin_accent: '#e08b3d', adminbar_bg: '#241b10', adminbar_text: '#f0e6d2', adminbar_hover: '#f5c26b' },
+		ocean:  { admin_bg: '#0f2838', admin_text: '#cfe6f5', admin_hover_bg: '#16405a', admin_hover_text: '#6fc3ff', admin_active_bg: '#2271b1', admin_active_text: '#ffffff', admin_accent: '#38a3e0', adminbar_bg: '#0b1e2b', adminbar_text: '#cfe6f5', adminbar_hover: '#6fc3ff' },
+		clair:  { admin_bg: '#ffffff', admin_text: '#2c3338', admin_hover_bg: '#e8eaec', admin_hover_text: '#2271b1', admin_active_bg: '#2271b1', admin_active_text: '#ffffff', admin_accent: '#2271b1', adminbar_bg: '#1d2327', adminbar_text: '#c3c4c7', adminbar_hover: '#72aee6' }
+	};
+	$(document).on('click', '.lnf-admin-preset', function () {
+		var values = ADMIN_PRESETS[$(this).data('lnf-admin-preset')];
+		if (!values) {
+			return;
+		}
+		if (!$('[name="lnf[admin_enable]"]').prop('checked')) {
+			$('[name="lnf[admin_enable]"]').prop('checked', true).trigger('change');
+		}
+		$.each(values, function (fieldKey, value) {
+			var $el = $form.find('[name="lnf[' + fieldKey + ']"]').first();
+			if (!$el.length) {
+				return;
+			}
+			if ($el.hasClass('lnf-color') && $.fn.wpColorPicker) {
+				$el.wpColorPicker('color', value);
+			} else {
+				$el.val(value);
+			}
+		});
+		$('.lnf-admin-preset').removeClass('is-active');
+		$(this).addClass('is-active');
+		refreshShowIf();
+	});
+
 	/* Sélecteur de couleur natif (iris) */
 	if ($.fn.wpColorPicker) {
 		$('.lnf-color').wpColorPicker({

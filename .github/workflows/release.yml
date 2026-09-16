@@ -1,7 +1,7 @@
 name: Release
 
-# Publie un zip nommé loginfennec.zip à chaque tag v* :
-# c'est ce zip que le module de mise à jour intégré téléchargera.
+# Publie un zip nommé loginfennec.zip à chaque tag v*
+# (attaché à la release GitHub, prêt pour l'upload wp.org).
 
 on:
   push:
@@ -31,6 +31,13 @@ jobs:
             --exclude 'brand' \
             --exclude 'README.md' \
             --exclude '*.pot' \
+            --exclude '_*' \
+            --exclude '.*' \
+            --exclude 'phpcs.xml.dist' \
+            --exclude 'composer.json' \
+            --exclude 'composer.lock' \
+            --exclude 'PRODUCTION.md' \
+            --exclude 'deploy.sh' \
             ./ build/loginfennec/
           cd build
           zip -r ../loginfennec.zip loginfennec

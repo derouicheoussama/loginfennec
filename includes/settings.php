@@ -143,6 +143,18 @@ function lnf_get_defaults() {
 		'field_label_user' => '',
 		'field_label_pass' => '',
 
+		// Admin Colors.
+		'admin_enable'       => false,
+		'admin_bg'           => '#1d2327',
+		'admin_text'         => '#c3c4c7',
+		'admin_hover_bg'     => '#2c3338',
+		'admin_hover_text'   => '#72aee6',
+		'admin_active_bg'    => '#2271b1',
+		'admin_active_text'  => '#ffffff',
+		'admin_accent'       => '#6d5df6',
+		'adminbar_bg'        => '#1d2327',
+		'adminbar_text'      => '#c3c4c7',
+		'adminbar_hover'     => '#72aee6',
 		// Sécurité.
 		'sec_enable'               => true,
 		'sec_max_attempts'         => 5,
@@ -200,7 +212,7 @@ function lnf_field_spec() {
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
 			'welcome_enable', 'sec_enable', 'sec_generic_error', 'sec_hide_language_switcher',
 			'sec_disable_xmlrpc', 'sec_honeypot', 'sec_disable_authors',
-			'recaptcha_enabled', 'white_label',
+			'recaptcha_enabled', 'white_label', 'admin_enable',
 			'sec_disable_app_passwords',
 		),
 		'url'    => array(
@@ -214,6 +226,9 @@ function lnf_field_spec() {
 			'label_color', 'input_bg', 'input_color', 'input_border',
 			'button_bg', 'button_hover', 'link_color',
 			'social_icon_color', 'social_icon_bg',
+			'admin_bg', 'admin_text', 'admin_hover_bg', 'admin_hover_text',
+			'admin_active_bg', 'admin_active_text', 'admin_accent',
+			'adminbar_bg', 'adminbar_text', 'adminbar_hover',
 		),
 		'int'    => array(
 			'bg_gradient_angle'    => array( 0, 360 ),

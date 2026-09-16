@@ -2750,3 +2750,58 @@ body.lnf-white-label #nav a[href*="action=register"] .lnf-brand-mark,
 body.lnf-white-label .lnf-brand-logo {
 	display: none !important;
 }
+
+/* ---------- Onglet Admin : palettes ---------- */
+
+.lnf-admin-presets {
+	grid-column: 1 / -1;
+	margin-bottom: 6px;
+}
+
+.lnf-admin-preset-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 8px;
+}
+
+.lnf-admin-preset {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border: 2px solid var(--lnf-line);
+	border-radius: 999px;
+	background: #fff;
+	padding: 7px 14px 7px 9px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--lnf-ink);
+	cursor: pointer;
+	transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.lnf-admin-preset:hover {
+	transform: translateY(-1px);
+	border-color: var(--lnf-accent);
+}
+
+.lnf-admin-preset.is-active {
+	border-color: var(--lnf-accent);
+	box-shadow: 0 0 0 3px rgba(109, 93, 246, .22);
+}
+
+.lnf-admin-preset-swatch {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 1px solid rgba(0, 0, 0, .15);
+}
+
+.lnf-admin-preset-swatch + .lnf-admin-preset-swatch {
+	margin-left: -6px;
+}
+
+h3.lnf-group-title.is-hidden {
+	display: none;
+}
