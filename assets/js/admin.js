@@ -390,6 +390,49 @@
 		$('.lnf-admin-preset').removeClass('is-active');
 		$(this).addClass('is-active');
 		refreshShowIf();
+		scheduleAdminPreview();
+	});
+
+	/* Aperçu temps réel des couleurs de l'admin : le CSS généré côté serveur
+	   est injecté dans la page en cours, le vrai menu se restyle instantanément. */
+	var ADMIN_COLOR_KEYS = ['admin_bg', 'admin_text', 'admin_hover_bg', 'admin_hover_text', 'admin_active_bg', 'admin_active_text', 'admin_accent', 'adminbar_bg', 'adminbar_text', 'adminbar_hover'];
+	var adminPreviewTimer = null;
+	var $adminPreviewStyle = null;
+
+	function scheduleAdminPreview() {
+		window.clearTimeout(adminPreviewTimer);
+		adminPreviewTimer = window.setTimeout(applyAdminPreview, 250);
+	}
+
+	function applyAdminPreview() {
+		var data = {
+			action: 'lnf_admin_colors_preview',
+			nonce: cfg.nonce,
+			admin_enable: $('[name="lnf[admin_enable]"]').prop('checked') ? '1' : '0'
+		};
+		$.each(ADMIN_COLOR_KEYS, function (i, key) {
+			data[key] = $form.find('[name="lnf[' + key + ']"]').first().val() || '';
+		});
+		$.post(cfg.ajaxUrl, data).done(function (res) {
+			if (!res || !res.success) {
+				return;
+			}
+			if (!$adminPreviewStyle || !$adminPreviewStyle.length) {
+				$adminPreviewStyle = $('<style>').attr('id', 'lnf-admin-preview').appendTo('head');
+			}
+			$adminPreviewStyle.text(res.data && res.data.css ? res.data.css : '');
+		});
+	}
+
+	$(document).on('change', '[name="lnf[admin_enable]"]', function () {
+		if (!this.checked && $adminPreviewStyle) {
+			$adminPreviewStyle.text('');
+			return;
+		}
+		scheduleAdminPreview();
+	});
+	$(document).on('input', '[name^="lnf[admin_"]', function () {
+		scheduleAdminPreview();
 	});
 
 	/* Sélecteur de couleur natif (iris) */
@@ -397,9 +440,15 @@
 		$('.lnf-color').wpColorPicker({
 			change: function () {
 				schedulePreview();
+				if (this.name && this.name.indexOf('lnf[admin_') === 0) {
+					scheduleAdminPreview();
+				}
 			},
 			clear: function () {
 				window.setTimeout(updatePreview, 60);
+				if (this.name && this.name.indexOf('lnf[admin_') === 0) {
+					scheduleAdminPreview();
+				}
 			}
 		});
 	}

@@ -1479,6 +1479,8 @@ class Lnf_Admin {
 	protected static function panel_admin( $s ) {
 		self::panel_open( 'admin', __( 'Administration', 'loginfennec' ), __( 'Personnalisez les couleurs du menu latéral et de la barre d’admin de WordPress.', 'loginfennec' ) );
 
+		echo '<div class="lnf-live-note"><span class="dashicons dashicons-visibility"></span> ' . esc_html__( 'Aperçu en temps réel : chaque couleur s’applique instantanément au menu ci-contre, avant même d’enregistrer. Cliquez sur « Enregistrer » pour la conserver.', 'loginfennec' ) . '</div>';
+
 		self::field_toggle( $s, 'admin_enable', __( 'Activer la personnalisation', 'loginfennec' ), __( 'Remplace les couleurs natives de l’interface d’administration.', 'loginfennec' ) );
 
 		echo '<div class="lnf-admin-presets" data-showif="' . esc_attr( wp_json_encode( array( 'admin_enable' => 1 ) ) ) . '">';

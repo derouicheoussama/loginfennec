@@ -53,10 +53,11 @@ function lnf_admin_colors() {
 /**
  * Génère le CSS admin custom.
  *
+ * @param array|null $colors Couleurs explicites (aperçu temps réel) ; null = réglages enregistrés.
  * @return string
  */
-function lnf_admin_colors_css() {
-	$c = lnf_admin_colors();
+function lnf_admin_colors_css( $colors = null ) {
+	$c = is_array( $colors ) ? $colors : lnf_admin_colors();
 	if ( empty( $c['admin_enable'] ) ) {
 		return '';
 	}
@@ -157,3 +158,30 @@ function lnf_adminbar_css_frontend() {
 	echo '<style id="lnf-adminbar-custom">' . lnf_admin_colors_css() . '</style>';
 }
 add_action( 'wp_head', 'lnf_adminbar_css_frontend', 99 );
+
+/**
+ * Aperçu temps réel : retourne le CSS construit à partir des couleurs
+ * soumises par le formulaire (avant enregistrement).
+ */
+function lnf_admin_colors_ajax_preview() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( array( 'message' => __( 'Permission refusée.', 'loginfennec' ) ) ), 403 );
+	}
+	check_ajax_referer( 'lnf_admin', 'nonce' );
+
+	$defaults = lnf_get_defaults();
+	$keys     = array(
+		'admin_bg', 'admin_text', 'admin_hover_bg', 'admin_hover_text',
+		'admin_active_bg', 'admin_active_text', 'admin_accent',
+		'adminbar_bg', 'adminbar_text', 'adminbar_hover',
+	);
+	$colors = array( 'admin_enable' => ! empty( $_POST['admin_enable'] ) && '0' !== sanitize_text_field( wp_unslash( $_POST['admin_enable'] ) ) );
+	foreach ( $keys as $key ) {
+		$raw  = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce vérifié ci-dessus.
+		$hex  = sanitize_hex_color( $raw );
+		$colors[ $key ] = ( null !== $hex && '' !== $raw ) ? $hex : $defaults[ $key ];
+	}
+
+	wp_send_json_success( array( 'css' => lnf_admin_colors_css( $colors ) ) );
+}
+add_action( 'wp_ajax_lnf_admin_colors_preview', 'lnf_admin_colors_ajax_preview' );

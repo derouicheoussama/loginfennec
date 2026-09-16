@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.4.0
+Stable tag: 3.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,10 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.4.1 =
+* New: real-time preview in the Admin tab — every color and palette restyles the live WordPress admin menu instantly, before saving
+* New: onboarding note explaining the live admin-colors preview
 
 = 3.4.0 =
 * Changed: dashboard refreshed with a professional blue palette (derived from the fennec logo navy)

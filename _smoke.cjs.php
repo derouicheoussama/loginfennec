@@ -461,5 +461,19 @@ if ( 'geo' === $mode ) {
 	check( 'titre login inchangé si vide', 'Log In' === lnf_seo_login_title( 'Log In' ) );
 }
 
+// Aperçu temps réel : générateur CSS paramétrable (indépendant du cache réglages).
+$preview = lnf_admin_colors_css( array(
+	'admin_enable' => true,
+	'admin_bg' => '#123456', 'admin_text' => '#fedcba',
+	'admin_hover_bg' => '#111111', 'admin_hover_text' => '#222222',
+	'admin_active_bg' => '#333333', 'admin_active_text' => '#ffffff',
+	'admin_accent' => '#e88018', 'adminbar_bg' => '#444444',
+	'adminbar_text' => '#555555', 'adminbar_hover' => '#666666',
+) );
+check( 'aperçu admin : CSS construit des couleurs passées', is_string( $preview ) && false !== strpos( $preview, '#123456' ) );
+check( 'aperçu admin : accent propagé (thème + dérivés)', false !== strpos( $preview, '#e88018' ) && false !== strpos( $preview, '--wp-admin-theme-color' ) );
+check( 'aperçu admin : désactivé → CSS vide', '' === lnf_admin_colors_css( array( 'admin_enable' => false ) ) );
+check( 'aperçu admin : aucune injection HTML', false === stripos( (string) $preview, '<script' ) );
+
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

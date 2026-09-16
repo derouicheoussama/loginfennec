@@ -2814,3 +2814,23 @@ h3.lnf-group-title.is-hidden {
 	letter-spacing: 6px;
 	color: #ffb900;
 }
+
+/* ---------- Aperçu en temps réel (onglet Admin) ---------- */
+
+.lnf-live-note {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid var(--lnf-accent);
+	border-left-width: 4px;
+	border-radius: 8px;
+	background: rgba(15, 90, 168, .07);
+	padding: 10px 14px;
+	font-size: 13px;
+	color: var(--lnf-ink);
+}
+
+.lnf-live-note .dashicons {
+	color: var(--lnf-accent);
+}
