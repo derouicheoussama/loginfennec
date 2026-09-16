@@ -5,7 +5,7 @@ Tags: login, customizer, login page, security, brute force, sms, otp, recaptcha,
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,12 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.3.1 =
+* New: two more feature boxes in the onboarding overview (SMS login, GEO & SEO)
+* Changed: full rebrand of the plugin dashboard with the fennec logo palette — fennec orange accent, deep navy, warm sand neutrals
+* Changed: "Nuit fennec" admin palette now matches the logo (navy menu, orange active item, cream text)
+* Changed: default login button and admin accent colors follow the brand
 
 = 3.3.0 =
 * Fixed: fatal error at activation — removed a leftover call to the deleted GitHub updater class (now checks WordPress.org)

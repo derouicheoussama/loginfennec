@@ -1196,11 +1196,11 @@ class Lnf_Admin {
 		$themes = array(
 			'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
 			'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-			'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
+			'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #e88018;border-radius:8px;' ),
 			'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
 			'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
-			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
+			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #e88018;border-radius:8px;' ),
+			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #e88018;border-radius:0;' ),
 		);
 		foreach ( $themes as $key => $theme ) {
 			printf(
@@ -1522,16 +1522,16 @@ class Lnf_Admin {
 		return array(
 			'nuit'   => array(
 				'label'           => __( 'Nuit fennec', 'loginfennec' ),
-				'admin_bg'        => '#1d2327',
-				'admin_text'      => '#c3c4c7',
-				'admin_hover_bg'  => '#2c3338',
-				'admin_hover_text' => '#9d7bff',
-				'admin_active_bg' => '#6d5df6',
+				'admin_bg'        => '#00305e',
+				'admin_text'      => '#f9f0d8',
+				'admin_hover_bg'  => '#0a427f',
+				'admin_hover_text' => '#f2a444',
+				'admin_active_bg' => '#e88018',
 				'admin_active_text' => '#ffffff',
-				'admin_accent'    => '#6d5df6',
-				'adminbar_bg'     => '#1d2327',
-				'adminbar_text'   => '#c3c4c7',
-				'adminbar_hover'  => '#9d7bff',
+				'admin_accent'    => '#e88018',
+				'adminbar_bg'     => '#00234a',
+				'adminbar_text'   => '#f9f0d8',
+				'adminbar_hover'  => '#f2a444',
 			),
 			'desert' => array(
 				'label'           => __( 'Désert', 'loginfennec' ),
@@ -2090,6 +2090,8 @@ class Lnf_Admin {
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Icônes aux couleurs officielles des marques et mention de copyright.', 'loginfennec' ); ?></p></div>
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-desktop"></span><h3><?php esc_html_e( 'Aperçu en direct', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Bureau, tablette et mobile — chaque changement se voit instantanément.', 'loginfennec' ); ?></p></div>
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-chart-bar"></span><h3><?php esc_html_e( 'Statistiques', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Score de sécurité et journal des 50 derniers événements de connexion.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-smartphone"></span><h3><?php esc_html_e( 'Connexion par SMS', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Numéro de téléphone + code à usage unique : Twilio, Vonage ou votre passerelle locale.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-location"></span><h3><?php esc_html_e( 'GEO & SEO', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Autorisez la connexion depuis vos pays uniquement et gardez la page hors de Google (noindex).', 'loginfennec' ); ?></p></div>
 					</div>
 					<p class="lnf-inst-note">∞ <?php esc_html_e( 'Création de Derouiche Oussama — sans publicité, sans collecte de données.', 'loginfennec' ); ?></p>
 				</section>
@@ -2130,11 +2132,11 @@ class Lnf_Admin {
 						$themes = array(
 							'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:inset 22px 22px 0 -8px rgba(255,255,255,.4);border-radius:8px;' ),
 							'classic'  => array( __( 'Classique', 'loginfennec' ), 'background:#fff;border:1px solid #d5d3e8;border-radius:6px;' ),
-							'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #6d5df6;border-radius:8px;' ),
+							'outline'  => array( __( 'Contour', 'loginfennec' ), 'background:transparent;border:2px solid #e88018;border-radius:8px;' ),
 							'pill'     => array( __( 'Pillule', 'loginfennec' ), 'background:#fff;border-radius:999px;' ),
 							'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
-							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #7c3aed;border-radius:8px;' ),
-							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #6d5df6;border-radius:0;' ),
+							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #e88018;border-radius:8px;' ),
+							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #e88018;border-radius:0;' ),
 						);
 						foreach ( $themes as $key => $theme ) {
 							printf(
