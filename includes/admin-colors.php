@@ -137,15 +137,22 @@ function lnf_color_lighter( $hex, $percent = 10 ) {
 
 /**
  * Injecte le CSS admin custom dans l'admin WordPress.
+ *
+ * Impression en fin de <head> (admin_head, priorité maximale) : attaché à
+ * la feuille « common », notre CSS arrivait AVANT colors.css de WordPress
+ * qui, à sélecteur égal (#adminmenu…), reprenait la main — d'où un retour
+ * aux couleurs par défaut après chaque enregistrement.
  */
 function lnf_admin_colors_css_output() {
 	$c = lnf_admin_colors();
 	if ( empty( $c['admin_enable'] ) ) {
 		return;
 	}
-	wp_add_inline_style( 'common', lnf_admin_colors_css() );
+	// Valeurs toutes issues de sanitize_hex_color (à l'enregistrement ET dans
+	// lnf_admin_colors()) : aucune donnée non contrôlée dans ce CSS.
+	echo '<style id="lnf-admin-colors">' . lnf_admin_colors_css() . '</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS construit exclusivement à partir de couleurs hexadécimales validées.
 }
-add_action( 'admin_enqueue_scripts', 'lnf_admin_colors_css_output', 99 );
+add_action( 'admin_head', 'lnf_admin_colors_css_output', 9999 );
 
 /**
  * Injecte le CSS admin bar côté front-end (si bar visible).
@@ -155,9 +162,9 @@ function lnf_adminbar_css_frontend() {
 	if ( empty( $c['admin_enable'] ) || ! is_user_logged_in() || ! is_admin_bar_showing() ) {
 		return;
 	}
-	echo '<style id="lnf-adminbar-custom">' . lnf_admin_colors_css() . '</style>';
+	echo '<style id="lnf-adminbar-custom">' . lnf_admin_colors_css() . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS construit exclusivement à partir de couleurs hexadécimales validées.
 }
-add_action( 'wp_head', 'lnf_adminbar_css_frontend', 99 );
+add_action( 'wp_head', 'lnf_adminbar_css_frontend', 9999 );
 
 /**
  * Aperçu temps réel : retourne le CSS construit à partir des couleurs

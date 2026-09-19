@@ -362,6 +362,10 @@ if ( 'sms' !== $mode ) {
 		check( 'CSS contient #adminmenu', false !== strpos( $css, '#adminmenu' ) );
 		check( 'CSS contient #ABCDEF', false !== strpos( $css, '#ABCDEF' ) );
 		check( 'CSS sans balise script', false === stripos( $css, '<script' ) );
+		ob_start();
+		lnf_admin_colors_css_output();
+		$out_html = ob_get_clean();
+		check( 'CSS admin imprimé en fin de head (style tag)', false !== strpos( $out_html, 'lnf-admin-colors' ) );
 	} else {
 		check( 'CSS vide si désactivé (defaults)', '' === lnf_admin_colors_css() );
 	}
