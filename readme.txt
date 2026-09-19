@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,9 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.6.1 =
+* Fixed: the checkout wizard header showed placeholder dashes (— — · —) instead of the selected pack and billing — the labels now update live (e.g. "1 site · Annuelle")
 
 = 3.6.0 =
 * New: automatic text contrast on the login submit button (normal and hover) — never dark text on a dark button, never light on light, for every color and every style (WCAG luminance)

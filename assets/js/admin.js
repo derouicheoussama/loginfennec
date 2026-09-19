@@ -557,8 +557,8 @@
 
 	function updatePaySummary() {
 		var amount = payAmountDA();
-		$('#lnf-pay-pack-label, #lnf-wz-pack').text(payLabel());
-		$('#lnf-pay-billing-label, #lnf-wz-billing').text(payBillingLabel());
+		$('#lnf-pay-pack-label, #lnf-wz-pack, #lnf-wz-pack-label').text(payLabel());
+		$('#lnf-pay-billing-label, #lnf-wz-billing, #lnf-wz-billing-label').text(payBillingLabel());
 		$('#lnf-pay-amount').text(fmtDA(amount) + ' DA');
 		$('#lnf-wz-amount-da, #lnf-ccp-amount').text(fmtDA(amount) + ' DA');
 		var usd = Math.round(amount * (parseFloat(cfg.paypalRate) || 0) * 100) / 100;
