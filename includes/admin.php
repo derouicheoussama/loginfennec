@@ -70,8 +70,8 @@ class Lnf_Admin {
 	 * Menu : personnalisation, page Pro et installateur (page cachée).
 	 */
 	public static function menu() {
-		// Icône fennec custom pour le menu admin.
-		$fennec_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><path fill="#a7aaad" d="M3.2 1.2 8.2 3.6 6.4 9.4 2.8 11zM16.8 1.2 11.8 3.6 13.6 9.4 17.2 11z"/><path fill="#a7aaad" d="M5.6 8.2c0-.2.1-.3.1-.5.5-2.3 2.1-4.1 4.3-4.1s3.8 1.8 4.3 4.1c.1.2.1.3.1.5.4 1.7.1 3.5-.9 4.9-.7 1-1.7 1.8-2.9 2.2-.2.1-.4.1-.6.1-.2 0-.4 0-.6-.1-1.2-.4-2.2-1.2-2.9-2.2-1-1.4-1.3-3.2-.9-4.9z"/><circle fill="#1d2327" cx="7.6" cy="10.2" r="1"/><circle fill="#1d2327" cx="12.4" cy="10.2" r="1"/><path fill="#1d2327" d="M10 12.8c-.6 0-1.2.2-1.6.6-.1.1-.1.2 0 .3.1.1.2.1.3 0 .3-.3.8-.5 1.3-.5s1 .2 1.3.5c.1.1.2.1.3 0 .1-.1.1-.2 0-.3-.4-.4-1-.6-1.6-.6z"/></svg>';
+		// Icône du menu admin : serrure + fennec (identité v2), gris dashicons.
+		$fennec_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 214" width="20" height="20"><g fill="none" stroke="#a7aaad" stroke-linecap="round" stroke-linejoin="round"><path d="M 50 122 A 64 64 0 1 1 150 122 L 162 192 Q 164 200 156 200 L 44 200 Q 36 200 38 192 Z" stroke-width="14"/><path d="M 50 100 C 52 70 58 42 66 27 C 68 23 72 24 74 28 L 91 60" stroke-width="11"/><path d="M 150 100 C 148 70 142 42 134 27 C 132 23 128 24 126 28 L 109 60" stroke-width="11"/><path d="M 50 100 C 47 122 58 137 78 144 C 92 148 108 148 122 144 C 142 137 153 122 150 100" stroke-width="11"/></g></svg>';
 		$menu_icon  = 'data:image/svg+xml;base64,' . base64_encode( $fennec_svg );
 
 		add_menu_page(

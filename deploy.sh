@@ -30,7 +30,7 @@ fi
 
 # Construit le zip de production
 echo "📦 Construction du zip..."
-./_php/php/php.exe -l loginfennec.php > /dev/null
+php -l loginfennec.php > /dev/null
 echo "✅ Syntaxe PHP OK"
 
 # Publie le tag
@@ -43,4 +43,4 @@ echo ""
 echo "🎉 Déploiement terminé !"
 echo "   Dépôt   : https://github.com/derouicheoussama/loginfennec"
 echo "   Release : https://github.com/derouicheoussama/loginfennec/releases/tag/v$VERSION"
-echo "   Mises à jour : actives sur tous les sites (updater intégré)"
+echo "   Mises à jour : servies par WordPress.org après publication du plugin"

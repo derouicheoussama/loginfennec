@@ -68,7 +68,7 @@ git tag v2.3.1 && git push origin v2.3.1
    svn add . --force && svn ci -m "LoginFennec Pro 2.3.1"
    svn cp trunk tags/2.3.1 && svn ci -m "Tag 2.3.1"
    ```
-6. **Rien d'autre** : l'updater bascule seul vers wp.org et la fiche apparaîtra dans `plugin-install.php`.
+6. **Rien d'autre** : les mises à jour sont servies par wp.org et la fiche apparaîtra dans `plugin-install.php`.
 
 ## 5. Ventes — mémo des packs
 
