@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           3.8.0
+ * Version:           3.8.1
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -48,25 +48,66 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 				if ( ! current_user_can( 'activate_plugins' ) || ! function_exists( 'deactivate_plugins' ) ) {
 					return;
 				}
-				$old_candidates = array(
-					'loginfence/loginfence.php',
-					'infinity-loginshield/infinity-loginshield.php',
-				);
+				$self      = plugin_basename( __FILE__ );
 				$old_active = array();
-				foreach ( $old_candidates as $candidate ) {
+				$self_newer = false;
+				$other_newer = '';
+
+				// 1. Anciennes générations (loginfence, infinity-loginshield).
+				foreach ( array( 'loginfence/loginfence.php', 'infinity-loginshield/infinity-loginshield.php' ) as $candidate ) {
 					if ( function_exists( 'is_plugin_active' ) && is_plugin_active( $candidate ) ) {
 						$old_active[] = $candidate;
 					}
 				}
-				if ( empty( $old_active ) ) {
+
+				// 2. Doublons de LoginFennec elle-même (dossiers loginfennec-1,
+				// loginfennec-2… créés quand un remplacement d'install échoue).
+				// La copie la plus RÉCENTE reste active, l'autre est désactivée.
+				$self_version = '';
+				$self_header  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
+				if ( ! empty( $self_header['v'] ) ) {
+					$self_version = (string) $self_header['v'];
+				}
+				foreach ( (array) get_option( 'active_plugins', array() ) as $active ) {
+					if ( ! is_string( $active ) || $active === $self || ! preg_match( '#(^|/)loginfennec\.php$#', $active ) ) {
+						continue;
+					}
+					$other_file = WP_PLUGIN_DIR . '/' . $active;
+					$other_head = file_exists( $other_file ) ? get_file_data( $other_file, array( 'v' => 'Version' ) ) : array();
+					$other_ver  = empty( $other_head['v'] ) ? '0' : (string) $other_head['v'];
+					if ( version_compare( $self_version, $other_ver, '>=' ) ) {
+						$old_active[] = $active;
+					} else {
+						$other_newer = $other_ver;
+					}
+				}
+
+				if ( empty( $old_active ) && '' === $other_newer ) {
 					return;
 				}
+
+				if ( '' !== $other_newer ) {
+					// Cette copie est plus ancienne que celle déjà active :
+					// on se désactive soi-même (jamais la copie fonctionnelle).
+					deactivate_plugins( $self, true );
+					add_action(
+						'admin_notices',
+						function () use ( $other_newer ) {
+							echo '<div class="notice notice-warning is-dismissible"><p><strong>LoginFennec Pro :</strong> '
+								. esc_html( sprintf( /* translators: %s: numéro de version. */ __( 'une copie plus récente (v%s) est déjà active — cette copie obsolète a été désactivée automatiquement. Supprimez-la dans Extensions.', 'loginfennec' ), $other_newer ) )
+								. '</p></div>';
+						}
+					);
+					return;
+				}
+
 				deactivate_plugins( $old_active, true );
 				add_action(
 					'admin_notices',
 					function () use ( $old_active ) {
 						echo '<div class="notice notice-warning is-dismissible"><p><strong>LoginFennec Pro :</strong> '
-							. esc_html__( 'l’ancienne copie du plugin a été désactivée automatiquement pour éviter tout conflit. Vous pouvez maintenant la supprimer dans Extensions.', 'loginfennec' )
+							. esc_html( count( $old_active ) ) . ' '
+							. esc_html__( 'copie obsolète du plugin était encore active — elle a été désactivée automatiquement pour éviter tout conflit. Supprimez-la dans Extensions.', 'loginfennec' )
 							. '</p></div>';
 					}
 				);
@@ -76,7 +117,7 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '3.8.0' );
+define( 'LOGINFENNEC_VERSION', '3.8.1' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
