@@ -871,6 +871,13 @@ class Lnf_Admin {
 
 		$s = lnf_settings();
 
+		// Avertissement : le mode sans échec neutralise tout le plugin.
+		if ( ! empty( $s['safe_mode'] ) ) {
+			echo '<div class="notice notice-warning"><p><strong>🛠 ' . esc_html__( 'Mode sans échec actif :', 'loginfennec' ) . '</strong> '
+				. esc_html__( 'personnalisation, sécurité, SMS, GEO et reCAPTCHA sont désactivés. Désactivez le mode sans échec dans l’onglet Extras pour tout réactiver.', 'loginfennec' )
+				. '</p></div>';
+		}
+
 		// Alerte : un serveur limitant max_input_vars sous le volume de ce
 		// formulaire (~130 champs) tronque silencieusement le POST en fin de
 		// formulaire — précisément les derniers onglets (SMS, Admin).
@@ -1507,6 +1514,10 @@ class Lnf_Admin {
 			'https://exemple.com/espace-client',
 			__( 'Laisser vide pour le comportement WordPress habituel (tableau de bord ou page demandée).', 'loginfennec' )
 		);
+
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Mises à jour & stabilité', 'loginfennec' ) . '</h3>';
+		self::field_toggle( $s, 'auto_update', __( 'Mises à jour automatiques du plugin', 'loginfennec' ), __( 'Utilise le mécanisme natif de WordPress : les nouveautés s’installent seules, sans updater tiers.', 'loginfennec' ) );
+		self::field_toggle( $s, 'safe_mode', __( 'Mode sans échec (dépannage)', 'loginfennec' ), __( 'Désactive d’un coup : personnalisation de la page de connexion, couleurs d’admin, blocage force brute, SMS, GEO et reCAPTCHA. À utiliser si un réglage rend le site instable — désactivez-le ensuite pour tout réactiver.', 'loginfennec' ) );
 
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'Référencement (SEO)', 'loginfennec' ) . '</h3>';
 		self::field_toggle( $s, 'seo_noindex', __( 'Empêcher l’indexation de la page de connexion', 'loginfennec' ), __( 'Ajoute noindex, nofollow : Google n’affiche jamais la page de connexion dans les résultats (recommandé).', 'loginfennec' ) );

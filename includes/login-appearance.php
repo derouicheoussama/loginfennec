@@ -138,6 +138,13 @@ function lnf_build_login_css( $s ) {
 
 	// Textes et libellés.
 	$css .= sprintf( 'body.login{color:%s;}', $s['text_color'] );
+	// Variables partagées : le panneau « Connexion par SMS » hérite du design
+	// (fond, couleur de texte) au lieu de ses valeurs de repli neutres.
+	$css .= sprintf(
+		'body.login{--lnf-form-bg:%1$s;--lnf-form-color:%2$s;}',
+		lnf_hex_to_rgba( $s['form_bg'], (int) $s['form_opacity'] ),
+		$s['text_color']
+	);
 	$css .= sprintf( 'body.login form label,body.login .forgetmenot label{color:%s;}', $s['label_color'] );
 
 	// Champs de saisie.
@@ -156,15 +163,18 @@ function lnf_build_login_css( $s ) {
 		$css .= sprintf( 'body.login form .input{height:%dpx;}', (int) $s['input_height'] );
 	}
 
-	// Bouton principal.
+	// Bouton principal — texte calculé automatiquement : jamais d'écriture
+	// sombre sur un bouton sombre (ni claire sur clair), quel que soit le style.
 	$css .= sprintf(
-		'body.login #wp-submit{background:%1$s;border-color:%1$s;color:#fff;border-radius:%2$dpx;height:40px;padding:0 18px;font-size:14px;}',
+		'body.login #wp-submit{background:%1$s;border-color:%1$s;color:%2$s;border-radius:%3$dpx;height:40px;padding:0 18px;font-size:14px;}',
 		$s['button_bg'],
+		lnf_contrast_text( $s['button_bg'] ),
 		(int) $s['button_radius']
 	);
 	$css .= sprintf(
-		'body.login #wp-submit:hover,body.login #wp-submit:focus{background:%1$s;border-color:%1$s;box-shadow:0 0 0 3px %2$s;}',
+		'body.login #wp-submit:hover,body.login #wp-submit:focus{background:%1$s;border-color:%1$s;color:%2$s;box-shadow:0 0 0 3px %3$s;}',
 		$s['button_hover'],
+		lnf_contrast_text( $s['button_hover'] ),
 		lnf_hex_to_rgba( $s['button_hover'], 35 )
 	);
 
@@ -406,6 +416,10 @@ function lnf_get_social_networks( $s ) {
  * Affiche le CSS personnalisé dans la page de connexion.
  */
 function lnf_login_head() {
+	// Mode sans échec : page de connexion native, aucune personnalisation.
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return;
+	}
 	// Essai expiré sans licence Pro : pas de personnalisation.
 	if ( lnf_trial_is_locked() ) {
 		return;
@@ -416,6 +430,8 @@ function lnf_login_head() {
 	if ( ! empty( $s['font_google'] ) ) {
 		$gf = str_replace( ' ', '+', $s['font_google'] );
 		$weights = ! empty( $s['font_google_weight'] ) ? ':wght@' . $s['font_google_weight'] : '';
+		printf( '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n" );
+		printf( '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n" );
 		wp_enqueue_style(
 			'lnf-google-font',
 			'https://fonts.googleapis.com/css2?family=' . rawurlencode( $gf ) . $weights . '&display=swap',

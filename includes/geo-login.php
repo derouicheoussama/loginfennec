@@ -97,6 +97,9 @@ function lnf_geo_allowed_countries() {
  * @return bool
  */
 function lnf_geo_blocked() {
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return false;
+	}
 	$s = lnf_settings();
 	if ( empty( $s['geo_enable'] ) ) {
 		return false;

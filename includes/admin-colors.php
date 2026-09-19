@@ -148,6 +148,9 @@ function lnf_admin_colors_css_output() {
 	if ( empty( $c['admin_enable'] ) ) {
 		return;
 	}
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return;
+	}
 	// Valeurs toutes issues de sanitize_hex_color (à l'enregistrement ET dans
 	// lnf_admin_colors()) : aucune donnée non contrôlée dans ce CSS.
 	echo '<style id="lnf-admin-colors">' . lnf_admin_colors_css() . '</style>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS construit exclusivement à partir de couleurs hexadécimales validées.

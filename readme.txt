@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.5.1
+Stable tag: 3.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,14 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.6.0 =
+* New: automatic text contrast on the login submit button (normal and hover) — never dark text on a dark button, never light on light, for every color and every style (WCAG luminance)
+* New: safe mode option — one switch to disable customization, security, SMS, GEO and reCAPTCHA when troubleshooting, with a dashboard warning
+* New: opt-in automatic updates via the native WordPress mechanism
+* Improved: SMS panel on the login page now inherits the form design (background, text color)
+* Improved: Google Fonts preconnect for a faster login page
+* Docs: PROMPT-VERIFICATION.md — a complete QA prompt covering every section, option and feature
 
 = 3.5.1 =
 * Fixed: saved admin colors reverted to the WordPress default palette after saving — the custom CSS now prints at the very end of the admin head, after the native color scheme, so it wins

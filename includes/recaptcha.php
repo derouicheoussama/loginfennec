@@ -24,6 +24,9 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function lnf_recaptcha_enabled() {
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return false;
+	}
 	$s = lnf_settings();
 	return ! empty( $s['recaptcha_enabled'] )
 		&& ! empty( $s['recaptcha_site_key'] )

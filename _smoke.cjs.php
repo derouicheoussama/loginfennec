@@ -267,6 +267,18 @@ if ( 'geo' === $mode ) {
 		'sec_whitelist'   => '10.0.0.1',
 	);
 }
+if ( 'safe' === $mode ) {
+	$GLOBALS['__options']['loginfennec_settings'] = array(
+		'safe_mode'   => '1',
+		'sms_enabled' => '1',
+		'geo_enable'  => '1',
+		'geo_countries' => 'DZ',
+		'admin_enable' => '1',
+		'recaptcha_enabled' => '1',
+		'recaptcha_site_key' => 'k',
+		'recaptcha_secret_key' => 's',
+	);
+}
 
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) { define( 'HOUR_IN_SECONDS', 3600 ); }
 if ( ! defined( 'DAY_IN_SECONDS' ) ) { define( 'DAY_IN_SECONDS', 86400 ); }
@@ -351,7 +363,7 @@ check( 'admin_text rejeté → défaut', '#c3c4c7' === $out['admin_text'] );
 check( 'admin_hover_bg 3 digits accepté', '#123' === $out['admin_hover_bg'] );
 
 echo "== Module admin colors ==\n";
-if ( 'sms' !== $mode ) {
+if ( 'sms' !== $mode && 'safe' !== $mode ) {
 	if ( $enabled ) {
 		$c = lnf_admin_colors();
 		check( 'admin_enable actif', ! empty( $c['admin_enable'] ) );
@@ -511,6 +523,25 @@ $replaced = lnf_sanitize_settings( array( 'sms_twilio_token' => 'NEW-KEY' ), $ba
 check( 'nouvelle clé → chiffrée à l\'écriture', 0 === strpos( (string) $replaced['sms_twilio_token'], 'lnfenc1:' ) && 'NEW-KEY' === lnf_decrypt_secret( $replaced['sms_twilio_token'] ) );
 $from_empty = lnf_sanitize_settings( array( 'sms_vonage_secret' => 'FRESH' ), lnf_get_defaults() );
 check( 'secret vide + nouvelle clé → chiffrée', 0 === strpos( (string) $from_empty['sms_vonage_secret'], 'lnfenc1:' ) );
+
+// Contraste : jamais d'écriture sombre sur sombre, ni claire sur clair.
+check( 'contraste : fond sombre → texte blanc', '#ffffff' === lnf_contrast_text( '#00305e' ) );
+check( 'contraste : fond noir → texte blanc', '#ffffff' === lnf_contrast_text( '#000000' ) );
+check( 'contraste : fond crème → texte sombre', '#1d2327' === lnf_contrast_text( '#f9f0d8' ) );
+check( 'contraste : fond blanc → texte sombre', '#1d2327' === lnf_contrast_text( '#ffffff' ) );
+check( 'contraste : orange fennec → texte sombre (lisible)', '#1d2327' === lnf_contrast_text( '#e88018' ) );
+check( 'luminance bornée', lnf_luminance( '#000000' ) < 0.01 && lnf_luminance( '#ffffff' ) > 0.99 );
+
+// Mode sans échec : tout est neutralisé (uniquement en mode 'safe').
+if ( 'safe' === $mode ) {
+	check( 'safe mode : détecté', lnf_safe_mode() );
+	check( 'safe mode : SMS désactivé', ! lnf_sms_active() );
+	check( 'safe mode : GEO désactivé', ! lnf_geo_blocked() );
+	check( 'safe mode : reCAPTCHA désactivé', ! lnf_recaptcha_enabled() );
+	ob_start();
+	lnf_admin_colors_css_output();
+	check( 'safe mode : couleurs admin non imprimées', '' === ob_get_clean() );
+}
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

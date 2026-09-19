@@ -30,6 +30,9 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function lnf_sms_active() {
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return false;
+	}
 	if ( function_exists( 'lnf_trial_is_locked' ) && lnf_trial_is_locked() ) {
 		return false;
 	}

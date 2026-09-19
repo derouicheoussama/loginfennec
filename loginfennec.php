@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           3.5.1
+ * Version:           3.6.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -76,7 +76,7 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '3.5.1' );
+define( 'LOGINFENNEC_VERSION', '3.6.0' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
@@ -262,11 +262,27 @@ add_action( 'plugins_loaded', 'lnf_maybe_upgrade', 20 );
 
 /**
  * Initialise les modules.
+ * Mode sans échec : les modules de sécurité restent à l'écart pour dépanner.
  */
 function lnf_init_modules() {
+	if ( function_exists( 'lnf_safe_mode' ) && lnf_safe_mode() ) {
+		return;
+	}
 	Lnf_Login_Security::init();
 }
 add_action( 'plugins_loaded', 'lnf_init_modules' );
+
+/**
+ * Mises à jour automatiques opt-in (réglage « auto_update ») via le
+ * mécanisme natif de WordPress — aucun updater personnalisé.
+ */
+function lnf_auto_update_plugin( $update, $item ) {
+	if ( isset( $item->slug ) && 'loginfennec' === $item->slug && function_exists( 'lnf_get_option' ) && ! empty( lnf_get_option( 'auto_update' ) ) ) {
+		return true;
+	}
+	return $update;
+}
+add_filter( 'auto_update_plugin', 'lnf_auto_update_plugin', 10, 2 );
 
 /**
  * En-têtes de sécurité et anti-cache sur la page de connexion.

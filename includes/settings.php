@@ -179,6 +179,10 @@ function lnf_get_defaults() {
 		// GEO : restriction par pays.
 		'geo_enable'       => false,
 		'geo_countries'    => '',
+
+		// Avancé & stabilité.
+		'auto_update'      => false,
+		'safe_mode'        => false,
 		// Sécurité.
 		'sec_enable'               => true,
 		'sec_max_attempts'         => 5,
@@ -246,6 +250,7 @@ function lnf_field_spec() {
 			'recaptcha_enabled', 'white_label', 'admin_enable',
 			'sec_disable_app_passwords', 'sms_enabled',
 			'seo_noindex', 'geo_enable',
+			'auto_update', 'safe_mode',
 		),
 		'url'    => array(
 			'bg_image', 'logo_url', 'logo_link', 'back_to_url',
@@ -462,6 +467,60 @@ function lnf_decrypt_secret( $stored ) {
 		substr( $raw, 12, 16 )
 	);
 	return false === $plain ? '' : $plain;
+}
+
+/**
+ * Luminance relative perçue (0-1) d'une couleur hexadécimale
+ * (formule WCAG : 0.2126 R + 0.7152 G + 0.0722 B, canaux linéarisés).
+ *
+ * @param string $hex Couleur hex (#rgb ou #rrggbb).
+ * @return float
+ */
+function lnf_luminance( $hex ) {
+	$hex = ltrim( (string) $hex, '#' );
+	if ( 3 === strlen( $hex ) ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+	if ( 6 !== strlen( $hex ) ) {
+		return 0;
+	}
+	$linearize = static function ( $channel ) {
+		$channel /= 255;
+		return $channel <= 0.03928 ? $channel / 12.92 : pow( ( $channel + 0.055 ) / 1.055, 2.4 );
+	};
+	return 0.2126 * $linearize( hexdec( substr( $hex, 0, 2 ) ) )
+		+ 0.7152 * $linearize( hexdec( substr( $hex, 2, 2 ) ) )
+		+ 0.0722 * $linearize( hexdec( substr( $hex, 4, 2 ) ) );
+}
+
+/**
+ * Couleur de texte (blanc ou encre sombre) offrant le meilleur contraste
+ * de lecture sur un fond donné. Garantie : jamais d'écriture sombre sur
+ * un bouton sombre, jamais d'écriture claire sur un bouton clair — quel
+ * que soit le style ou la couleur choisis.
+ *
+ * @param string $background Fond sur lequel le texte sera posé.
+ * @param string $dark      Encre sombre à utiliser.
+ * @param string $light     Encre claire à utiliser.
+ * @return string
+ */
+function lnf_contrast_text( $background, $dark = '#1d2327', $light = '#ffffff' ) {
+	$l       = lnf_luminance( $background );
+	$l_light = lnf_luminance( $light );
+	$l_dark  = lnf_luminance( $dark );
+	$ratio_light = ( max( $l, $l_light ) + 0.05 ) / ( min( $l, $l_light ) + 0.05 );
+	$ratio_dark  = ( max( $l, $l_dark ) + 0.05 ) / ( min( $l, $l_dark ) + 0.05 );
+	return $ratio_light >= $ratio_dark ? $light : $dark;
+}
+
+/**
+ * Mode sans échec : désactive d'un coup sécurité, SMS, GEO, reCAPTCHA,
+ * personnalisation et couleurs d'admin pour dépanner un site instable.
+ *
+ * @return bool
+ */
+function lnf_safe_mode() {
+	return ! empty( lnf_get_option( 'safe_mode' ) );
 }
 
 /**
