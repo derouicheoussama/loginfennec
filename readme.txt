@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,13 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.6.2 =
+* Fixed: two-column layout could never be saved — the "layout" setting was silently reset to "single" by the sanitizer (missing allowed-values list)
+* Fixed: duplicated default entries for layout and side image (3.0.0 merge residue)
+* Fixed: side image was sanitized as plain text instead of a URL; Google Fonts name no longer passes through key sanitization
+* Security: uninstall now also removes the license, trial data, review/first-run flags, license cron, geolocation cache and update-check transients
+* Improved: SMS logins now count toward the 7-day login statistics
 
 = 3.6.1 =
 * Fixed: the checkout wizard header showed placeholder dashes (— — · —) instead of the selected pack and billing — the labels now update live (e.g. "1 site · Annuelle")

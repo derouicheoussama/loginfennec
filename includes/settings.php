@@ -86,8 +86,6 @@ function lnf_get_defaults() {
 		'form_padding'  => 36,
 		'form_shadow'   => true,
 		'input_height'  => 0,
-		'layout'        => 'single', // single | two-column.
-		'side_image'    => '',
 		'text_color'    => '#ffffff',
 		'label_color'   => '#ffffff',
 		'input_bg'      => '#ffffff',
@@ -241,7 +239,7 @@ function lnf_get_option( $key ) {
  */
 function lnf_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'font_google', 'sms_provider' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'sms_provider' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
@@ -258,7 +256,7 @@ function lnf_field_spec() {
 			'social_linkedin', 'social_youtube', 'login_redirect', 'side_image',
 			'sms_webhook_url',
 		),
-		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'side_image', 'sms_twilio_sid', 'sms_twilio_token', 'sms_vonage_key', 'sms_vonage_secret', 'sms_webhook_token', 'sms_from', 'sms_country', 'sms_template', 'seo_login_title', 'geo_countries' ),
+		'text'   => array( 'back_to_text', 'register_text', 'social_email', 'copyright_text', 'sec_lock_message', 'welcome_title', 'welcome_subtitle', 'custom_css', 'sec_whitelist', 'logo_text', 'custom_js', 'field_placeholder_user', 'field_placeholder_pass', 'field_label_user', 'field_label_pass', 'sec_alert_email', 'font_google', 'font_google_weight', 'recaptcha_site_key', 'recaptcha_secret_key', 'sms_twilio_sid', 'sms_twilio_token', 'sms_vonage_key', 'sms_vonage_secret', 'sms_webhook_token', 'sms_from', 'sms_country', 'sms_template', 'seo_login_title', 'geo_countries' ),
 		'color'  => array(
 			'bg_color1', 'bg_color2', 'bg_overlay_color', 'form_bg', 'text_color',
 			'label_color', 'input_bg', 'input_color', 'input_border',
@@ -321,6 +319,7 @@ function lnf_sanitize_settings( $input, $base = null ) {
 			'social_style' => array( 'circle', 'rounded', 'square' ),
 			'font_family'  => array( 'system', 'serif', 'rounded', 'mono' ),
 			'anim'         => array( 'none', 'fade', 'slide', 'zoom' ),
+			'layout'       => array( 'single', 'two-column' ),
 			'sms_provider' => array( 'twilio', 'vonage', 'webhook' ),
 		);
 		$field_allowed = isset( $allowed[ $key ] ) ? $allowed[ $key ] : array();

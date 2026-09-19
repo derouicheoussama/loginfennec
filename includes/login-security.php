@@ -248,7 +248,7 @@ class Lnf_Login_Security {
 
 		foreach ( self::get_log() as $event ) {
 			$age = $now - (int) $event['t'];
-			if ( 'login' === $event['a'] && $age <= 7 * DAY_IN_SECONDS ) {
+			if ( ( 'login' === $event['a'] || 'sms' === $event['a'] ) && $age <= 7 * DAY_IN_SECONDS ) {
 				$stats['logins7']++;
 			}
 			if ( 'blocked' === $event['a'] && $age <= 7 * DAY_IN_SECONDS ) {

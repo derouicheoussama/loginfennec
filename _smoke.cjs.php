@@ -543,5 +543,16 @@ if ( 'safe' === $mode ) {
 	check( 'safe mode : couleurs admin non imprimées', '' === ob_get_clean() );
 }
 
+// Layout : la valeur « two-column » doit survivre à la sanitization
+// (bug historique : clé 'layout' sans liste autorisée → toujours réinitialisée).
+$lay = lnf_sanitize_settings( array( 'layout' => 'two-column' ), null );
+check( 'layout two-column sauvegardable', 'two-column' === $lay['layout'] );
+$lay_bad = lnf_sanitize_settings( array( 'layout' => 'pirate' ), null );
+check( 'layout invalide → défaut', 'single' === $lay_bad['layout'] );
+$fg = lnf_sanitize_settings( array( 'font_google' => 'Playfair Display' ), null );
+check( 'police Google avec espace préservée', 'Playfair Display' === $fg['font_google'] );
+$si = lnf_sanitize_settings( array( 'side_image' => 'https://test.local/img.jpg' ), null );
+check( 'side_image assaini en URL', 'https://test.local/img.jpg' === $si['side_image'] );
+
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );
