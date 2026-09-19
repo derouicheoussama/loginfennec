@@ -208,13 +208,6 @@ function lnf_settings() {
 	if ( null === $cache ) {
 		$saved = get_option( LOGINFENNEC_OPTION, array() );
 		$cache = wp_parse_args( is_array( $saved ) ? $saved : array(), lnf_get_defaults() );
-		// Les secrets sont chiffrés au repos : le reste du plugin consomme
-		// toujours des valeurs en clair.
-		foreach ( lnf_secret_keys() as $secret_key ) {
-			if ( isset( $cache[ $secret_key ] ) ) {
-				$cache[ $secret_key ] = lnf_decrypt_secret( $cache[ $secret_key ] );
-			}
-		}
 	}
 	return $cache;
 }
@@ -341,13 +334,7 @@ function lnf_sanitize_settings( $input, $base = null ) {
 		if ( null !== $base && ! array_key_exists( $key, $input ) ) {
 			continue;
 		}
-		$raw = (string) ( isset( $input[ $key ] ) ? $input[ $key ] : '' );
-		// Champ secret laissé vide → on conserve le secret enregistré
-		// (les champs secrets ne sont jamais affichés, donc jamais renvoyés).
-		if ( in_array( $key, lnf_secret_keys(), true ) && '' === trim( $raw ) && null !== $base ) {
-			continue;
-		}
-		$out[ $key ] = sanitize_textarea_field( $raw );
+		$out[ $key ] = sanitize_textarea_field( (string) ( isset( $input[ $key ] ) ? $input[ $key ] : '' ) );
 	}
 
 	foreach ( $spec['color'] as $key ) {
@@ -366,20 +353,12 @@ function lnf_sanitize_settings( $input, $base = null ) {
 		$out[ $key ] = max( $range[0], min( $range[1], $value ) );
 	}
 
-	// Chiffrement au repos : le tableau retourné est destiné à update_option —
-	// les secrets y sont systématiquement stockés chiffrés.
-	foreach ( lnf_secret_keys() as $secret_key ) {
-		if ( isset( $out[ $secret_key ] ) && '' !== $out[ $secret_key ] ) {
-			$out[ $secret_key ] = lnf_encrypt_secret( (string) $out[ $secret_key ] );
-		}
-	}
-
 	return $out;
 }
 
 /**
- * Clés de réglages contenant des secrets (jamais exportées, jamais affichées,
- * chiffrées au repos).
+ * Clés de réglages contenant des secrets (jamais exportées, jamais écrasées
+ * par un import qui n'en fournit pas).
  *
  * @return array
  */
@@ -390,78 +369,6 @@ function lnf_secret_keys() {
 		'sms_webhook_token',
 		'recaptcha_secret_key',
 	);
-}
-
-/**
- * Clé de chiffrement des secrets : dérivée du sel « auth » de WordPress
- * (wp-config.php) + une graine aléatoire propre au site. Une simple copie
- * de la base de données ne suffit donc pas à déchiffrer les clés API.
- *
- * @return string Clé hexadécimale 256 bits.
- */
-function lnf_secret_key() {
-	static $key = null;
-	if ( null !== $key ) {
-		return $key;
-	}
-	$seed = get_option( 'lnf_secret_seed', '' );
-	if ( ! is_string( $seed ) || '' === $seed ) {
-		$seed = bin2hex( random_bytes( 16 ) );
-		update_option( 'lnf_secret_seed', $seed, false );
-	}
-	$key = hash( 'sha256', wp_salt( 'auth' ) . '|' . $seed );
-	return $key;
-}
-
-/**
- * Chiffre un secret (AES-256-GCM). Préfixe « lnfenc1: ».
- * Sans openssl (rare), retourne la valeur telle quelle : dégradation douce.
- *
- * @param string $plain Secret en clair.
- * @return string
- */
-function lnf_encrypt_secret( $plain ) {
-	$plain = (string) $plain;
-	if ( '' === $plain || ! function_exists( 'openssl_encrypt' ) ) {
-		return $plain;
-	}
-	$iv     = random_bytes( 12 );
-	$tag    = '';
-	$cipher = openssl_encrypt( $plain, 'aes-256-gcm', lnf_secret_key(), OPENSSL_RAW_DATA, $iv, $tag, '', 16 );
-	if ( false === $cipher ) {
-		return $plain;
-	}
-	return 'lnfenc1:' . base64_encode( $iv . $tag . $cipher );
-}
-
-/**
- * Déchiffre un secret stocké. Une valeur sans préfixe (héritée d'une version
- * antérieure, en clair) est retournée telle quelle.
- *
- * @param string $stored Valeur stockée.
- * @return string
- */
-function lnf_decrypt_secret( $stored ) {
-	$stored = (string) $stored;
-	if ( '' === $stored || 0 !== strpos( $stored, 'lnfenc1:' ) ) {
-		return $stored;
-	}
-	if ( ! function_exists( 'openssl_decrypt' ) ) {
-		return '';
-	}
-	$raw = base64_decode( substr( $stored, 8 ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- décodage du chiffré maison.
-	if ( false === $raw || strlen( $raw ) < 29 ) {
-		return '';
-	}
-	$plain = openssl_decrypt(
-		substr( $raw, 28 ),
-		'aes-256-gcm',
-		lnf_secret_key(),
-		OPENSSL_RAW_DATA,
-		substr( $raw, 0, 12 ),
-		substr( $raw, 12, 16 )
-	);
-	return false === $plain ? '' : $plain;
 }
 
 /**

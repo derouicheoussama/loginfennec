@@ -34,8 +34,6 @@ function lnf_uninstall_site() {
 	delete_option( LOGINFENNEC_ATTEMPTS );
 	delete_option( LOGINFENNEC_PENDING );
 	delete_option( LOGINFENNEC_VERSION_KEY );
-	delete_option( 'lnf_secret_seed' );
-	delete_option( 'lnf_security_log' );
 	delete_transient( LOGINFENNEC_TRANSIENT );
 	delete_transient( LOGINFENNEC_WPORG_CHECK );
 

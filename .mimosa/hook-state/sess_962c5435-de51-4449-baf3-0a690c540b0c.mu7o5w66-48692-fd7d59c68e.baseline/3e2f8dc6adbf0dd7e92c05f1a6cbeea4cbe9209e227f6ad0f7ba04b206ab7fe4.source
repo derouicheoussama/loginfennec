@@ -435,7 +435,7 @@ check( 'index.php dans les dossiers (anti-listing)', file_exists( 'includes/inde
 check( 'assets SMS versionnés présents', file_exists( 'assets/js/sms-login.js' ) && file_exists( 'assets/css/sms-login.css' ) );
 check( 'clés secrètes identifiées', 4 === count( lnf_secret_keys() ) );
 $sec = lnf_sanitize_settings( array( 'sms_twilio_token' => 'TOPSECRET', 'sms_vonage_secret' => 'VSEC' ) );
-check( 'sanitize conserve les secrets (chiffrés, déchiffrables)', 'TOPSECRET' === lnf_decrypt_secret( $sec['sms_twilio_token'] ) && 'VSEC' === lnf_decrypt_secret( $sec['sms_vonage_secret'] ) );
+check( 'sanitize conserve les secrets', 'TOPSECRET' === $sec['sms_twilio_token'] && 'VSEC' === $sec['sms_vonage_secret'] );
 
 if ( 'geo' === $mode ) {
 	check( 'pays autorisés normalisés', array( 'DZ', 'FR', 'TN', 'US' ) === lnf_geo_allowed_countries() );
@@ -492,21 +492,6 @@ $full = lnf_sanitize_settings( array(
 	'adminbar_text' => '#f9f0d8', 'adminbar_hover' => '#f2a444',
 ), null );
 check( 'save complet (base null) : toutes les couleurs passent', '#112233' === $full['admin_bg'] && true === $full['admin_enable'] && '#f2a444' === $full['adminbar_hover'] );
-
-// Secrets : chiffrement au repos + champ vide qui conserve + lecture déchiffrée.
-$enc = lnf_encrypt_secret( 'TOPSECRET-TOKEN' );
-check( 'secret chiffré (préfixe + pas de clair)', 0 === strpos( $enc, 'lnfenc1:' ) && false === strpos( $enc, 'TOPSECRET' ) );
-check( 'déchiffrement restitue le secret', 'TOPSECRET-TOKEN' === lnf_decrypt_secret( $enc ) );
-check( 'valeur héritée en clair passée telle quelle', 'legacy-key' === lnf_decrypt_secret( 'legacy-key' ) );
-check( 'chiffré falsifié → chaîne vide', '' === lnf_decrypt_secret( 'lnfenc1:' . substr( $enc, 8, -4 ) . 'AAAA' ) );
-
-$base_sec = array_merge( lnf_get_defaults(), array( 'sms_twilio_token' => 'EXISTING-KEY' ) );
-$kept     = lnf_sanitize_settings( array( 'sms_twilio_token' => '' ), $base_sec );
-check( 'champ secret vide → clé conservée', 'EXISTING-KEY' === lnf_decrypt_secret( $kept['sms_twilio_token'] ) );
-$replaced = lnf_sanitize_settings( array( 'sms_twilio_token' => 'NEW-KEY' ), $base_sec );
-check( 'nouvelle clé → chiffrée à l\'écriture', 0 === strpos( (string) $replaced['sms_twilio_token'], 'lnfenc1:' ) && 'NEW-KEY' === lnf_decrypt_secret( $replaced['sms_twilio_token'] ) );
-$from_empty = lnf_sanitize_settings( array( 'sms_vonage_secret' => 'FRESH' ), lnf_get_defaults() );
-check( 'secret vide + nouvelle clé → chiffrée', 0 === strpos( (string) $from_empty['sms_vonage_secret'], 'lnfenc1:' ) );
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

@@ -2834,3 +2834,17 @@ h3.lnf-group-title.is-hidden {
 .lnf-live-note .dashicons {
 	color: var(--lnf-accent);
 }
+
+/* ---------- Champs secrets (clés API masquées) ---------- */
+
+.lnf-secret-ok {
+	color: var(--lnf-green);
+}
+
+.lnf-secret-ok .dashicons {
+	font-size: 16px;
+	height: 16px;
+	width: 16px;
+	margin-right: 2px;
+	vertical-align: text-bottom;
+}

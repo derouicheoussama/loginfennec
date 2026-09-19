@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.4.2
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,6 +131,11 @@ Yes. Define `LOGINFENNEC_CHECKOUT_URL` in wp-config.php with your payment link (
 6. The redesigned login page in action.
 
 == Changelog ==
+
+= 3.5.0 =
+* Security: API keys and secrets (Twilio, Vonage, webhook, reCAPTCHA) are now encrypted at rest with AES-256-GCM using a per-site key derived from the WordPress auth salt
+* Security: secret fields never display their stored value in the admin HTML — leave empty to keep the current key, type a new one to replace it
+* Security: an empty secret field on save or import keeps the existing key
 
 = 3.4.2 =
 * Fixed: admin colors (and any field) could silently reset when the server truncated the form submission — saving is now a partial update that keeps stored values for fields missing from the request

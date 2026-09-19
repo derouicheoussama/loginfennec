@@ -445,13 +445,11 @@ class Lnf_Admin {
 		$imported = lnf_sanitize_settings( $data, null );
 
 		// Anti-fuite (sens inverse) : un import sans secrets ne doit pas effacer
-		// ceux déjà enregistrés sur le site. Les valeurs stockées lues via
-		// lnf_settings() sont en clair (déchiffrées) : on les rechiffre
-		// pour l'écriture.
+		// ceux déjà enregistrés sur le site.
 		$stored = lnf_settings();
 		foreach ( lnf_secret_keys() as $secret ) {
 			if ( '' === (string) $imported[ $secret ] && '' !== (string) $stored[ $secret ] ) {
-				$imported[ $secret ] = lnf_encrypt_secret( (string) $stored[ $secret ] );
+				$imported[ $secret ] = $stored[ $secret ];
 			}
 		}
 
@@ -498,35 +496,24 @@ class Lnf_Admin {
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="loginfennec-journal-' . gmdate( 'Ymd-Hi' ) . '.csv"' );
 
-		echo 'date_utc,ip,username,action' . "\r\n";
-		foreach ( Lnf_Login_Security::get_log() as $event ) {
-			$row = array(
-				gmdate( 'Y-m-d H:i:s', (int) $event['t'] ),
-				isset( $event['ip'] ) ? (string) $event['ip'] : '',
-				isset( $event['u'] ) ? (string) $event['u'] : '',
-				isset( $event['a'] ) ? (string) $event['a'] : '',
-			);
-			echo implode( ',', array_map( array( __CLASS__, 'csv_field' ), $row ) ) . "\r\n";
+		$out = fopen( 'php://output', 'w' );
+		if ( $out ) {
+			fputcsv( $out, array( 'date_utc', 'ip', 'username', 'action' ) );
+			foreach ( Lnf_Login_Security::get_log() as $event ) {
+				fputcsv(
+					$out,
+					array(
+						gmdate( 'Y-m-d H:i:s', (int) $event['t'] ),
+						$event['ip'],
+						$event['u'],
+						$event['a'],
+					)
+				);
+			}
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- export CSV temporaire.
+			fclose( $out );
 		}
 		exit;
-	}
-
-	/**
-	 * Échappe un champ CSV (guillemets, séparateurs) et neutralise l'injection
-	 * de formule pour les tableurs (= + - @ en début de valeur).
-	 *
-	 * @param string $value Valeur brute.
-	 * @return string
-	 */
-	private static function csv_field( $value ) {
-		$value = (string) $value;
-		if ( '' !== $value && in_array( $value[0], array( '=', '+', '-', '@', "\t", "\r" ), true ) ) {
-			$value = "'" . $value;
-		}
-		if ( preg_match( '/[",\r\n]/', $value ) ) {
-			$value = '"' . str_replace( '"', '""', $value ) . '"';
-		}
-		return $value;
 	}
 
 	/**
@@ -722,28 +709,6 @@ class Lnf_Admin {
 			esc_attr( $s[ $key ] ),
 			esc_attr( $placeholder )
 		);
-		if ( $desc ) {
-			echo '<p class="lnf-desc">' . esc_html( $desc ) . '</p>';
-		}
-		echo '</div>';
-	}
-
-	/**
-	 * Champ secret : la valeur enregistrée n'est JAMAIS rendue dans le HTML.
-	 * Champ vide = la clé actuelle est conservée ; saisir une valeur la remplace.
-	 */
-	protected static function field_secret( $s, $key, $label, $desc = '', $showif = array() ) {
-		$has = '' !== (string) ( isset( $s[ $key ] ) ? $s[ $key ] : '' );
-		echo '<div class="lnf-field"' . esc_html( self::showif( $showif ) ) . '>';
-		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
-		printf(
-			'<input type="password" class="lnf-input" id="lnf-f-%1$s" name="lnf[%1$s]" value="" placeholder="%2$s" autocomplete="new-password">',
-			esc_attr( $key ),
-			$has ? esc_attr__( '••••••••  (enregistré — laisser vide pour conserver)', 'loginfennec' ) : esc_attr__( 'Collez la clé ici', 'loginfennec' )
-		);
-		if ( $has ) {
-			echo '<p class="lnf-desc lnf-secret-ok"><span class="dashicons dashicons-yes-alt"></span> ' . esc_html__( 'Clé enregistrée — chiffrée dans la base de données, jamais affichée ni exportée.', 'loginfennec' ) . '</p>';
-		}
 		if ( $desc ) {
 			echo '<p class="lnf-desc">' . esc_html( $desc ) . '</p>';
 		}
@@ -1657,11 +1622,11 @@ class Lnf_Admin {
 		);
 		self::field_text( $s, 'sms_from', __( 'Expéditeur', 'loginfennec' ), 'text', 'LoginFennec', __( 'Nom d’expéditeur validé par l’opérateur ou numéro d’envoi (Twilio et Vonage).', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
 		self::field_text( $s, 'sms_twilio_sid', __( 'Twilio — Account SID', 'loginfennec' ), 'text', 'AC…', '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
-		self::field_secret( $s, 'sms_twilio_token', __( 'Twilio — Auth Token', 'loginfennec' ), '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
+		self::field_text( $s, 'sms_twilio_token', __( 'Twilio — Auth Token', 'loginfennec' ), 'password', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
 		self::field_text( $s, 'sms_vonage_key', __( 'Vonage — API Key', 'loginfennec' ), 'text', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
-		self::field_secret( $s, 'sms_vonage_secret', __( 'Vonage — API Secret', 'loginfennec' ), '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
+		self::field_text( $s, 'sms_vonage_secret', __( 'Vonage — API Secret', 'loginfennec' ), 'password', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
 		self::field_text( $s, 'sms_webhook_url', __( 'Webhook — URL d’envoi', 'loginfennec' ), 'url', 'https://sms.exemple.dz/api/send', __( 'Reçoit un POST JSON {to, from, message}.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );
-		self::field_secret( $s, 'sms_webhook_token', __( 'Webhook — Jeton secret (optionnel)', 'loginfennec' ), __( 'Envoyé dans l’en-tête X-Lnf-Token pour authentifier la requête.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );
+		self::field_text( $s, 'sms_webhook_token', __( 'Webhook — Jeton secret (optionnel)', 'loginfennec' ), 'password', '', __( 'Envoyé dans l’en-tête X-Lnf-Token pour authentifier la requête.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );
 
 		echo '<h3 class="lnf-group-title" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1 ) ) ) . '">' . esc_html__( 'Code à usage unique', 'loginfennec' ) . '</h3>';
 		self::field_text( $s, 'sms_country', __( 'Indicatif pays', 'loginfennec' ), 'text', '213', __( 'Chiffres seulement, sans « + ». Les numéros saisis au format local sont convertis automatiquement.', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
@@ -1704,7 +1669,7 @@ class Lnf_Admin {
 		self::field_text( $s, 'geo_countries', __( 'Pays autorisés (codes ISO)', 'loginfennec' ), 'text', 'DZ, FR', __( 'Codes à 2 lettres séparés par des virgules — ex. DZ pour l’Algérie. Vide = tous les pays. En cas d’échec de détection, l’accès reste autorisé pour ne jamais vous enfermer dehors.', 'loginfennec' ), array( 'geo_enable' => 1 ) );
 		self::field_toggle( $s, 'recaptcha_enabled', __( 'Activer reCAPTCHA v3', 'loginfennec' ), __( 'Protection invisible anti-bot sur la page de connexion. Nécessite des clés reCAPTCHA de Google.', 'loginfennec' ) );
 		self::field_text( $s, 'recaptcha_site_key', __( 'Clé Site reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );
-		self::field_secret( $s, 'recaptcha_secret_key', __( 'Clé Secrète reCAPTCHA', 'loginfennec' ), '', array( 'recaptcha_enabled' => 1 ) );
+		self::field_text( $s, 'recaptcha_secret_key', __( 'Clé Secrète reCAPTCHA', 'loginfennec' ), 'text', '6Lc…', '', array( 'recaptcha_enabled' => 1 ) );
 		self::field_text(
 			$s,
 			'sec_alert_email',
