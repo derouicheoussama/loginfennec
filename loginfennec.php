@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           3.7.0
+ * Version:           3.8.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -76,7 +76,7 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '3.7.0' );
+define( 'LOGINFENNEC_VERSION', '3.8.0' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
@@ -153,6 +153,11 @@ register_deactivation_hook( __FILE__, 'lnf_deactivate' );
  * Les options « legacy » ci-dessous gardent volontairement les anciens préfixes.
  */
 function lnf_migrate_legacy() {
+	// One-shot : sans ce drapeau, la migration rejouait ~15 requêtes SQL
+	// (get_option/delete_option) à CHAQUE chargement de page.
+	if ( get_option( 'lnf_legacy_migrated' ) ) {
+		return;
+	}
 	// Réglages : chaîne complète des anciens slugs.
 	$settings_chain = array(
 		'infinity_customizer_settings',
@@ -235,6 +240,8 @@ function lnf_migrate_legacy() {
 	foreach ( $legacy_options as $old_option ) {
 		delete_option( $old_option );
 	}
+
+	update_option( 'lnf_legacy_migrated', 1, false );
 }
 add_action( 'plugins_loaded', 'lnf_migrate_legacy', 12 );
 

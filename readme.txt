@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,12 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.8.0 =
+* Performance: trial heartbeat is throttled to one write per hour instead of a database + file write on every admin page load
+* Performance: legacy migration runs once (it replayed about fifteen SQL queries on every request since 2.0)
+* Pro: "Go Pro" button in the dashboard topbar, payment-return notice, license keys auto-normalized, automatic reload after activation
+* Payment: proof of payment can be sent by WhatsApp (set LOGINFENNEC_WHATSAPP) and PayPal now returns to the Pro page after checkout
 
 = 3.7.0 =
 * New: brand identity v2 — the keyhole-and-fennec logo across the plugin, banners and WordPress.org assets

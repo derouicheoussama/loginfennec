@@ -187,6 +187,19 @@ function lnf_contact_email() {
 }
 
 /**
+ * Numéro WhatsApp de réception des preuves de paiement (chiffres seulement,
+ * format international sans « + »). Vide par défaut : le bouton reste masqué.
+ * Définir LOGINFENNEC_WHATSAPP dans wp-config.php ou filtrer
+ * « loginfennec_whatsapp ».
+ *
+ * @return string
+ */
+function lnf_whatsapp_number() {
+	$default = defined( 'LOGINFENNEC_WHATSAPP' ) ? LOGINFENNEC_WHATSAPP : '';
+	return preg_replace( '/[^0-9]/', '', (string) apply_filters( 'loginfennec_whatsapp', $default ) );
+}
+
+/**
  * URL de paiement (filtrable).
  *
  * @return string

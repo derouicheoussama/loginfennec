@@ -239,8 +239,15 @@ function lnf_trial_is_locked() {
 
 /**
  * Marque la dernière activité (anti-rollback).
+ * Throttlé à une heure : sans cela, chaque page d'admin déclenche une
+ * écriture en base ET une écriture fichier — inutile et coûteux.
  */
 function lnf_trial_touch() {
+	$option = get_option( LNF_TRIAL_OPTION, array() );
+	if ( is_array( $option ) && isset( $option['last'] ) && lnf_trial_verify_record( $option )
+		&& ( time() - (int) $option['last'] ) < HOUR_IN_SECONDS ) {
+		return;
+	}
 	$status = lnf_trial_status();
 	$record = lnf_trial_make_record( $status['start'], time() );
 	update_option( LNF_TRIAL_OPTION, $record, false );

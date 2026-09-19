@@ -194,6 +194,8 @@ class Lnf_Admin {
 				'baridimob'      => lnf_baridimob(),
 				'ccpName'        => lnf_ccp_name(),
 				'contactEmail'   => lnf_contact_email(),
+				'whatsapp'       => lnf_whatsapp_number(),
+				'proUrl'         => admin_url( 'admin.php?page=loginfennec-pro' ),
 				'prices'         => array(
 					'site1' => array(
 						'yearly'   => (int) $plans['site1']['yearly']['price'],
@@ -904,6 +906,11 @@ class Lnf_Admin {
 					</span>
 				</div>
 				<div class="lnf-topbar-actions">
+					<?php if ( ! lnf_is_pro() ) : ?>
+						<a class="lnf-btn lnf-btn-pro" href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>">
+							<span class="dashicons dashicons-superhero-alt"></span> <?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?>
+						</a>
+					<?php endif; ?>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="lnf_reset">
 						<?php wp_nonce_field( 'lnf_save', 'lnf_nonce' ); ?>
@@ -2355,6 +2362,10 @@ class Lnf_Admin {
 		}
 		?>
 		<div class="wrap lnf-wrap lnf-pro">
+			<?php if ( isset( $_GET['lnf-paid'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- indicateur d'affichage en lecture seule. ?>
+				<div class="notice notice-info is-dismissible"><p><strong><?php esc_html_e( 'Paiement reçu, merci !', 'loginfennec' ); ?></strong>
+					<?php esc_html_e( 'Ouvrez l’assistant d’achat et collez votre clé de licence à l’étape 2 — elle vous a été envoyée par e-mail.', 'loginfennec' ); ?></p></div>
+			<?php endif; ?>
 			<div class="lnf-hero lnf-pro-hero">
 				<img class="lnf-hero-logo" src="<?php echo esc_url( LOGINFENNEC_URL . "assets/img/logo-fennec.png" ); ?>" alt="LoginFennec" />
 				<h1><?php esc_html_e( 'LoginFennec Pro', 'loginfennec' ); ?></h1>
@@ -2522,6 +2533,7 @@ class Lnf_Admin {
 										<li><?php esc_html_e( 'Recevez votre clé par e-mail, puis passez à l’étape 2.', 'loginfennec' ); ?></li>
 									</ol>
 									<a class="button lnf-proof-mailto" href="#"><span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Envoyer ma preuve de paiement', 'loginfennec' ); ?></a>
+									<a class="button lnf-proof-wa" href="#" target="_blank" rel="noopener noreferrer"<?php if ( '' === lnf_whatsapp_number() ) { echo ' hidden'; } ?>><span class="dashicons dashicons-format-chat"></span> <?php esc_html_e( 'WhatsApp', 'loginfennec' ); ?></a>
 									<div class="lnf-wz-actions"><button type="button" class="button button-primary lnf-wz-next"><?php esc_html_e( 'J’ai payé — saisir ma clé', 'loginfennec' ); ?></button></div>
 								</div>
 

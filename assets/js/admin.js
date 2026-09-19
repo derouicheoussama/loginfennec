@@ -564,12 +564,16 @@
 		var usd = Math.round(amount * (parseFloat(cfg.paypalRate) || 0) * 100) / 100;
 		$('#lnf-wz-amount-usd, #lnf-paypal-amount').text(usd + ' ' + cfg.paypalCurrency);
 		if (cfg.paypalEmail) {
+			var returnUrl = cfg.proUrl + (cfg.proUrl.indexOf('?') > -1 ? '&' : '?') + 'lnf-paid=1';
 			var payUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick'
 				+ '&business=' + encodeURIComponent(cfg.paypalEmail)
 				+ '&item_name=' + encodeURIComponent('LoginFennec Pro — ' + payLabel() + ' (' + payBillingLabel() + ')')
 				+ '&amount=' + usd
 				+ '&currency_code=' + cfg.paypalCurrency
 				+ '&no_shipping=1'
+				+ '&rm=2'
+				+ '&return=' + encodeURIComponent(returnUrl)
+				+ '&cancel_return=' + encodeURIComponent(cfg.proUrl)
 				+ '&custom=' + encodeURIComponent(cfg.siteUrl || '');
 			$('#lnf-wz-paypal-link, #lnf-paypal-link').attr('href', payUrl);
 		}
@@ -577,6 +581,9 @@
 		$('#lnf-card-open, #lnf-wz-card-open').attr('data-checkout', cardUrl);
 		var proof = 'Bonjour,\n\nJe viens de payer ' + fmtDA(amount) + ' DA pour ' + payLabel() + ' (' + payBillingLabel() + ') sur le site ' + (cfg.siteUrl || '') + '.\n\nVoici ma capture de reçu BaridiMob/CCP :\n';
 		$('.lnf-proof-mailto').attr('href', 'mailto:' + (cfg.contactEmail || '') + '?subject=' + encodeURIComponent('Preuve de paiement LoginFennec Pro — ' + payLabel()) + '&body=' + encodeURIComponent(proof));
+		if (cfg.whatsapp) {
+			$('.lnf-proof-wa').removeAttr('hidden').attr('href', 'https://wa.me/' + cfg.whatsapp + '?text=' + encodeURIComponent(proof));
+		}
 	}
 
 	$(document).on('click', '.lnf-choose-pack, .lnf-buy-open', function (e) {
@@ -658,7 +665,9 @@
 	/* Activer une licence depuis la fenêtre d'achat */
 	$(document).on('click', '.lnf-modal-activate', function () {
 		var $btn = $(this);
-		var key = $.trim($('#lnf-modal-key').val());
+		// Normalisation : espaces supprimés, tirets conservés, majuscules.
+		var key = $.trim($('#lnf-modal-key').val()).toUpperCase().replace(/[\s]+/g, '');
+		$('#lnf-modal-key').val(key);
 		var $out = $('.lnf-wz-pane[data-wpane="2"] .lnf-license-status');
 		if (!key) {
 			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
@@ -677,6 +686,8 @@
 				if (res && res.success) {
 					wzStep(3);
 					$('.lnf-wz-pane[data-wpane="3"] .lnf-wz-success-msg').text(res.data.message || 'Pro activé.');
+					// Le rechargement applique l'état Pro partout.
+					window.setTimeout(function () { window.location.reload(); }, 2500);
 				} else {
 					var msg = (res && res.data && res.data.message) ? res.data.message : 'Erreur';
 					$out.text(msg).addClass('is-err').removeClass('is-ok');
