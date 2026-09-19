@@ -34,5 +34,31 @@ execFileSync(
 	{ stdio: 'inherit' }
 );
 
+// Contrôle final : structure WordPress obligatoire (sinon « Le fichier de
+// l'extension n'existe pas » chez l'utilisateur). Lecture du central
+// directory (fiable, insensible aux data descriptors).
+import zlib from 'node:zlib';
+const zipBuf = fs.readFileSync( dest );
+const eocd = zipBuf.lastIndexOf( Buffer.from( [ 0x50, 0x4b, 0x05, 0x06 ] ) );
+if ( eocd < 0 ) { console.error( 'ÉCHEC : zip invalide (EOCD introuvable)' ); process.exit( 1 ); }
+const entryCount = zipBuf.readUInt16LE( eocd + 10 );
+let ptr = zipBuf.readUInt32LE( eocd + 16 );
+const entries = [];
+for ( let i = 0; i < entryCount; i++ ) {
+	if ( zipBuf.readUInt32LE( ptr ) !== 0x02014b50 ) { break; }
+	const nameLen = zipBuf.readUInt16LE( ptr + 28 );
+	const extraLen = zipBuf.readUInt16LE( ptr + 30 );
+	const commentLen = zipBuf.readUInt16LE( ptr + 32 );
+	entries.push( zipBuf.toString( 'utf8', ptr + 46, ptr + 46 + nameLen ) );
+	ptr += 46 + nameLen + extraLen + commentLen;
+}
+let fail = 0;
+for ( const name of entries ) {
+	if ( name.includes( '\\' ) ) { console.error( 'ÉCHEC : antislash dans ' + name ); fail++; }
+	if ( ! name.startsWith( 'loginfennec/' ) ) { console.error( 'ÉCHEC : hors racine — ' + name ); fail++; }
+}
+if ( ! entries.includes( 'loginfennec/loginfennec.php' ) ) { console.error( 'ÉCHEC : fichier principal absent' ); fail++; }
+if ( fail ) { process.exit( 1 ); }
+
 const size = fs.statSync( dest ).size;
-console.log( `BUILD-OK loginfennec-${ version }.zip (${ Math.round( size / 1024 ) } Ko)` );
+console.log( `BUILD-OK loginfennec-${ version }.zip (${ Math.round( size / 1024 ) } Ko, ${ entries.length } entrées, structure vérifiée)` );
