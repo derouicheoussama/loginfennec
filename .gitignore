@@ -11,3 +11,4 @@ Thumbs.db
 # Fichiers zippés locaux
 *.zip
 _php/
+.mimosa/
