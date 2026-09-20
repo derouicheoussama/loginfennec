@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.8.2
+Stable tag: 3.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,10 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.8.3 =
+* New: obsolete-copy detector — when an old duplicate installation (e.g. a v3.3.0 leftover in a parallel folder) exists, the Plugins screen shows exactly which folder must be deleted
+* Verified: the package contains a single plugin header file and no code recreates plugin folders
 
 = 3.8.2 =
 * Changed: admin menu icon updated to the new keyhole-and-fennec identity

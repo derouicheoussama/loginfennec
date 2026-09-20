@@ -42,6 +42,7 @@ class Lnf_Admin {
 		add_action( 'wp_ajax_lnf_purge_log', array( __CLASS__, 'ajax_purge_log' ) );
 		add_action( 'wp_ajax_lnf_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'obsolete_copies_notice' ) );
 		add_filter( 'admin_footer_text', array( __CLASS__, 'footer_signature' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( LOGINFENNEC_FILE ), array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -590,6 +591,44 @@ class Lnf_Admin {
 		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfennec' ) . '</a>';
 		$meta[] = '<a href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener noreferrer">★★★★★ ' . esc_html__( 'Noter le plugin', 'loginfennec' ) . '</a>';
 		return $meta;
+	}
+
+	/**
+	 * Détecte les copies obsolètes de LoginFennec (dossiers en double créés
+	 * par un remplacement d'installation raté) et indique le dossier exact
+	 * à supprimer. Affiché uniquement sur la page Extensions.
+	 */
+	public static function obsolete_copies_notice() {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'plugins' !== $screen->id || ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+		if ( ! function_exists( 'get_plugins' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		$self = plugin_basename( LOGINFENNEC_FILE );
+		$old  = array();
+		foreach ( get_plugins() as $basename => $data ) {
+			if ( $basename === $self || false === strpos( (string) $data['Name'], 'LoginFennec' ) ) {
+				continue;
+			}
+			if ( '/loginfennec.php' === substr( $basename, -16 ) ) {
+				$old[] = array( $basename, (string) $data['Version'] );
+			}
+		}
+		if ( empty( $old ) ) {
+			return;
+		}
+		echo '<div class="notice notice-warning"><p><strong>LoginFennec Pro :</strong> '
+			. esc_html( sprintf( /* translators: %d : nombre de copies. */ __( '%d copie obsolète de l’extension est installée en double — une seule copie (la plus récente) doit rester.', 'loginfennec' ), count( $old ) ) )
+			. '</p><ul style="list-style:disc;margin-left:18px">';
+		foreach ( $old as $copy ) {
+			$folder = dirname( $copy[0] );
+			echo '<li>— version ' . esc_html( $copy[1] ) . ' — dossier <code>wp-content/plugins/' . esc_html( $folder ) . '</code> : '
+				. esc_html__( 'cliquez « Supprimer » sur sa ligne, ou supprimez ce dossier via FTP.', 'loginfennec' )
+				. '</li>';
+		}
+		echo '</ul></p></div>';
 	}
 
 	/**
