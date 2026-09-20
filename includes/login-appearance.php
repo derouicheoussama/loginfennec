@@ -31,6 +31,9 @@ function lnf_build_login_css( $s ) {
 	$css = '';
 
 	// ——— Google Fonts ———.
+	// Prend le pas sur la famille générique : ne s'applique que si une
+	// police Google est renseignée (sinon le sélecteur « Police » du
+	// dashboard serait sans effet).
 	if ( ! empty( $s['font_google'] ) ) {
 		$css .= sprintf(
 			'body.login,body.login form .input,body.login #wp-submit{font-family:"%1$s",sans-serif !important;}',

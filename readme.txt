@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.9.0
+Stable tag: 3.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,10 @@ LoginFennec Pro redesigns your WordPress login page AND protects it, from one el
 
 == Frequently Asked Questions ==
 
+= What happens after the 7-day trial? =
+
+During the first 7 days you get the full experience. Afterwards, design customization pauses until you enter a license key (or keep using the free design tools). Importantly: <strong>security protections never stop</strong> — brute-force lockout, honeypot, hardening, the security journal and updates keep working forever, trial or not.
+
 = Does it slow down my site? =
 
 No. Everything is loaded only where needed: the login page gets one small inline stylesheet, admin assets load only on the plugin screens, and the SMS panel loads only when SMS login is enabled. No external calls happen by default.
@@ -136,6 +140,15 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.10.0 =
+* Security: the 7-day trial no longer disables security protections at expiry — brute-force lockout, honeypot, hardening and the journal stay active forever; only design customization pauses until a license is entered
+* Security: reCAPTCHA cannot be bypassed by omitting the token anymore (missing tokens are refused; only a Google outage lets requests through)
+* Security: SMS one-time codes are now brute-force-proof against parallel requests (atomic attempt counter) with a per-IP cap on code verification, and the gateway is no longer callable in a loop
+* Fixed: conditional settings sections (SMS, GEO, security, welcome, admin colors) could all collapse after saving — the toggles are read from the checkbox again
+* Fixed: the SMS login panel is now actually displayed on the login page (hook was missing)
+* Fixed: Reset confirmation now really cancels; card-bank iframe loads the checkout; installer summary filled; e-mail alerts marked free everywhere (they are); reCAPTCHA script no longer errors on lost-password pages
+* Improved: Google Fonts field exposed in Extras (takes priority over the generic font family, as documented); generic font family applies when no Google font is set; generic-error anti-enumeration is now on by default; geo lookups failures cached 10 min; white-list "*" entry no longer whitelists everything; several a11y and i18n fixes
 
 = 3.9.0 =
 * New: optional self-hosted secure update channel for direct clients — define LOGINFENNEC_UPDATE_SERVER in wp-config.php and updates appear natively in the dashboard

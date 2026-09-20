@@ -26,6 +26,7 @@ function add_shortcode( ...$a ) {}
 function wp_clear_scheduled_hook( ...$a ) {}
 function wp_next_scheduled( ...$a ) { return false; }
 function wp_schedule_event( ...$a ) { return true; }
+function wp_schedule_single_event( ...$a ) { return true; }
 function wp_unschedule_event( ...$a ) { return true; }
 function load_plugin_textdomain( ...$a ) { return true; }
 function plugin_basename( $f ) { return basename( dirname( $f ) ) . '/' . basename( $f ); }
@@ -123,6 +124,37 @@ class WP_Error {
 	public function get_error_code() { return $this->code; }
 	public function get_error_message() { return $this->message; }
 }
+
+/** Stub wpwpdb : émule INSERT..ON DUPLICATE (compteur atomique), DELETE, SELECT. */
+class Imp_Smoke_Wpdb {
+	public $options = 'wp_options';
+	public $rows    = array();
+	public function prepare( $q, ...$a ) {
+		foreach ( $a as $arg ) {
+			$q = preg_replace( '/%[sd]/', "'" . addslashes( (string) $arg ) . "'", $q, 1 );
+		}
+		return $q;
+	}
+	public function query( $q ) {
+		if ( preg_match( "/INSERT INTO \S+ \(option_name, option_value, autoload\) VALUES \('([^']+)', '([^']+)', 'off'\) ON DUPLICATE KEY UPDATE/", $q, $m ) ) {
+			$this->rows[ $m[1] ] = isset( $this->rows[ $m[1] ] ) ? (string) ( (int) $this->rows[ $m[1] ] + 1 ) : $m[2];
+			return 1;
+		}
+		if ( preg_match( "/DELETE FROM \S+ WHERE option_name = '([^']+)'/", $q, $m ) ) {
+			unset( $this->rows[ $m[1] ] );
+			return 1;
+		}
+		return 0;
+	}
+	public function get_var( $q ) {
+		if ( preg_match( "/SELECT option_value FROM \S+ WHERE option_name = '([^']+)'/", $q, $m ) ) {
+			return isset( $this->rows[ $m[1] ] ) ? $this->rows[ $m[1] ] : null;
+		}
+		return null;
+	}
+	public function esc_like( $s ) { return addcslashes( (string) $s, '_%\\' ); }
+}
+$GLOBALS['wpdb'] = new Imp_Smoke_Wpdb();
 function add_role( ...$a ) {}
 function remove_role( ...$a ) {}
 function get_role( ...$a ) { return null; }

@@ -544,7 +544,9 @@ class Lnf_Admin {
 		foreach ( array( 'sec_enable', 'sec_honeypot', 'sec_disable_authors', 'sec_disable_xmlrpc', 'sec_generic_error' ) as $key ) {
 			$s[ $key ] = true;
 		}
-		update_option( LOGINFENNEC_OPTION, $s, 'yes' );
+		// lnf_settings() retourne les secrets DÉCHIFFRÉS : on repasse par la
+		// sanitization (qui rechiffre) pour ne jamais écrire de clair en base.
+		update_option( LOGINFENNEC_OPTION, lnf_sanitize_settings( $s, $s ), 'yes' );
 		wp_send_json_success();
 	}
 
@@ -837,7 +839,8 @@ class Lnf_Admin {
 		echo '<div class="lnf-field lnf-toggle-field"' . esc_html( self::showif( $showif ) ) . '>';
 		// Sentinelle « 0 » : garantit que la clé est toujours soumise, même case
 		// décochée — indispensable à la mise à jour partielle de save().
-		echo '<label class="lnf-switch"><input type="hidden" name="lnf[' . esc_attr( $key ) . ']" value="0"><input type="checkbox" name="lnf[' . esc_attr( $key ) . ']" value="1"' . checked( ! empty( $s[ $key ] ), true, false ) . '><span class="lnf-switch-ui"></span></label>';
+		// aria-label : la case est dans un <label> sans texte (lecteurs d'écran).
+		echo '<label class="lnf-switch"><input type="hidden" name="lnf[' . esc_attr( $key ) . ']" value="0"><input type="checkbox" name="lnf[' . esc_attr( $key ) . ']" value="1"' . checked( ! empty( $s[ $key ] ), true, false ) . ' aria-label="' . esc_attr( wp_strip_all_tags( $label ) ) . '"><span class="lnf-switch-ui"></span></label>';
 		echo '<div class="lnf-toggle-text"><span class="lnf-label">' . esc_html( $label ) . '</span>';
 		if ( $desc ) {
 			echo '<p class="lnf-desc">' . esc_html( $desc ) . '</p>';
@@ -850,14 +853,14 @@ class Lnf_Admin {
 	 */
 	protected static function field_media( $s, $key, $label, $desc = '', $showif = array() ) {
 		echo '<div class="lnf-field lnf-field-wide"' . esc_html( self::showif( $showif ) ) . '>';
-		echo '<label class="lnf-label">' . esc_html( $label ) . '</label>';
+		echo '<label class="lnf-label" for="lnf-f-' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label>';
 		echo '<div class="lnf-media">';
 		if ( ! empty( $s[ $key ] ) ) {
 			printf( '<img class="lnf-media-thumb" src="%s" alt="">', esc_url( $s[ $key ] ) );
 		} else {
 			echo '<img class="lnf-media-thumb" src="" alt="" hidden>';
 		}
-		printf( '<input type="url" class="lnf-input" name="lnf[%s]" value="%s" placeholder="https://…" autocomplete="off">', esc_attr( $key ), esc_attr( $s[ $key ] ) );
+		printf( '<input type="url" class="lnf-input" id="lnf-f-%1$s" name="lnf[%1$s]" value="%2$s" placeholder="https://…" autocomplete="off">', esc_attr( $key ), esc_attr( $s[ $key ] ) );
 		echo '<span class="lnf-media-actions">';
 		echo '<button type="button" class="button lnf-media-pick">' . esc_html__( 'Médiathèque', 'loginfennec' ) . '</button>';
 		echo '<button type="button" class="button-link lnf-media-clear">' . esc_html__( 'Retirer', 'loginfennec' ) . '</button>';
@@ -1530,6 +1533,8 @@ class Lnf_Admin {
 			)
 		);
 		self::field_range( $s, 'font_size', __( 'Taille du texte', 'loginfennec' ), 12, 18, 'px' );
+		self::field_text( $s, 'font_google', __( 'Police Google (nom exact)', 'loginfennec' ), 'text', __( 'ex. : Poppins', 'loginfennec' ), __( 'Prioritaire sur la famille générique. Vide = utiliser la famille sélectionnée ci-dessus.', 'loginfennec' ) );
+		self::field_text( $s, 'font_google_weight', __( 'Graisses Google Fonts', 'loginfennec' ), 'text', '400;500;700', __( 'Poids demandés à fonts.googleapis.com, séparés par des points-virgules.', 'loginfennec' ) );
 
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'Animation d’entrée', 'loginfennec' ) . '</h3>';
 		self::field_select(
@@ -1928,7 +1933,7 @@ class Lnf_Admin {
 						<li><?php esc_html_e( 'Logo personnalisé + lien du logo', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Arrière-plan : couleur, dégradé ou image', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Contrôles de flou et d’opacité', 'loginfennec' ); ?></li>
-						<li><?php esc_html_e( '6 styles modernes (effet verre, sombre…)', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( '10 styles modernes (effet verre, sombre…)', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Liens : personnalisation ou masquage', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Icônes de réseaux sociaux', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Mention de copyright', 'loginfennec' ); ?></li>

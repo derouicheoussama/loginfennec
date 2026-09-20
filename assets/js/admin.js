@@ -185,6 +185,13 @@
 			return;
 		}
 		function field(key) {
+			// Pour une case à cocher, viser la checkbox elle-même : une
+			// sentinelle hidden « 0 » (value de secours) précède toujours
+			// la case dans le DOM et .first() tomberait dessus.
+			var $cb = $form.find('[name="lnf[' + key + ']"]').filter(':checkbox');
+			if ($cb.length) {
+				return $cb;
+			}
 			return $form.find('[name="lnf[' + key + ']"]').first();
 		}
 		function checked(key) {
@@ -254,7 +261,11 @@
 			}
 			var visible = true;
 			$.each(cond, function (key, expected) {
-				var $el = $form.find('[name="lnf[' + key + ']"]').first();
+				// Case à cocher : lire la checkbox, pas la sentinelle hidden « 0 ».
+				var $el = $form.find('[name="lnf[' + key + ']"]').filter(':checkbox');
+				if (!$el.length) {
+					$el = $form.find('[name="lnf[' + key + ']"]').first();
+				}
 				var current;
 				if (!$el.length) {
 					visible = false;
@@ -578,6 +589,7 @@
 			$('#lnf-wz-paypal-link, #lnf-paypal-link').attr('href', payUrl);
 		}
 		var cardUrl = cfg.checkoutUrl + (cfg.checkoutUrl.indexOf('?') > -1 ? '&' : '?') + 'pack=' + selectedPack + '&billing=' + currentBilling + '&site=' + encodeURIComponent(cfg.siteUrl || '');
+		window.lnfCardUrl = cardUrl;
 		$('#lnf-card-open, #lnf-wz-card-open').attr('data-checkout', cardUrl);
 		var proof = 'Bonjour,\n\nJe viens de payer ' + fmtDA(amount) + ' DA pour ' + payLabel() + ' (' + payBillingLabel() + ') sur le site ' + (cfg.siteUrl || '') + '.\n\nVoici ma capture de reçu BaridiMob/CCP :\n';
 		$('.lnf-proof-mailto').attr('href', 'mailto:' + (cfg.contactEmail || '') + '?subject=' + encodeURIComponent('Preuve de paiement LoginFennec Pro — ' + payLabel()) + '&body=' + encodeURIComponent(proof));
@@ -643,6 +655,12 @@
 		$(this).addClass('is-active');
 		$('.lnf-wz-mbody').attr('hidden', '');
 		$('.lnf-wz-mbody[data-mbody="' + $(this).data('m') + '"]').removeAttr('hidden');
+		// Carte bancaire : charger l'iframe seulement à la sélection (sinon
+		// l'URL de checkout serait rechargée à chaque mise à jour du résumé).
+		if ($(this).data('m') === 'card' && window.lnfCardUrl) {
+			$('#lnf-wz-card-frame').attr('src', window.lnfCardUrl);
+			$('#lnf-wz-card-newtab').attr('href', window.lnfCardUrl);
+		}
 	});
 
 	$(document).on('click', '.lnf-wz-next', function () {
@@ -828,15 +846,35 @@
 	});
 
 	/* Vider le journal : bouton plus */
-	$(document).on('click', '#lnf-reset', function () {
+	$(document).on('click', '#lnf-reset', function (e) {
 		if (!window.confirm('Réinitialiser tous les réglages aux valeurs par défaut ?')) {
-			e && e.preventDefault ? e.preventDefault() : null;
+			e.preventDefault();
 		}
 	});
 
 	/* Installateur : navigation entre les étapes */
 	var wizardStep = 1;
 	var wizardTotal = $('.lnf-wstep').length || 3;
+
+	// Récapitulatif final : reflète les sélections courantes.
+	var wizardLabels = {
+		styles: { glass: 'Effet verre', minimal: 'Minimal', dark: 'Sombre', sunset: 'Coucher de soleil', ocean: 'Océan', forest: 'Forêt', neon: 'Néon', sakura: 'Sakura', mono: 'Monochrome', royal: 'Royal', custom: 'Personnalisé' },
+		themes: { glass: 'Effet verre', classic: 'Classique', outline: 'Contour', pill: 'Pillule', elevated: 'Surélevé', accent: 'Accent', minimal: 'Minimal' }
+	};
+	function wizardRecap() {
+		var preset = $('[name="lnf[preset]"]').val();
+		var theme = $('[name="lnf[form_theme]"]').val();
+		var sec = $('[name="lnf[sec_enable]"]').filter(':checkbox').prop('checked');
+		if ($('#lnf-recap-style').length) {
+			$('#lnf-recap-style').text(wizardLabels.styles[preset] || preset || '—');
+		}
+		if ($('#lnf-recap-theme').length) {
+			$('#lnf-recap-theme').text(wizardLabels.themes[theme] || theme || '—');
+		}
+		if ($('#lnf-recap-sec').length) {
+			$('#lnf-recap-sec').text(sec ? 'Activée (force brute, honeypot, anti-énumération)' : 'Standard');
+		}
+	}
 
 	function wizardShow(n) {
 		wizardStep = Math.max(1, Math.min(wizardTotal, n));
@@ -851,6 +889,9 @@
 		$('.lnf-step-prev').toggle(wizardStep > 1);
 		$('.lnf-step-next').toggle(wizardStep < wizardTotal);
 		$('.lnf-step-finish').toggle(wizardStep === wizardTotal);
+		if (wizardStep === wizardTotal) {
+			wizardRecap();
+		}
 	}
 
 	$(document).on('click', '.lnf-step-next', function () {

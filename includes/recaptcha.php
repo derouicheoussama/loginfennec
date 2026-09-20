@@ -61,21 +61,27 @@ function lnf_recaptcha_footer() {
 	$s = lnf_settings();
 	?>
 	<script>
-	document.getElementById('loginform').addEventListener('submit', function(e) {
-		if (typeof grecaptcha !== 'undefined') {
-			e.preventDefault();
-			grecaptcha.ready(function() {
-				grecaptcha.execute('<?php echo esc_js( $s['recaptcha_site_key'] ); ?>', {action: 'login'}).then(function(token) {
-					var input = document.createElement('input');
-					input.type = 'hidden';
-					input.name = 'lnf_recaptcha_token';
-					input.value = token;
-					document.getElementById('loginform').appendChild(input);
-					document.getElementById('loginform').submit();
+	// Garde : le pied de page est imprimé aussi sur lostpassword/register —
+	// sans #loginform, addEventListener sur null lèverait une TypeError.
+	(function () {
+		var f = document.getElementById('loginform');
+		if (!f) { return; }
+		f.addEventListener('submit', function(e) {
+			if (typeof grecaptcha !== 'undefined') {
+				e.preventDefault();
+				grecaptcha.ready(function() {
+					grecaptcha.execute('<?php echo esc_js( $s['recaptcha_site_key'] ); ?>', {action: 'login'}).then(function(token) {
+						var input = document.createElement('input');
+						input.type = 'hidden';
+						input.name = 'lnf_recaptcha_token';
+						input.value = token;
+						f.appendChild(input);
+						f.submit();
+					});
 				});
-			});
-		}
-	});
+			}
+		});
+	})();
 	</script>
 	<?php
 }
@@ -90,13 +96,25 @@ add_action( 'login_footer', 'lnf_recaptcha_footer', 99 );
  * @return WP_User|WP_Error
  */
 function lnf_recaptcha_verify( $user, $username, $password ) {
-	if ( ! lnf_recaptcha_enabled() || ! isset( $_POST['lnf_recaptcha_token'] ) ) {
+	if ( ! lnf_recaptcha_enabled() ) {
 		return $user;
+	}
+	// Token absent ou vide = soumission sans passer par le JS (bot) :
+	// la vérification est REFUSÉE, pas ignorée — sinon la protection
+	// serait contournable en omettant simplement le champ.
+	if ( ! isset( $_POST['lnf_recaptcha_token'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- formulaire de connexion public, pas de nonce disponible.
+		return new WP_Error(
+			'lnf_recaptcha_missing',
+			'<strong>' . esc_html__( 'Erreur', 'loginfennec' ) . '</strong> : ' . esc_html__( 'Vérification anti-robots manquante. Activez JavaScript et réessayez.', 'loginfennec' )
+		);
 	}
 	$s     = lnf_settings();
 	$token = sanitize_text_field( wp_unslash( $_POST['lnf_recaptcha_token'] ) );
 	if ( empty( $token ) ) {
-		return $user;
+		return new WP_Error(
+			'lnf_recaptcha_missing',
+			'<strong>' . esc_html__( 'Erreur', 'loginfennec' ) . '</strong> : ' . esc_html__( 'Vérification anti-robots manquante. Activez JavaScript et réessayez.', 'loginfennec' )
+		);
 	}
 
 	$response = wp_remote_post(
@@ -110,7 +128,7 @@ function lnf_recaptcha_verify( $user, $username, $password ) {
 		)
 	);
 	if ( is_wp_error( $response ) ) {
-		return $user; // Serveur injoignable : on laisse passer.
+		return $user; // Serveur injoignable : on laisse passer (jamais enfermer les utilisateurs pour une panne Google).
 	}
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 	if ( empty( $data['success'] ) || ( isset( $data['score'] ) && $data['score'] < 0.5 ) ) {

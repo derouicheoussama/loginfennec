@@ -67,7 +67,13 @@ class Lnf_Login_Security {
 	 * @return bool
 	 */
 	public static function can_use_features() {
-		return ! lnf_trial_is_locked();
+		// Les protections de SÉCURITÉ restent actives même après l'essai :
+		// couper le brute-force/honeypot/durcissements d'un site en
+		// production serait dangereux (et inacceptable pour wp.org).
+		// Le verrou d'essai ne concerne que la personnalisation du design
+		// (voir login-appearance.php) et les fonctions avancées (SMS, GEO,
+		// reCAPTCHA), qui testent lnf_trial_is_locked() elles-mêmes.
+		return true;
 	}
 
 	/**
@@ -104,7 +110,7 @@ class Lnf_Login_Security {
 	public static function notify_lock( $username, $minutes ) {
 		$s     = lnf_settings();
 		$email = trim( (string) $s['sec_alert_email'] );
-		if ( '' === $email || ! lnf_is_pro() || ! is_email( $email ) ) {
+		if ( '' === $email || ! is_email( $email ) ) {
 			return;
 		}
 		$subject = sprintf( '[%s] LoginFennec — IP bloquée', get_bloginfo( 'name' ) );
@@ -378,7 +384,10 @@ class Lnf_Login_Security {
 				continue;
 			}
 			if ( '*' === substr( $allowed, -1 ) ) {
-				if ( 0 === strncmp( $ip, rtrim( $allowed, '*' ), strlen( rtrim( $allowed, '*' ) ) ) ) {
+				// Une entrée « * » seule mettrait TOUTES les IP en liste
+				// blanche (préfixe vide) : on l'ignore.
+				$prefix = rtrim( $allowed, '*' );
+				if ( strlen( $prefix ) >= 3 && 0 === strncmp( $ip, $prefix, strlen( $prefix ) ) ) {
 					return true;
 				}
 			} elseif ( $allowed === $ip ) {
@@ -415,7 +424,10 @@ class Lnf_Login_Security {
 			$remaining = self::locked_remaining( $key );
 			if ( $remaining > 0 ) {
 				self::$lock_triggered = true;
-				$message = sprintf( esc_html( $s['sec_lock_message'] ), max( 1, $remaining ) );
+				// str_replace plutôt que sprintf : le message personnalisé peut
+				// contenir des « % » littéraux (ex. « 100% sûr ») qui feraient
+				// planter sprintf sur PHP 8.
+				$message = str_replace( '%d', (string) max( 1, $remaining ), (string) $s['sec_lock_message'] );
 				return new WP_Error( 'lnf_locked', $message );
 			}
 		}

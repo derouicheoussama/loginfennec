@@ -186,12 +186,57 @@ function lnf_sms_otp_create( $phone ) {
 			's' => $salt,
 			'h' => wp_hash( $salt . '|' . $phone . '|' . $code ),
 			'e' => time() + $ttl * MINUTE_IN_SECONDS,
-			'a' => 0,
 		),
 		$ttl * MINUTE_IN_SECONDS
 	);
+	// Nouveau code = compteur d'essais remis à zéro.
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- reset du compteur atomique d'essais.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", '_lnf_sms_att_' . md5( 'verify|' . $phone ) ) );
 	return $code;
 }
+
+/**
+ * Compteur atomique d'essais (anti brute-force parallèle).
+ * Les transients sont lisibles-écrits sans verrou : N requêtes simultanées
+ * liraient le même compteur. Ici, INSERT … ON DUPLICATE KEY UPDATE est
+ * atomique côté MySQL : chaque requête obtient un numéro unique.
+ *
+ * @param string $key  Clé (sans préfixe).
+ * @param int    $ttl  Durée de vie en secondes.
+ * @return int Numéro de l'essai (1, 2, 3…).
+ */
+function lnf_sms_attempt_tick( $key, $ttl ) {
+	global $wpdb;
+	$option = '_lnf_sms_att_' . md5( $key );
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- compteur atomique requis contre le brute-force parallèle (aucune autre primitive disponible).
+	$wpdb->query(
+		$wpdb->prepare(
+			"INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, '1', 'off') ON DUPLICATE KEY UPDATE option_value = CAST(option_value AS UNSIGNED) + 1",
+			$option
+		)
+	);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- lecture de la valeur que la requête ci-dessus vient d'écrire.
+	$count = (int) $wpdb->get_var(
+		$wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option )
+	);
+	if ( 1 === $count ) {
+		wp_schedule_single_event( time() + max( 60, $ttl ), 'lnf_sms_att_gc', array( $option ) );
+	}
+	return $count;
+}
+
+/**
+ * Poubelle des compteurs d'essais expirés (cron).
+ *
+ * @param string $option Nom d'option complet.
+ */
+function lnf_sms_att_gc( $option ) {
+	global $wpdb;
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- nettoyage du compteur atomique expiré.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+}
+add_action( 'lnf_sms_att_gc', 'lnf_sms_att_gc' );
 
 /**
  * Vérifie un OTP soumis et retourne l'utilisateur correspondant.
@@ -207,9 +252,10 @@ function lnf_sms_otp_verify( $phone, $code ) {
 	if ( ! is_array( $otp ) || empty( $otp['h'] ) ) {
 		return new WP_Error( 'lnf_sms_expired', __( 'Code expiré ou inexistant : demandez-en un nouveau.', 'loginfennec' ) );
 	}
-	$max = max( 1, (int) $s['sms_max_attempts'] );
-	$otp['a'] = ( isset( $otp['a'] ) ? (int) $otp['a'] : 0 ) + 1;
-	if ( $otp['a'] > $max ) {
+	$max    = max( 1, (int) $s['sms_max_attempts'] );
+	$ttl    = max( 60, (int) ( $otp['e'] - time() ) );
+	$attempt = lnf_sms_attempt_tick( 'verify|' . $phone, $ttl );
+	if ( $attempt > $max ) {
 		delete_transient( $key );
 		return new WP_Error( 'lnf_sms_locked', __( 'Trop de tentatives : demandez un nouveau code.', 'loginfennec' ) );
 	}
@@ -218,7 +264,7 @@ function lnf_sms_otp_verify( $phone, $code ) {
 		$left = max( 60, (int) ( $otp['e'] - time() ) );
 		set_transient( $key, $otp, $left );
 		/* translators: %d : nombre de tentatives restantes. */
-		return new WP_Error( 'lnf_sms_wrong', sprintf( __( 'Code incorrect. Tentatives restantes : %d.', 'loginfennec' ), max( 0, $max - $otp['a'] ) ) );
+		return new WP_Error( 'lnf_sms_wrong', sprintf( __( 'Code incorrect. Tentatives restantes : %d.', 'loginfennec' ), max( 0, $max - $attempt ) ) );
 	}
 	delete_transient( $key );
 	return lnf_sms_find_user( $phone );
@@ -433,6 +479,7 @@ function lnf_sms_render_panel() {
 	</div>
 	<?php
 }
+add_action( 'login_footer', 'lnf_sms_render_panel', 5 );
 
 /* ---------------------------------------------------------------------
  * AJAX
@@ -450,11 +497,15 @@ function lnf_sms_ajax_send() {
 	if ( ! lnf_sms_active() || ! lnf_sms_gateway_ready() ) {
 		wp_send_json_success( $generic );
 	}
-	$phone  = lnf_sms_normalize_phone( isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '', lnf_get_option( 'sms_country' ) );
-	$rate   = lnf_sms_rate_ok( $phone );
+	$phone = lnf_sms_normalize_phone( isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '', lnf_get_option( 'sms_country' ) );
+	$rate  = lnf_sms_rate_ok( $phone );
 	if ( is_wp_error( $rate ) ) {
 		wp_send_json_error( array( array( 'message' => $rate->get_error_message() ) ) );
 	}
+	// Délai posé AVANT l'appel passerelle : une passerelle lente ne doit pas
+	// permettre à des requêtes anonymes d'occuper les workers PHP en boucle.
+	// En cas d'échec de la passerelle, le délai est retiré (retry possible).
+	lnf_sms_rate_hit( $phone );
 	$user = lnf_sms_find_user( $phone );
 	if ( ! $user ) {
 		usleep( wp_rand( 200000, 450000 ) );
@@ -470,9 +521,9 @@ function lnf_sms_ajax_send() {
 	$text = str_replace( '{minutes}', (string) max( 1, (int) $s['sms_otp_ttl'] ), $text );
 	$sent = lnf_sms_dispatch( $phone, sanitize_text_field( $text ) );
 	if ( is_wp_error( $sent ) ) {
+		delete_transient( 'lnf_sms_wait_' . md5( $phone ) );
 		wp_send_json_error( array( array( 'message' => $sent->get_error_message() ) ) );
 	}
-	lnf_sms_rate_hit( $phone );
 	if ( method_exists( 'Lnf_Login_Security', 'log_event' ) ) {
 		Lnf_Login_Security::log_event( 'sms', 'OTP → ' . substr( $phone, 0, strlen( $phone ) - 4 ) . '****' );
 	}
@@ -486,6 +537,12 @@ add_action( 'wp_ajax_nopriv_lnfsms_send', 'lnf_sms_ajax_send' );
  */
 function lnf_sms_ajax_verify() {
 	check_ajax_referer( 'lnf_sms', 'nonce' );
+	// Plafond de vérifications par IP (atomique) : freine le brute-force
+	// parallèle de codes sur plusieurs numéros depuis la même adresse.
+	$ip = function_exists( 'lnf_sms_client_ip' ) ? lnf_sms_client_ip() : '';
+	if ( '' !== $ip && lnf_sms_attempt_tick( 'verify-ip|' . $ip, 10 * MINUTE_IN_SECONDS ) > 20 ) {
+		wp_send_json_error( array( array( 'message' => __( 'Trop de tentatives depuis cette adresse. Réessayez dans quelques minutes.', 'loginfennec' ) ) ) );
+	}
 	if ( function_exists( 'lnf_geo_blocked' ) && lnf_geo_blocked() ) {
 		wp_send_json_error( array( array( 'message' => __( 'Connexion impossible depuis votre région.', 'loginfennec' ) ) ) );
 	}

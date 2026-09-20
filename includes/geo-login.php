@@ -48,23 +48,29 @@ function lnf_geo_country_for_ip( $ip ) {
 		return '';
 	}
 	$cached = get_transient( 'lnf_geo_' . md5( $ip ) );
-	if ( is_string( $cached ) && preg_match( '/^[A-Z]{2}$/', $cached ) ) {
-		return $cached;
+	// Cache positif (code pays) et négatif ('' = échec récent) : sans le
+	// cache négatif, chaque bot avec une IP différente provoquerait un
+	// appel sortant par tentative de connexion.
+	if ( null !== $cached && false !== $cached ) {
+		return is_string( $cached ) ? $cached : '';
 	}
 	$response = wp_remote_get(
 		'https://get.geojs.io/v1/ip/country/' . rawurlencode( $ip ) . '.json',
 		array( 'timeout' => 4 )
 	);
 	if ( is_wp_error( $response ) ) {
+		set_transient( 'lnf_geo_' . md5( $ip ), '', 10 * MINUTE_IN_SECONDS );
 		return '';
 	}
 	$code = (int) wp_remote_retrieve_response_code( $response );
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 	if ( 200 !== $code || empty( $data['country_code'] ) || ! is_string( $data['country_code'] ) ) {
+		set_transient( 'lnf_geo_' . md5( $ip ), '', 10 * MINUTE_IN_SECONDS );
 		return '';
 	}
 	$country = strtoupper( preg_replace( '/[^A-Za-z]/', '', $data['country_code'] ) );
 	if ( ! preg_match( '/^[A-Z]{2}$/', $country ) ) {
+		set_transient( 'lnf_geo_' . md5( $ip ), '', 10 * MINUTE_IN_SECONDS );
 		return '';
 	}
 	set_transient( 'lnf_geo_' . md5( $ip ), $country, DAY_IN_SECONDS );

@@ -186,7 +186,7 @@ function lnf_get_defaults() {
 		'sec_max_attempts'         => 5,
 		'sec_lockout_minutes'      => 15,
 		'sec_lock_message'         => 'Trop de tentatives de connexion. Réessayez dans %d minutes.',
-		'sec_generic_error'        => false,
+		'sec_generic_error'        => true,
 		'sec_hide_language_switcher' => false,
 		'sec_disable_xmlrpc'       => false,
 		'sec_honeypot'             => true,

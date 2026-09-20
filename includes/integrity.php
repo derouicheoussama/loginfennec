@@ -138,7 +138,7 @@ function lnf_integrity_check() {
 		add_action(
 			'admin_notices',
 			function () use ( $tampered ) {
-				echo '<div class="notice notice-error"><p><strong>⚠️ LoginFennec Pro — Integrity Alert</strong><br>';
+				echo '<div class="notice notice-error"><p><strong>⚠️ LoginFennec Pro — ' . esc_html__( 'Alerte intégrité', 'loginfennec' ) . '</strong><br>';
 				echo esc_html__( 'The following files have been modified and the signature removed:', 'loginfennec' ) . '</p><ul>';
 				foreach ( array_slice( $tampered, 0, 5 ) as $file ) {
 					echo '<li>' . esc_html( $file ) . '</li>';

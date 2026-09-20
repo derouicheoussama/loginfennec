@@ -166,6 +166,10 @@ function lnf_trial_init() {
  * @return array { start, last, days_elapsed, days_left, expired, locked }
  */
 function lnf_trial_status() {
+	$static_ref = &lnf_trial_status_cache();
+	if ( is_array( $static_ref ) ) {
+		return $static_ref;
+	}
 	$file_data = lnf_trial_read_file();
 	$option    = get_option( LNF_TRIAL_OPTION, array() );
 
@@ -213,7 +217,7 @@ function lnf_trial_status() {
 	$days_left       = max( 0, LNF_TRIAL_DAYS - $days_elapsed );
 	$expired         = ( $days_elapsed >= LNF_TRIAL_DAYS );
 
-	return array(
+	$cache = array(
 		'start'       => $start,
 		'last'        => $last,
 		'days_elapsed' => $days_elapsed,
@@ -222,6 +226,21 @@ function lnf_trial_status() {
 		'locked'      => $expired,
 		'rollback'    => false,
 	);
+	// Cache statique (par requête) : la relecture + re-vérification HMAC du
+	// fichier d'essai sinon s'exécutent 2-3 fois par hit de wp-login.
+	$static_ref = &lnf_trial_status_cache();
+	$static_ref = $cache;
+	return $cache;
+}
+
+/**
+ * Récipient statique du cache par requête de lnf_trial_status().
+ *
+ * @return array|null
+ */
+function &lnf_trial_status_cache() {
+	static $cache = null;
+	return $cache;
 }
 
 /**

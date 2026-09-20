@@ -40,9 +40,12 @@ function lnf_uninstall_site() {
 	delete_option( 'lnf_trial_data' );
 	delete_option( 'lnf_first_activated' );
 	delete_option( 'lnf_review_dismissed' );
+	delete_option( 'lnf_legacy_migrated' );
 	delete_transient( LOGINFENNEC_TRANSIENT );
 	delete_transient( LOGINFENNEC_WPORG_CHECK );
 	delete_transient( 'lnf_wporg_latest' );
+	delete_transient( 'lnf_update_remote' );
+	delete_transient( 'lnf_integrity_checked' );
 
 	// Connexion par SMS et GEO : numéros, codes OTP, compteurs anti-abus,
 	// cache de géolocalisation (transients dynamiques).
@@ -50,16 +53,18 @@ function lnf_uninstall_site() {
 	global $wpdb;
 	$wpdb->query(
 		$wpdb->prepare(
-			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s",
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s",
 			$wpdb->esc_like( '_transient_lnf_sms_' ) . '%',
 			$wpdb->esc_like( '_transient_timeout_lnf_sms_' ) . '%',
 			$wpdb->esc_like( '_transient_lnf_geo_' ) . '%',
-			$wpdb->esc_like( '_transient_timeout_lnf_geo_' ) . '%'
+			$wpdb->esc_like( '_transient_timeout_lnf_geo_' ) . '%',
+			$wpdb->esc_like( '_lnf_sms_att_' ) . '%'
 		)
 	);
 
 	// Crons du plugin.
 	wp_clear_scheduled_hook( 'lnf_license_cron' );
+	wp_clear_scheduled_hook( 'lnf_sms_att_gc' );
 }
 
 lnf_uninstall_site();
