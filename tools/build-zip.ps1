@@ -9,12 +9,13 @@
 
 param(
 	[string]$Source = '',
-	[string]$Dest = ''
+	[string]$Dest = '',
+	[string]$Prefix = ''
 )
 
 $ErrorActionPreference = 'Stop'
 if ( '' -eq $Source -or '' -eq $Dest ) {
-	throw 'Usage : build-zip.ps1 -Source <dossier> -Dest <fichier.zip>'
+	throw 'Usage : build-zip.ps1 -Source <dossier> -Dest <fichier.zip> [-Prefix loginfennec]'
 }
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -26,8 +27,12 @@ if (Test-Path -LiteralPath $Dest) {
 $root = (Resolve-Path -LiteralPath $Source).Path.TrimEnd('\')
 
 # Le zip doit contenir un dossier racine (loginfennec/...) : c'est ce que
-# WordPress attend d'un zip d'extension.
-$prefix = [System.IO.Path]::GetFileName($root.TrimEnd('\')) + '/'
+# WordPress attend d'un zip d'extension. -Prefix force ce nom (utile quand
+# le dossier source de staging s'appelle autrement, ex. _wporg).
+if ( '' -eq $Prefix ) {
+	$Prefix = [System.IO.Path]::GetFileName($root.TrimEnd('\'))
+}
+$prefix = $Prefix.Trim('\') + '/'
 $zip = [System.IO.Compression.ZipFile]::Open($Dest, [System.IO.Compression.ZipArchiveMode]::Create)
 try {
 	Get-ChildItem -LiteralPath $root -Recurse -File | ForEach-Object {

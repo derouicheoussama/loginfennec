@@ -30,7 +30,7 @@ for ( const entry of [ 'assets', 'includes', 'languages', 'loginfennec.php', 're
 
 execFileSync(
 	'powershell.exe',
-	[ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join( root, 'tools', 'build-zip.ps1' ), '-Source', stage, '-Dest', dest ],
+	[ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join( root, 'tools', 'build-zip.ps1' ), '-Source', stage, '-Dest', dest, '-Prefix', 'loginfennec' ],
 	{ stdio: 'inherit' }
 );
 
@@ -42,7 +42,7 @@ fs.rmSync( path.join( wporgStage, 'includes', 'class-updater.php' ), { force: tr
 const wporgDest = path.join( build, `loginfennec-${ version }-wporg.zip` );
 execFileSync(
 	'powershell.exe',
-	[ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join( root, 'tools', 'build-zip.ps1' ), '-Source', wporgStage, '-Dest', wporgDest ],
+	[ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join( root, 'tools', 'build-zip.ps1' ), '-Source', wporgStage, '-Dest', wporgDest, '-Prefix', 'loginfennec' ],
 	{ stdio: 'inherit' }
 );
 fs.rmSync( wporgStage, { recursive: true, force: true } );
