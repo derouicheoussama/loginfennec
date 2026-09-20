@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           3.8.3
+ * Version:           3.9.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -117,7 +117,7 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '3.8.3' );
+define( 'LOGINFENNEC_VERSION', '3.9.0' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
@@ -132,6 +132,18 @@ require_once LOGINFENNEC_DIR . 'includes/license.php';
 require_once LOGINFENNEC_DIR . 'includes/integrity.php';
 require_once LOGINFENNEC_DIR . 'includes/recaptcha.php';
 require_once LOGINFENNEC_DIR . 'includes/admin-colors.php';
+
+// Canal de mise à jour auto-hébergé (DÉSACTIVÉ par défaut — une fois le
+// plugin publié sur WordPress.org, les mises à jour arrivent nativement).
+// Activation pour vos clients directs, dans wp-config.php :
+//   define( 'LOGINFENNEC_UPDATE_SERVER', 'https://updates.exemple.com/loginfennec/update.json' );
+// Voir docs/UPDATE-SERVER.md (contrat serveur + procédure de publication).
+// Le paquet wp.org exclut class-updater.php : le file_exists évite tout
+// fatal sur ce paquet.
+if ( defined( 'LOGINFENNEC_UPDATE_SERVER' ) && constant( 'LOGINFENNEC_UPDATE_SERVER' ) && 0 === strpos( (string) constant( 'LOGINFENNEC_UPDATE_SERVER' ), 'https://' ) && file_exists( LOGINFENNEC_DIR . 'includes/class-updater.php' ) ) {
+	require_once LOGINFENNEC_DIR . 'includes/class-updater.php';
+	Lnf_Update_Server::init();
+}
 
 if ( is_admin() ) {
 	require_once LOGINFENNEC_DIR . 'includes/admin.php';

@@ -104,6 +104,11 @@ function get_transient( $k ) {
 function set_transient( $k, $v, $e = 0 ) { $GLOBALS['__transients'][ $k ] = array( 'v' => $v, 'x' => $e > 0 ? time() + $e : PHP_INT_MAX ); return true; }
 function delete_transient( $k ) { unset( $GLOBALS['__transients'][ $k ] ); return true; }
 function wp_remote_post( ...$a ) { return array( 'response' => array( 'code' => 200 ), 'body' => '{}' ); }
+function wp_delete_file( $f ) { @unlink( $f ); }
+function download_url( $url, $timeout = 300 ) {
+	global $__dl_file;
+	return isset( $__dl_file ) ? $__dl_file : new WP_Error( 'http_no_file', 'download_url stub' );
+}
 function wp_remote_get( ...$a ) { return array( 'response' => array( 'code' => 200 ), 'body' => '{}' ); }
 function wp_remote_retrieve_response_code( ...$a ) { return 200; }
 function wp_remote_retrieve_body( $r ) { return isset( $r['body'] ) ? $r['body'] : ''; }
@@ -278,6 +283,9 @@ if ( 'safe' === $mode ) {
 		'recaptcha_site_key' => 'k',
 		'recaptcha_secret_key' => 's',
 	);
+}
+if ( 'updater' === $mode ) {
+	define( 'LOGINFENNEC_UPDATE_SERVER', 'https://updates.exemple.com/loginfennec/update.json' );
 }
 
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) { define( 'HOUR_IN_SECONDS', 3600 ); }
@@ -553,6 +561,46 @@ $fg = lnf_sanitize_settings( array( 'font_google' => 'Playfair Display' ), null 
 check( 'police Google avec espace préservée', 'Playfair Display' === $fg['font_google'] );
 $si = lnf_sanitize_settings( array( 'side_image' => 'https://test.local/img.jpg' ), null );
 check( 'side_image assaini en URL', 'https://test.local/img.jpg' === $si['side_image'] );
+
+// Canal de mise à jour auto-hébergé (mode 'updater').
+if ( 'updater' === $mode ) {
+	check( 'updater : classe chargée', class_exists( 'Lnf_Update_Server' ) );
+	check( 'updater : hooks enregistrés', ! empty( $GLOBALS['__filters']['pre_set_site_transient_update_plugins'] ) && ! empty( $GLOBALS['__filters']['upgrader_pre_download'] ) );
+	check( 'updater : canal HTTPS actif', 0 === strpos( Lnf_Update_Server::server_url(), 'https://' ) );
+
+	// Serveur muet → aucune offre de mise à jour.
+	check( 'updater : serveur muet → rien', empty( Lnf_Update_Server::fetch() ) );
+
+	// Serveur publiant une version 9.9 avec checksum du fichier de test.
+	$GLOBALS['__dl_file'] = tempnam( sys_get_temp_dir(), 'lnfzip' );
+	file_put_contents( $GLOBALS['__dl_file'], 'CONTENU-DU-ZIP-3.9.0' );
+	$sum = hash_file( 'sha256', $GLOBALS['__dl_file'] );
+	set_transient( 'lnf_update_remote', array(
+		'version'      => '9.9.0',
+		'download_url' => 'https://updates.exemple.com/loginfennec/loginfennec-9.9.0.zip',
+		'checksum'     => $sum,
+	), 3600 );
+
+	$t = (object) array( 'checked' => time(), 'response' => array() );
+	$t2 = Lnf_Update_Server::inject_update( $t );
+	check( 'updater : mise à jour 9.9 offerte', isset( $t2->response['loginfennec/loginfennec.php'] ) && '9.9.0' === $t2->response['loginfennec/loginfennec.php']->new_version );
+
+	$got = Lnf_Update_Server::verify_checksum( false, 'https://updates.exemple.com/loginfennec/loginfennec-9.9.0.zip', null, array( 'plugin' => 'loginfennec/loginfennec.php' ) );
+	check( 'updater : checksum OK → fichier local', is_string( $got ) && is_file( $got ) );
+
+	set_transient( 'lnf_update_remote', array(
+		'version'      => '9.9.0',
+		'download_url' => 'https://updates.exemple.com/loginfennec/loginfennec-9.9.0.zip',
+		'checksum'     => str_repeat( 'a', 64 ),
+	), 3600 );
+	$bad = Lnf_Update_Server::verify_checksum( false, 'https://updates.exemple.com/loginfennec/loginfennec-9.9.0.zip', null, array( 'plugin' => 'loginfennec/loginfennec.php' ) );
+	check( 'updater : checksum corrompu → installation refusée', is_wp_error( $bad ) );
+
+	$other = Lnf_Update_Server::verify_checksum( false, 'https://x/other.zip', null, array( 'plugin' => 'autre/autre.php' ) );
+	check( 'updater : autre extension non concernée', false === $other );
+} else {
+	check( 'updater : module présent mais canal inactif par défaut', ! class_exists( 'Lnf_Update_Server' ) || '' === Lnf_Update_Server::server_url() );
+}
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

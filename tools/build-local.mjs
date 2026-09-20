@@ -34,6 +34,19 @@ execFileSync(
 	{ stdio: 'inherit' }
 );
 
+// Paquet wp.org : sans le canal auto-hébergé (mises à jour natives wp.org).
+const wporgStage = path.join( build, '_wporg' );
+fs.rmSync( wporgStage, { recursive: true, force: true } );
+fs.cpSync( stage, wporgStage, { recursive: true } );
+fs.rmSync( path.join( wporgStage, 'includes', 'class-updater.php' ), { force: true } );
+const wporgDest = path.join( build, `loginfennec-${ version }-wporg.zip` );
+execFileSync(
+	'powershell.exe',
+	[ '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join( root, 'tools', 'build-zip.ps1' ), '-Source', wporgStage, '-Dest', wporgDest ],
+	{ stdio: 'inherit' }
+);
+fs.rmSync( wporgStage, { recursive: true, force: true } );
+
 // Contrôle final : structure WordPress obligatoire (sinon « Le fichier de
 // l'extension n'existe pas » chez l'utilisateur). Lecture du central
 // directory (fiable, insensible aux data descriptors).
@@ -62,3 +75,4 @@ if ( fail ) { process.exit( 1 ); }
 
 const size = fs.statSync( dest ).size;
 console.log( `BUILD-OK loginfennec-${ version }.zip (${ Math.round( size / 1024 ) } Ko, ${ entries.length } entrées, structure vérifiée)` );
+console.log( `BUILD-OK loginfennec-${ version }-wporg.zip (sans canal auto-hébergé)` );

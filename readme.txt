@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.8.3
+Stable tag: 3.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,12 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.9.0 =
+* New: optional self-hosted secure update channel for direct clients — define LOGINFENNEC_UPDATE_SERVER in wp-config.php and updates appear natively in the dashboard
+* Security: update packages are verified by SHA-256 checksum before installation (mismatched or tampered packages are refused), HTTPS-only channel, optional license-key binding
+* Off by default: once published on WordPress.org, updates are served natively without any configuration
+* Docs: docs/UPDATE-SERVER.md — server contract (static HTTPS hosting is enough) and release publishing procedure
 
 = 3.8.3 =
 * New: obsolete-copy detector — when an old duplicate installation (e.g. a v3.3.0 leftover in a parallel folder) exists, the Plugins screen shows exactly which folder must be deleted
