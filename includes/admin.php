@@ -1449,6 +1449,30 @@ class Lnf_Admin {
 	protected static function panel_form( $s ) {
 		self::panel_open( 'form', __( 'Formulaire', 'loginfennec' ), __( 'Effet verre, couleurs des champs, bouton et liens.', 'loginfennec' ) );
 
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'Disposition', 'loginfennec' ) . '</h3>';
+		self::field_select(
+			$s,
+			'layout',
+			__( 'Disposition de la page', 'loginfennec' ),
+			array(
+				'single'      => __( 'Classique (formulaire centré)', 'loginfennec' ),
+				'two-column'  => __( 'Deux colonnes (image latérale)', 'loginfennec' ),
+			),
+			__( 'Le mode deux colonnes place une image à gauche du formulaire.', 'loginfennec' )
+		);
+		// field_media n'expose pas showif : le wrap est géré ici.
+		echo '<div class="lnf-field lnf-field-wide" data-showif="' . esc_attr( wp_json_encode( array( 'layout' => 'two-column' ) ) ) . '">';
+		echo '<label class="lnf-label" for="lnf-f-side_image">' . esc_html__( 'Image latérale', 'loginfennec' ) . '</label>';
+		echo '<div class="lnf-media">';
+		if ( ! empty( $s['side_image'] ) ) {
+			printf( '<img class="lnf-media-thumb" src="%s" alt="">', esc_url( $s['side_image'] ) );
+		} else {
+			echo '<img class="lnf-media-thumb" src="" alt="" hidden>';
+		}
+		printf( '<input type="url" class="lnf-input" id="lnf-f-side_image" name="lnf[side_image]" value="%s" placeholder="https://…" autocomplete="off">', esc_attr( $s['side_image'] ) );
+		echo '<span class="lnf-media-actions"><button type="button" class="button lnf-media-pick">' . esc_html__( 'Médiathèque', 'loginfennec' ) . '</button></span>';
+		echo '</div><p class="lnf-desc">' . esc_html__( 'S’affiche à gauche du formulaire. Sans image, la disposition classique reprend.', 'loginfennec' ) . '</p></div>';
+
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'Conteneur', 'loginfennec' ) . '</h3>';
 		self::field_color( $s, 'form_bg', __( 'Fond du formulaire', 'loginfennec' ) );
 		self::field_range( $s, 'form_opacity', __( 'Opacité du fond', 'loginfennec' ), 0, 100, '%' );
@@ -1612,6 +1636,9 @@ class Lnf_Admin {
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'Référencement (SEO)', 'loginfennec' ) . '</h3>';
 		self::field_toggle( $s, 'seo_noindex', __( 'Empêcher l’indexation de la page de connexion', 'loginfennec' ), __( 'Ajoute noindex, nofollow : Google n’affiche jamais la page de connexion dans les résultats (recommandé).', 'loginfennec' ) );
 		self::field_text( $s, 'seo_login_title', __( 'Titre de l’onglet', 'loginfennec' ), 'text', __( 'ex. : Espace client — {site}', 'loginfennec' ), __( 'Laisser vide pour le titre WordPress par défaut. Jeton : {site}.', 'loginfennec' ) );
+
+		echo '<h3 class="lnf-group-title">' . esc_html__( 'White-label', 'loginfennec' ) . '</h3>';
+		self::field_toggle( $s, 'white_label', __( 'Mode white-label', 'loginfennec' ), __( 'Masque « Back to… », le lien d’inscription et le logo de marque sur la page de connexion, ainsi que la signature du dashboard.', 'loginfennec' ) );
 
 		echo '<h3 class="lnf-group-title">' . esc_html__( 'CSS personnalisé', 'loginfennec' ) . '</h3>';
 		self::field_textarea(

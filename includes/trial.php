@@ -36,6 +36,26 @@ const LNF_TRIAL_FILE    = 'loginfennec-trial.json';
  */
 function lnf_trial_file_path() {
 	$uploads = wp_upload_dir();
+	$dir     = trailingslashit( $uploads['basedir'] ) . 'loginfennec';
+	if ( ! is_dir( $dir ) ) {
+		wp_mkdir_p( $dir );
+		// Protège le dossier (le JSON d'essai n'a pas à être public).
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- protection du dossier d'essai, une seule écriture.
+		@file_put_contents( $dir . '/.htaccess', "Deny from all\n" );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- idem.
+		@file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" );
+	}
+	return $dir . '/' . LNF_TRIAL_FILE;
+}
+
+/**
+ * Ancien emplacement (racine de uploads, public) : lu en secours pour les
+ * installations antérieures, jamais réécrit.
+ *
+ * @return string
+ */
+function lnf_trial_file_path_legacy() {
+	$uploads = wp_upload_dir();
 	return trailingslashit( $uploads['basedir'] ) . LNF_TRIAL_FILE;
 }
 
@@ -89,7 +109,12 @@ function lnf_trial_verify_record( $record ) {
 function lnf_trial_read_file() {
 	$file = lnf_trial_file_path();
 	if ( ! file_exists( $file ) || ! is_readable( $file ) ) {
-		return false;
+		// Installations antérieures : le fichier vivait à la racine de uploads.
+		$legacy = lnf_trial_file_path_legacy();
+		if ( ! file_exists( $legacy ) || ! is_readable( $legacy ) ) {
+			return false;
+		}
+		$file = $legacy;
 	}
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- lecture locale du fichier d'essai.
 	$content = file_get_contents( $file );
@@ -281,6 +306,10 @@ function lnf_trial_force_reset() {
 	$file = lnf_trial_file_path();
 	if ( file_exists( $file ) ) {
 		wp_delete_file( $file );
+	}
+	$legacy = lnf_trial_file_path_legacy();
+	if ( file_exists( $legacy ) ) {
+		wp_delete_file( $legacy );
 	}
 	lnf_trial_init();
 }

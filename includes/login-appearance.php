@@ -30,6 +30,9 @@ defined( 'ABSPATH' ) || exit;
 function lnf_build_login_css( $s ) {
 	$css = '';
 
+	// ——— Layout 2 colonnes : actif seulement avec une image latérale ———.
+	$two_col = ( 'two-column' === ( $s['layout'] ?? 'single' ) && ! empty( $s['side_image'] ) );
+
 	// ——— Google Fonts ———.
 	// Prend le pas sur la famille générique : ne s'applique que si une
 	// police Google est renseignée (sinon le sélecteur « Police » du
@@ -60,6 +63,21 @@ function lnf_build_login_css( $s ) {
 		'body.login #login{width:%1$dpx;max-width:calc(100%% - 40px);margin:8%% auto 0;padding-inline:0;box-sizing:border-box;}',
 		(int) $s['form_width']
 	);
+
+	// ——— Layout 2 colonnes : grille + image latérale ———.
+	if ( $two_col ) {
+		$css .= 'body.login.lnf-two-col #login{grid-template-columns:1fr 1fr;gap:0;max-width:900px;border-radius:18px;overflow:hidden;}';
+		$css .= 'body.login.lnf-two-col #login::before{content:"";display:block;background-size:cover;background-position:center;min-height:100%;}';
+		$css .= 'body.login.lnf-two-col #login > *{grid-column:2;}';
+		$css .= 'body.login.lnf-two-col #login form{border-radius:0;box-shadow:none;}';
+		$css .= '@media (max-width:782px){body.login.lnf-two-col #login{grid-template-columns:1fr;max-width:calc(100% - 40px);}body.login.lnf-two-col #login::before{display:none;}}';
+	}
+
+	// ——— White-label : masque les marques sur la page de connexion ———.
+	// (le CSS ne peut pas vivre dans admin.css : jamais chargé côté login).
+	if ( ! empty( $s['white_label'] ) ) {
+		$css .= 'body.lnf-white-label #backtoblog,body.lnf-white-label #nav a[href*="action=register"] .lnf-brand-mark,body.lnf-white-label .lnf-brand-logo{display:none !important;}';
+	}
 
 	// Éléments au-dessus des calques d'arrière-plan.
 	$css .= 'body.login #login,body.login .lnf-social,body.login .lnf-copyright{position:relative;z-index:1;}';

@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.10.1
+Stable tag: 3.10.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,13 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.10.2 =
+* New: two-column layout is now fully usable — layout selector and side image in the Form tab (the CSS previously lived in a stylesheet never loaded on the login page)
+* New: white-label toggle in Extras — brand marks hidden on the login page and in the dashboard footer
+* New: Google Fonts name and weights exposed in Extras (they take priority over the generic font family, as documented)
+* Security/privacy: the trial file moves from the public uploads root into a protected subfolder (.htaccess denied); the old location is still read for existing installs
+* Anti-enumeration generic error message enabled by default
 
 = 3.10.1 =
 * New: one-click cleanup of duplicate installations — an obsolete copy now shows a red banner with a "Delete this copy" button directly in the Plugins list row
