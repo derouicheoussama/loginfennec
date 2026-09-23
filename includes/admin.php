@@ -43,6 +43,7 @@ class Lnf_Admin {
 		add_action( 'wp_ajax_lnf_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'obsolete_copies_notice' ) );
+		add_action( 'after_plugin_row', array( __CLASS__, 'obsolete_copy_row' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( __CLASS__, 'footer_signature' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( LOGINFENNEC_FILE ), array( __CLASS__, 'plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -593,6 +594,44 @@ class Lnf_Admin {
 		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfennec' ) . '</a>';
 		$meta[] = '<a href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener noreferrer">★★★★★ ' . esc_html__( 'Noter le plugin', 'loginfennec' ) . '</a>';
 		return $meta;
+	}
+
+	/**
+	 * Ligne d'alerte sous une copie obsolète de LoginFennec dans Extensions :
+	 * bandeau rouge avec un lien « Supprimer cette copie » en un clic.
+	 *
+	 * @param string $file Basename de l'extension de la ligne.
+	 * @param array  $data Données d'en-tête.
+	 */
+	public static function obsolete_copy_row( $file, $data ) {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! $screen || 'plugins' !== $screen->id || ! current_user_can( 'delete_plugins' ) ) {
+			return;
+		}
+		if ( $file === plugin_basename( LOGINFENNEC_FILE ) ) {
+			return; // Notre propre ligne : toujours saine.
+		}
+		if ( false === strpos( (string) $data['Name'], 'LoginFennec' ) ) {
+			return;
+		}
+		// Si la copie est PLUS RÉCENTE que nous, ce n'est pas elle l'obsolète.
+		if ( isset( $data['Version'] ) && version_compare( LOGINFENNEC_VERSION, (string) $data['Version'], '<' ) ) {
+			return;
+		}
+		$delete = wp_nonce_url(
+			self_admin_url( 'plugins.php?action=delete&plugin=' . rawurlencode( $file ) ),
+			'delete-plugin_' . $file
+		);
+		?>
+		<tr class="plugin-update-tr"><td colspan="4" class="plugin-update"><div class="update-message notice inline notice-warning"><p>
+			<strong>⚠️ <?php esc_html_e( 'Copie obsolète', 'loginfennec' ); ?> (v<?php echo esc_html( $data['Version'] ); ?>)</strong> —
+			<?php echo esc_html( sprintf( /* translators: %s : version. */ __( 'la version %s est active dans un autre dossier. Cette copie doit être supprimée.', 'loginfennec' ), LOGINFENNEC_VERSION ) ); ?>
+			<a class="button button-small button-link-delete" href="<?php echo esc_url( $delete ); ?>"><?php esc_html_e( 'Supprimer cette copie', 'loginfennec' ); ?></a>
+		</p></div></td></tr>
+		<?php
 	}
 
 	/**

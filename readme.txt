@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.10.0
+Stable tag: 3.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,9 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 3.10.1 =
+* New: one-click cleanup of duplicate installations — an obsolete copy now shows a red banner with a "Delete this copy" button directly in the Plugins list row
 
 = 3.10.0 =
 * Security: the 7-day trial no longer disables security protections at expiry — brute-force lockout, honeypot, hardening and the journal stay active forever; only design customization pauses until a license is entered
