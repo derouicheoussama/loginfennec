@@ -1280,7 +1280,7 @@ class Lnf_Admin {
 				'title'  => __( 'LoginFennec Pro', 'loginfennec' ),
 				'state'  => lnf_is_pro()
 					? __( 'Licence active : ', 'loginfennec' ) . lnf_license_label()
-					: __( '2FA, reCAPTCHA, URL de connexion personnalisée…', 'loginfennec' ),
+					: __( 'URL de connexion personnalisée, verrouillage /wp-admin…', 'loginfennec' ),
 				'ok'     => lnf_is_pro(),
 				'goto'   => '',
 				'link'   => admin_url( 'admin.php?page=loginfennec-pro' ),
@@ -1893,7 +1893,7 @@ class Lnf_Admin {
 
 		echo '<div class="lnf-pro-teaser">';
 		echo '<div class="lnf-pro-teaser-text"><h4>' . esc_html__( 'Niveaux de sécurité avancés — LoginFennec Pro', 'loginfennec' ) . '</h4><p>'
-			. esc_html__( 'Double authentification (2FA), reCAPTCHA v3, URL de connexion personnalisée, alertes e-mail, journal des tentatives et blocage géographique.', 'loginfennec' )
+			. esc_html__( 'URL de connexion personnalisée, verrouillage dédié de /wp-admin, journal d’audit étendu et support prioritaire. (La 2FA et reCAPTCHA v3 sont inclus gratuitement.)', 'loginfennec' )
 			. '</p></div>';
 		echo '<a class="lnf-btn lnf-btn-pro" href="' . esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ) . '">' . esc_html__( 'Passer en Pro', 'loginfennec' ) . '</a>';
 		echo '</div>';
@@ -2364,7 +2364,7 @@ class Lnf_Admin {
 						<div class="lnf-inst-check"><label class="lnf-switch"><input type="hidden" name="lnf[sec_disable_xmlrpc]" value="0"><input type="checkbox" name="lnf[sec_disable_xmlrpc]" value="1" <?php checked( ! empty( $s['sec_disable_xmlrpc'] ) ); ?>><span class="lnf-switch-ui"></span></label><div><strong><?php esc_html_e( 'Désactiver XML-RPC', 'loginfennec' ); ?></strong><p class="lnf-inst-desc"><?php esc_html_e( 'Ferme une porte d’entrée classique des attaques.', 'loginfennec' ); ?></p></div></div>
 					</div>
 					<p class="lnf-inst-desc"><strong><?php esc_html_e( 'Votre IP actuelle', 'loginfennec' ); ?></strong> : <code><?php echo esc_html( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' ); ?></code> — <?php esc_html_e( 'ajoutez-la à la liste blanche (onglet Sécurité) pour ne jamais être verrouillé lors de vos tests.', 'loginfennec' ); ?></p>
-					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?></a> — <?php esc_html_e( '2FA, reCAPTCHA, URL de connexion personnalisée et alertes e-mail.', 'loginfennec' ); ?></p>
+					<p class="lnf-inst-pro-note"><a href="<?php echo esc_url( admin_url( 'admin.php?page=loginfennec-pro' ) ); ?>"><?php esc_html_e( 'Passer en Pro', 'loginfennec' ); ?></a> — <?php esc_html_e( 'URL de connexion personnalisée, verrouillage /wp-admin et support prioritaire. (2FA et reCAPTCHA inclus gratuitement.)', 'loginfennec' ); ?></p>
 				</section>
 
 				<section class="lnf-wstep" data-step="4">
@@ -2415,7 +2415,7 @@ class Lnf_Admin {
 				array( __( 'Restriction de la connexion par pays (GEO)', 'loginfennec' ), true, true ),
 				array( __( 'Alertes e-mail après chaque blocage', 'loginfennec' ), true, true ),
 				array( __( 'Journal de sécurité : 50 derniers événements, export CSV', 'loginfennec' ), true, true ),
-				array( __( 'Double authentification (2FA)', 'loginfennec' ), false, true ),
+				array( __( 'Double authentification (2FA) — Authy, Google Authenticator, Duo Mobile', 'loginfennec' ), true, true ),
 				array( __( 'URL de connexion personnalisée', 'loginfennec' ), false, true ),
 				array( __( 'Verrouillage dédié de /wp-admin (liste blanche IP)', 'loginfennec' ), false, true ),
 			),
@@ -2435,7 +2435,7 @@ class Lnf_Admin {
 			array(
 				'icon'  => 'dashicons-shield-alt',
 				'title' => __( 'Sécurité maximale', 'loginfennec' ),
-				'text'  => __( '2FA, reCAPTCHA et URL de connexion personnalisée : votre page de connexion devient une forteresse.', 'loginfennec' ),
+				'text'  => __( 'URL de connexion personnalisée, verrouillage de /wp-admin, journal d’audit étendu et appareils de confiance : votre page de connexion devient une forteresse.', 'loginfennec' ),
 			),
 			array(
 				'icon'  => 'dashicons-chart-line',
@@ -2577,7 +2577,7 @@ class Lnf_Admin {
 						<ul class="lnf-pack-list">
 							<li><?php esc_html_e( 'Tout le gratuit, plus :', 'loginfennec' ); ?></li>
 							<li><?php esc_html_e( 'Alertes e-mail de blocage', 'loginfennec' ); ?></li>
-							<li><?php esc_html_e( '2FA, reCAPTCHA, URL personnalisée*', 'loginfennec' ); ?></li>
+							<li><?php esc_html_e( 'URL personnalisée, verrouillage /wp-admin*', 'loginfennec' ); ?></li>
 							<li class="lnf-updates" data-yearly="<?php esc_attr_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?>" data-lifetime="<?php esc_attr_e( 'Mises à jour à vie ♾️', 'loginfennec' ); ?>"><?php esc_html_e( 'Mises à jour pendant 1 an', 'loginfennec' ); ?></li>
 						</ul>
 						<button type="button" class="lnf-btn lnf-btn-pro lnf-buy-open" data-pack="site1"><?php esc_html_e( 'Acheter — paiement sur place', 'loginfennec' ); ?></button>

@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 3.10.2
+Stable tag: 4.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,10 @@ No. Everything is loaded only where needed: the login page gets one small inline
 
 Yes. The plugin only touches wp-login.php and adds no front-end code to your public pages, so themes and builders are unaffected. Any WordPress login form (including WooCommerce accounts) uses wp-login.php under the hood.
 
+= How does two-factor authentication (2FA) work? =
+
+Each user enables it in their own profile: scan the QR code with Authy, Google Authenticator, Duo Mobile or Microsoft Authenticator, confirm a 6-digit code, and every login then asks for the rotating 30-second code. Eight single-use backup codes are provided in case the phone is lost. The secret is encrypted at rest and the QR is rendered locally — nothing is sent to a third-party service.
+
 = How does SMS login work, and what does it cost? =
 
 LoginFennec generates the one-time code and hands the SMS to the gateway YOU configure: Twilio, Vonage, or any provider exposing an HTTP API (webhook). SMS pricing depends on that provider only — the plugin itself adds no cost.
@@ -140,6 +144,11 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.0.0 =
+* New: two-factor authentication (2FA) — TOTP codes compatible with Authy, Google Authenticator, Duo Mobile and Microsoft Authenticator (30-second rotating codes)
+* New: QR-code onboarding rendered locally (no third-party service), manual key entry, 8 single-use backup codes, per-user setup in the profile screen
+* Security: two-step login (password, then code), ±30s tolerance window, 5 attempts maximum per attempt session, secret encrypted at rest
 
 = 3.10.2 =
 * New: two-column layout is now fully usable — layout selector and side image in the Form tab (the CSS previously lived in a stylesheet never loaded on the login page)

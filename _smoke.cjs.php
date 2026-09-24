@@ -319,6 +319,9 @@ if ( 'safe' === $mode ) {
 if ( 'updater' === $mode ) {
 	define( 'LOGINFENNEC_UPDATE_SERVER', 'https://updates.exemple.com/loginfennec/update.json' );
 }
+if ( '2fa' === $mode ) {
+	define( 'ABSPATH_2FA_TEST', 1 );
+}
 
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) { define( 'HOUR_IN_SECONDS', 3600 ); }
 if ( ! defined( 'DAY_IN_SECONDS' ) ) { define( 'DAY_IN_SECONDS', 86400 ); }
@@ -632,6 +635,35 @@ if ( 'updater' === $mode ) {
 	check( 'updater : autre extension non concernée', false === $other );
 } else {
 	check( 'updater : module présent mais canal inactif par défaut', ! class_exists( 'Lnf_Update_Server' ) || '' === Lnf_Update_Server::server_url() );
+}
+
+// Double authentification TOTP (mode '2fa') : vecteur officiel RFC 6238.
+if ( '2fa' === $mode ) {
+	$bin = lnf_totp_base32_decode( lnf_totp_base32_encode( 'abcDEF123!' ) );
+	check( '2fa : base32 aller-retour', 'abcDEF123!' === $bin );
+	$rfc_secret = '12345678901234567890';
+	check( '2fa : vecteur RFC 6238 T=59 (8 chiffres)', '94287082' === lnf_totp_code( $rfc_secret, 59, 8 ) );
+	check( '2fa : vecteur RFC 6238 T=1111111109', '07081804' === lnf_totp_code( $rfc_secret, 1111111109, 8 ) );
+	$code_now = lnf_totp_code( $rfc_secret, time() );
+	check( '2fa : code courant 6 chiffres', (bool) preg_match( '/^\d{6}$/', $code_now ) );
+
+	// Utilisateur de test : secret stocké chiffré.
+	$GLOBALS['__users'][42] = array( 'ID' => 42, 'user_login' => 'twofa' );
+	$GLOBALS['__usermeta'][42][ LNF_TOTP_META_SECRET ] = lnf_encrypt_secret( $rfc_secret );
+	check( '2fa : enabled (secret chiffré)', lnf_totp_enabled( 42 ) );
+	check( '2fa : code courant accepté', lnf_totp_verify( 42, $code_now ) );
+	check( '2fa : tolérance ±30 s acceptée', lnf_totp_verify( 42, lnf_totp_code( $rfc_secret, time() - 30 ) ) );
+	check( '2fa : code hors fenêtre refusé', ! lnf_totp_verify( 42, lnf_totp_code( $rfc_secret, time() - 300 ) ) );
+	check( '2fa : code non numérique refusé', ! lnf_totp_verify( 42, 'abcd' ) );
+
+	// Codes de secours : usage unique.
+	$codes = lnf_totp_generate_backup( 42 );
+	check( '2fa : 8 codes de secours générés', 8 === count( $codes ) );
+	check( '2fa : premier code consommé', lnf_totp_consume_backup( 42, $codes[0] ) );
+	check( '2fa : même code refusé (usage unique)', ! lnf_totp_consume_backup( 42, $codes[0] ) );
+	check( '2fa : autre code accepté', lnf_totp_consume_backup( 42, $codes[3] ) );
+} else {
+	check( '2fa : module chargé', function_exists( 'lnf_totp_verify' ) );
 }
 
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
