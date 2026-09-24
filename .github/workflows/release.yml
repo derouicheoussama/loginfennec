@@ -1,7 +1,10 @@
 name: Release
 
-# Publie un zip nommé loginfennec.zip à chaque tag v*
-# (attaché à la release GitHub, prêt pour l'upload wp.org).
+# Publie, à chaque tag v* : loginfennec.zip + update.json + .sha256.
+# Les clients avec LOGINFENNEC_UPDATE_SERVER pointé sur
+# releases/latest/download/update.json reçoivent la mise à jour
+# instantanément dans leur dashboard. Après publication wp.org, ce canal
+# s'efface automatiquement (priorité wp.org dans class-updater.php).
 
 on:
   push:
@@ -46,8 +49,20 @@ jobs:
         run: |
           find . -name '*.php' -not -path './node_modules/*' -print0 | xargs -0 -n1 php -l || true
 
+      - name: Générer update.json (canal mises à jour instantané)
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          SUM=$(sha256sum build/loginfennec.zip | cut -d' ' -f1)
+          jq -n --arg v "$VERSION" --arg s "$SUM" \
+            '{name:"LoginFennec Pro",version:$v,download_url:"https://github.com/derouicheoussama/loginfennec/releases/latest/download/loginfennec.zip",checksum:$s,requires:"5.2",requires_php:"7.2",tested:"7.1",url:"https://github.com/derouicheoussama/loginfennec",last_updated:(now|todate),sections:{changelog:("Voir la release "+$v+".")}}' \
+            > build/update.json
+          sha256sum build/loginfennec.zip > build/loginfennec.zip.sha256
+
       - name: Créer la release GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: loginfennec.zip
+          files: |
+            build/loginfennec.zip
+            build/update.json
+            build/loginfennec.zip.sha256
           generate_release_notes: true

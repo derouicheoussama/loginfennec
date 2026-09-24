@@ -96,6 +96,11 @@ class Lnf_Update_Server {
 	/**
 	 * Injecte la mise à jour dans le transient WordPress si plus récente.
 	 *
+	 * Règle wp.org : si le dépôt officiel propose déjà la mise à jour
+	 * (même transient), ce canal s'EFFACE — WordPress.org prime toujours.
+	 * Conséquence : quand le dépôt GitHub passe en privé après la
+	 * publication wp.org, la transition est automatique et sans rupture.
+	 *
 	 * @param object $transient Transient update_plugins.
 	 * @return object
 	 */
@@ -103,11 +108,15 @@ class Lnf_Update_Server {
 		if ( empty( $transient->checked ) ) {
 			return $transient;
 		}
+		$basename = plugin_basename( LOGINFENNEC_FILE );
+		// wp.org prime : son offre existe déjà dans le transient.
+		if ( ! empty( $transient->response[ $basename ] ) ) {
+			return $transient;
+		}
 		$data = self::fetch();
 		if ( empty( $data ) || ! version_compare( LOGINFENNEC_VERSION, (string) $data['version'], '<' ) ) {
 			return $transient;
 		}
-		$basename                    = plugin_basename( LOGINFENNEC_FILE );
 		$transient->response[ $basename ] = (object) array(
 			'slug'          => 'loginfennec',
 			'plugin'        => $basename,

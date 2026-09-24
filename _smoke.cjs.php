@@ -633,6 +633,15 @@ if ( 'updater' === $mode ) {
 
 	$other = Lnf_Update_Server::verify_checksum( false, 'https://x/other.zip', null, array( 'plugin' => 'autre/autre.php' ) );
 	check( 'updater : autre extension non concernée', false === $other );
+
+	// Priorité wp.org : si wp.org propose déjà la mise à jour, notre canal
+	// s'efface (règle wp.org + transition dépôt privé sans rupture).
+	$t3 = (object) array(
+		'checked'  => time(),
+		'response' => array( 'loginfennec/loginfennec.php' => (object) array( 'new_version' => '99.0-wporg', 'package' => 'https://downloads.wordpress.org/loginfennec.zip' ) ),
+	);
+	$t3 = Lnf_Update_Server::inject_update( $t3 );
+	check( 'updater : priorité wp.org (canal GitHub effacé)', '99.0-wporg' === $t3->response['loginfennec/loginfennec.php']->new_version );
 } else {
 	check( 'updater : module présent mais canal inactif par défaut', ! class_exists( 'Lnf_Update_Server' ) || '' === Lnf_Update_Server::server_url() );
 }

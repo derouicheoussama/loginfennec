@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.0.0
+Stable tag: 4.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,11 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.1.0 =
+* New: dual update system — the self-hosted/GitHub channel now automatically yields to WordPress.org as soon as the official repository serves the plugin (seamless transition when the GitHub repository goes private after publication)
+* New: the GitHub release workflow publishes update.json + SHA-256 alongside the zip — instant dashboard updates for configured clients on every tag push
+* Improved: GitHub README fully rewritten (architecture, update channels, development tools)
 
 = 4.0.0 =
 * New: two-factor authentication (2FA) — TOTP codes compatible with Authy, Google Authenticator, Duo Mobile and Microsoft Authenticator (30-second rotating codes)
