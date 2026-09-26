@@ -259,6 +259,128 @@
 				cp.style.display = 'none';
 			}
 		}
+
+		// ——— Classes du body : disposition deux colonnes, white-label ———.
+		var bodyEl = doc.body;
+		if (bodyEl) {
+			var isTwoCol = (field('layout').val() === 'two-column') && String(field('side_image').val() || '') !== '';
+			bodyEl.classList.toggle('lnf-two-col', isTwoCol);
+			bodyEl.classList.toggle('lnf-white-label', !!checked('white_label'));
+		}
+
+		// ——— Message de bienvenue : créé/mis à jour/supprimé en direct ———.
+		var welcomeOn = checked('welcome_enable');
+		var wTitle = String(field('welcome_title').val() || '').trim();
+		var wSub = String(field('welcome_subtitle').val() || '').trim();
+		var welcome = welcomeOn && (wTitle !== '' || wSub !== '');
+		var wEl = doc.querySelector('.lnf-welcome');
+		if (!welcome) {
+			if (wEl) { wEl.remove(); }
+		} else {
+			if (!wEl) {
+				wEl = doc.createElement('div');
+				wEl.className = 'lnf-welcome';
+				var target = doc.querySelector('#login form') || doc.querySelector('#login');
+				if (target && target.parentNode) {
+					target.parentNode.insertBefore(wEl, target);
+				} else {
+					doc.body.appendChild(wEl);
+				}
+			}
+			var h3 = wEl.querySelector('h3');
+			var p = wEl.querySelector('p');
+			if (wTitle !== '') {
+				if (!h3) { h3 = doc.createElement('h3'); wEl.insertBefore(h3, wEl.firstChild); }
+				h3.textContent = wTitle;
+			} else if (h3) {
+				h3.remove();
+			}
+			if (wSub !== '') {
+				if (!p) { p = doc.createElement('p'); wEl.appendChild(p); }
+				p.textContent = wSub;
+			} else if (p) {
+				p.remove();
+			}
+		}
+
+		// ——— Copyright : créé/mis à jour/supprimé en direct ———.
+		var cpOn = checked('copyright_enable');
+		var cp = doc.querySelector('.lnf-copyright');
+		var cpText = String(field('copyright_text').val() || '')
+			.replace('{year}', String(new Date().getFullYear()))
+			.replace('{sitename}', cfg.sitename || '');
+		if (!cpOn || cpText === '') {
+			if (cp) { cp.style.display = 'none'; }
+		} else {
+			if (!cp) {
+				cp = doc.createElement('div');
+				cp.className = 'lnf-copyright';
+				var anchorEl = doc.querySelector('.lnf-social') || doc.querySelector('#nav');
+				if (anchorEl && anchorEl.parentNode) {
+					anchorEl.parentNode.insertBefore(cp, anchorEl.nextSibling);
+				} else if (doc.querySelector('#login')) {
+					doc.querySelector('#login').appendChild(cp);
+				}
+			}
+			cp.textContent = cpText;
+			cp.style.display = '';
+		}
+
+		// ——— Champs : placeholders et libellés en direct ———.
+		var userLogin = doc.querySelector('#user_login');
+		if (userLogin) {
+			userLogin.placeholder = String(field('field_placeholder_user').val() || '');
+		}
+		var userPass = doc.querySelector('#user_pass');
+		if (userPass) {
+			userPass.placeholder = String(field('field_placeholder_pass').val() || '');
+		}
+		var labelUser = doc.querySelector('label[for="user_login"]');
+		var labelUserTxt = String(field('field_label_user').val() || '').trim();
+		if (labelUser && labelUserTxt !== '') {
+			labelUser.textContent = labelUserTxt;
+		}
+		var labelPass = doc.querySelector('label[for="user_pass"]');
+		var labelPassTxt = String(field('field_label_pass').val() || '').trim();
+		if (labelPass && labelPassTxt !== '') {
+			labelPass.textContent = labelPassTxt;
+		}
+
+		// ——— Liens : textes et cibles en direct ———.
+		var backLink = doc.querySelector('#backtoblog a');
+		var backTxt = String(field('back_to_text').val() || '').trim();
+		var backUrl = String(field('back_to_url').val() || '').trim();
+		if (backLink) {
+			if (backTxt !== '') { backLink.textContent = backTxt; }
+			if (backUrl !== '') { backLink.href = backUrl; }
+		}
+		var regLink = doc.querySelector('#nav a[href*="action=register"]');
+		var regTxt = String(field('register_text').val() || '').trim();
+		if (regLink && regTxt !== '') {
+			regLink.textContent = regTxt;
+		}
+
+		// ——— Police Google : met le <link> de l'aperçu en harmonie ———.
+		var fg = String(field('font_google').val() || '').trim();
+		var fgw = String(field('font_google_weight').val() || '').trim();
+		var headEl = doc.head;
+		if (headEl) {
+			var gfLink = headEl.querySelector('#lnf-gf-live');
+			if (fg !== '') {
+				var gfHref = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fg).replace(/%20/g, '+') + (fgw !== '' ? ':wght@' + fgw : '') + '&display=swap';
+				if (!gfLink) {
+					gfLink = doc.createElement('link');
+					gfLink.id = 'lnf-gf-live';
+					gfLink.rel = 'stylesheet';
+					headEl.appendChild(gfLink);
+				}
+				if (gfLink.href !== gfHref) {
+					gfLink.href = gfHref;
+				}
+			} else if (gfLink) {
+				gfLink.remove();
+			}
+		}
 	}
 
 	function updatePreview() {

@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.3.0
+Stable tag: 4.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,9 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.3.1 =
+* Improved: the live preview now reflects every dashboard setting in real time — body layout classes, welcome message creation/editing, copyright block, input placeholders and labels, link texts and targets, Google Fonts link — all without saving
 
 = 4.3.0 =
 * New: social icons appear live in the preview as you type URLs — no save needed (icons are created, hidden or updated in the preview in real time)
