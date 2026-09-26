@@ -1,7 +1,7 @@
 name: CI
 
-# Garde-fou continu : la syntaxe de tous les fichiers PHP est vérifiée
-# à chaque push et pull request.
+# Garde-fou continu : syntaxe PHP (stricte), syntaxe JS et harnais de
+# fumée (7 modes) à chaque push et pull request. Un échec = croix rouge.
 
 on:
   push:
@@ -15,5 +15,47 @@ jobs:
       - name: Récupérer le code
         uses: actions/checkout@v4
 
-      - name: Vérifier la syntaxe PHP
-        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Vérifier la syntaxe PHP (stricte — un échec casse le build)
+        run: |
+          ERR=0
+          while IFS= read -r -d '' f; do
+            php -l "$f" || ERR=1
+          done < <(find . -name '*.php' -not -path './.git/*' -print0)
+          exit $ERR
+
+  js-and-harness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: PHP 8.3 (harnais)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Node 22 (syntaxe JS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Vérifier la syntaxe JS
+        run: |
+          node --check assets/js/admin.js
+          node --check assets/js/sms-login.js
+          node --check assets/js/qrcode.js
+
+      - name: Harnais de fumée — 7 modes
+        run: |
+          for mode in "" enabled sms geo safe updater 2fa; do
+            echo "── mode ${mode:-défaut} ──"
+            php _smoke.cjs.php $mode | tail -1
+          done
+
+      - name: Audit croisé (defaults ↔ spec ↔ UI ↔ consommation ↔ uninstall)
+        run: node tools/audit.mjs

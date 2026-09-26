@@ -45,9 +45,28 @@ jobs:
           cd build
           zip -r ../loginfennec.zip loginfennec
 
-      - name: Vérifier la syntaxe PHP
+      - name: Vérifier la syntaxe PHP (stricte)
         run: |
-          find . -name '*.php' -not -path './node_modules/*' -print0 | xargs -0 -n1 php -l || true
+          ERR=0
+          while IFS= read -r -d '' f; do
+            php -l "$f" || ERR=1
+          done < <(find . -name '*.php' -not -path './.git/*' -not -path './build/*' -print0)
+          exit $ERR
+
+      - name: Vérifier la structure du zip (racine, slashs, fichier principal)
+        run: |
+          python3 - <<'PY'
+          import zipfile, sys
+          z = zipfile.ZipFile('build/loginfennec.zip')
+          names = z.namelist()
+          bad = [n for n in names if '\\' in n]
+          outside = [n for n in names if not n.startswith('loginfennec/')]
+          main = 'loginfennec/loginfennec.php' in names
+          if bad or outside or not main:
+              print('ÉCHEC structure :', {'antislash': bad, 'hors_racine': outside, 'principal': main})
+              sys.exit(1)
+          print(f'STRUCTURE OK ({len(names)} entrées)')
+          PY
 
       - name: Générer update.json (canal mises à jour instantané)
         run: |

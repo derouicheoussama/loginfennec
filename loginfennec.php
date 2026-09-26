@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           4.3.3
+ * Version:           4.4.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -171,7 +171,7 @@ function lnf_cleanup_duplicates( $plugin ) {
 }
 add_action( 'activated_plugin', 'lnf_cleanup_duplicates' );
 
-define( 'LOGINFENNEC_VERSION', '4.3.3' );
+define( 'LOGINFENNEC_VERSION', '4.4.0' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );

@@ -307,7 +307,8 @@ class Lnf_Admin {
 	}
 
 	/**
-	 * Vérifie les mises à jour à la demande (interroge WordPress.org).
+	 * Vérifie les mises à jour à la demande (interroge WordPress.org puis
+	 * le canal secondaire, dans cet ordre de priorité).
 	 */
 	public static function ajax_check_updates() {
 		check_ajax_referer( 'lnf_admin', 'nonce' );
@@ -315,57 +316,73 @@ class Lnf_Admin {
 			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
 
-		// Tant que le plugin n'est pas encore publié sur WordPress.org,
-		// la version locale est la référence : rien à mettre à jour.
-		$latest = get_transient( 'lnf_wporg_latest' );
-		if ( false === $latest ) {
-			if ( ! function_exists( 'plugins_api' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+		// Canal secondaire : purge son cache pour que la vérification soit
+		// réellement à jour (sinon le transient 12 h masquerait une release
+		// toute fraîche).
+		if ( class_exists( 'Lnf_Update_Server' ) ) {
+			delete_transient( 'lnf_update_remote' );
+		}
+
+		// 1) WordPress.org (canal prioritaire).
+		if ( ! function_exists( 'plugins_api' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+		}
+		$info = plugins_api(
+			'plugin_information',
+			array(
+				'slug'   => 'loginfennec',
+				'fields' => array( 'versions' => false, 'sections' => false, 'banners' => false ),
+			)
+		);
+		if ( ! is_wp_error( $info ) && ! empty( $info->version ) && version_compare( LOGINFENNEC_VERSION, (string) $info->version, '<' ) ) {
+			if ( function_exists( 'wp_update_plugins' ) ) {
+				wp_update_plugins();
 			}
-			$info = plugins_api(
-				'plugin_information',
+			$basename   = plugin_basename( LOGINFENNEC_FILE );
+			$update_url = wp_nonce_url(
+				self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $basename ) ),
+				'upgrade-plugin_' . $basename
+			);
+			wp_send_json_success(
 				array(
-					'slug'   => 'loginfennec',
-					'fields' => array( 'versions' => false, 'sections' => false, 'banners' => false ),
+					'status'  => 'available',
+					'version' => (string) $info->version,
+					'channel' => 'wordpress.org',
+					'url'     => $update_url,
 				)
 			);
-			if ( is_wp_error( $info ) || empty( $info->version ) ) {
+		}
+
+		// 2) Canal auto-hébergé / GitHub (si configuré).
+		if ( class_exists( 'Lnf_Update_Server' ) ) {
+			$remote = Lnf_Update_Server::fetch();
+			if ( ! empty( $remote ) && version_compare( LOGINFENNEC_VERSION, (string) $remote['version'], '<' ) ) {
+				if ( function_exists( 'wp_update_plugins' ) ) {
+					wp_update_plugins();
+				}
+				$basename   = plugin_basename( LOGINFENNEC_FILE );
+				$update_url = wp_nonce_url(
+					self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $basename ) ),
+					'upgrade-plugin_' . $basename
+				);
 				wp_send_json_success(
 					array(
-						'status'  => 'up_to_date',
-						'version' => LOGINFENNEC_VERSION,
-						'message' => __( 'Le plugin est à jour. (Les mises à jour seront servies par WordPress.org dès la publication.)', 'loginfennec' ),
+						'status'  => 'available',
+						'version' => (string) $remote['version'],
+						'channel' => 'github',
+						'url'     => $update_url,
 					)
 				);
 			}
-			$latest = (string) $info->version;
-			set_transient( 'lnf_wporg_latest', $latest, 12 * HOUR_IN_SECONDS );
 		}
 
-		if ( '' === $latest || version_compare( LOGINFENNEC_VERSION, $latest, '>=' ) ) {
-			wp_send_json_success(
-				array(
-					'status'  => 'up_to_date',
-					'version' => LOGINFENNEC_VERSION,
-				)
-			);
-		}
-
-		// Une version plus récente existe : rafraîchit la liste des extensions.
-		if ( function_exists( 'wp_update_plugins' ) ) {
-			wp_update_plugins();
-		}
-		$basename   = plugin_basename( LOGINFENNEC_FILE );
-		$update_url = wp_nonce_url(
-			self_admin_url( 'update.php?action=upgrade-plugin&plugin=' . rawurlencode( $basename ) ),
-			'upgrade-plugin_' . $basename
-		);
-
+		// À jour : indique le canal qui servira les prochaines mises à jour.
+		$channel = class_exists( 'Lnf_Update_Server' ) && '' !== Lnf_Update_Server::server_url() ? 'github' : 'wordpress.org';
 		wp_send_json_success(
 			array(
-				'status'  => 'available',
-				'version' => $latest,
-				'url'     => $update_url,
+				'status'  => 'up_to_date',
+				'version' => LOGINFENNEC_VERSION,
+				'channel' => $channel,
 			)
 		);
 	}

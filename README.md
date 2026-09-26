@@ -1,10 +1,15 @@
 # 🦊 LoginFennec Pro — Personnalisation page login et Security
 
+![CI](https://github.com/derouicheoussama/loginfennec/actions/workflows/ci.yml/badge.svg)
+![Release](https://github.com/derouicheoussama/loginfennec/actions/workflows/release.yml/badge.svg)
+[![License: GPLv2+](https://img.shields.io/badge/license-GPLv2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+![Version](https://img.shields.io/badge/version-4.4.0-1E6BF1.svg)
+
 Plugin WordPress : **personnalisez et sécurisez votre page de connexion** depuis un dashboard moderne avec aperçu en direct — et connectez vos utilisateurs par SMS.
 
 ![Banner](wporg-assets/banner-1544x500.png)
 
-> **v4.1.0** · PHP 7.2+ · WordPress 5.2+ · Licence GPL v2 ou ultérieure
+> **v4.4.0** · PHP 7.2+ · WordPress 5.2+ · Licence GPL v2 ou ultérieure
 > Auteur : Derouiche Oussama · [derouicheoussama.com](https://www.derouicheoussama.com) · Signature « ∞ Infinity Coder » dans chaque fichier
 
 ---

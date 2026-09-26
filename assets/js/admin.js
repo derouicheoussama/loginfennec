@@ -1080,10 +1080,11 @@
 					$out.html('<span class="lnf-update-msg is-err">' + $('<i>').text(msg).html() + '</span>');
 					return;
 				}
+				var channel = res.data.channel === 'github' ? ' · canal GitHub' : ' · WordPress.org';
 				if (res.data.status === 'up_to_date') {
-					$out.html('<span class="lnf-update-msg is-ok">✓ À jour — v' + res.data.version + '</span>');
+					$out.html('<span class="lnf-update-msg is-ok">✓ À jour — v' + res.data.version + channel + '</span>');
 				} else {
-					$out.html('<span class="lnf-update-msg is-new">v' + res.data.version + ' disponible</span> <a class="lnf-update-link" href="' + res.data.url + '">Mettre à jour</a>');
+					$out.html('<span class="lnf-update-msg is-new">v' + res.data.version + ' disponible' + channel + '</span> <a class="lnf-update-link" href="' + res.data.url + '">Mettre à jour</a>');
 				}
 			})
 			.fail(function () {
