@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           4.3.2
+ * Version:           4.3.3
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -102,12 +102,24 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 				}
 
 				deactivate_plugins( $old_active, true );
+
+				// Suppression automatique des copies obsolètes (capability
+				// delete_plugins, système de fichiers direct) : un vieux zip
+				// re-téléversé ne peut plus laisser de copie derrière lui.
+				$deleted = false;
+				if ( current_user_can( 'delete_plugins' ) && function_exists( 'delete_plugins' ) ) {
+					$removed = delete_plugins( $old_active );
+					$deleted = ! is_wp_error( $removed );
+				}
+
 				add_action(
 					'admin_notices',
-					function () use ( $old_active ) {
+					function () use ( $old_active, $deleted ) {
 						echo '<div class="notice notice-warning is-dismissible"><p><strong>LoginFennec Pro :</strong> '
 							. esc_html( count( $old_active ) ) . ' '
-							. esc_html__( 'copie obsolète du plugin était encore active — elle a été désactivée automatiquement pour éviter tout conflit. Supprimez-la dans Extensions.', 'loginfennec' )
+							. ( $deleted
+								? esc_html__( 'copie obsolète du plugin a été désactivée et SUPPRIMÉE automatiquement pour éviter tout conflit.', 'loginfennec' )
+								: esc_html__( 'copie obsolète du plugin a été désactivée automatiquement — cliquez « Supprimer » sur sa ligne dans Extensions.', 'loginfennec' ) )
 							. '</p></div>';
 					}
 				);
@@ -117,7 +129,49 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 	return;
 }
 
-define( 'LOGINFENNEC_VERSION', '4.3.2' );
+/**
+ * À l'activation de NOTRE copie : supprime les copies obsolètes INACTIVES
+ * (dossiers en double laissés par un vieux zip re-téléversé). Jamais une
+ * copie plus récente que nous, jamais une copie active (le garde
+ * anti-conflit ci-dessus la gère).
+ *
+ * @param string $plugin Basename de l'extension activée.
+ */
+function lnf_cleanup_duplicates( $plugin ) {
+	if ( plugin_basename( __FILE__ ) !== $plugin ) {
+		return;
+	}
+	if ( ! current_user_can( 'delete_plugins' ) || ! function_exists( 'delete_plugins' ) ) {
+		return;
+	}
+	if ( ! function_exists( 'get_plugins' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	$self = plugin_basename( __FILE__ );
+	$active = (array) get_option( 'active_plugins', array() );
+	$stale  = array();
+	foreach ( get_plugins() as $basename => $data ) {
+		if ( $basename === $self || false === strpos( (string) $data['Name'], 'LoginFennec' ) ) {
+			continue;
+		}
+		if ( '/loginfennec.php' !== substr( $basename, -16 ) ) {
+			continue;
+		}
+		if ( isset( $data['Version'] ) && version_compare( LOGINFENNEC_VERSION, (string) $data['Version'], '<' ) ) {
+			continue; // Copie plus récente que nous : elle reste.
+		}
+		if ( in_array( $basename, $active, true ) ) {
+			continue; // Active : le garde anti-conflit s'en occupe.
+		}
+		$stale[] = $basename;
+	}
+	if ( $stale ) {
+		delete_plugins( $stale );
+	}
+}
+add_action( 'activated_plugin', 'lnf_cleanup_duplicates' );
+
+define( 'LOGINFENNEC_VERSION', '4.3.3' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );

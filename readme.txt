@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.3.2
+Stable tag: 4.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,9 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.3.3 =
+* New: automatic cleanup of duplicate installations — when this copy is activated, older inactive LoginFennec copies (leftover folders from re-uploaded old zips) are deleted automatically; active obsolete copies are deactivated AND deleted when the anti-conflict guard fires
 
 = 4.3.2 =
 * Improved: the dual update rule now also covers the "WordPress.org already serves this version" case — the GitHub channel stays silent whenever wp.org knows the plugin, ensuring clients never receive a version missing from the official repository
