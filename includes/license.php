@@ -286,6 +286,10 @@ function lnf_is_pro() {
  */
 function lnf_license_label() {
 	$license = lnf_license_get();
+	// Clé développeur : libellé dédié (tests locaux, sans serveur de licences).
+	if ( 0 === strpos( (string) $license['key'], 'DEV' ) ) {
+		return __( 'Développeur (test)', 'loginfennec' );
+	}
 	$plans   = lnf_license_plans();
 	$plan    = isset( $plans[ $license['plan'] ] ) ? $plans[ $license['plan'] ] : null;
 	if ( ! $plan ) {

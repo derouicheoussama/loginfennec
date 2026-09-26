@@ -230,6 +230,15 @@
 		if (!$frame.length) {
 			return; // Page installateur : pas d'aperçu.
 		}
+		// Aperçu en chargement différé : déclenche le chargement et attend
+		// l'événement load (l'injection CSS sur about:blank serait perdue).
+		if ('about:blank' === $frame.attr('src') || !$frame.attr('src')) {
+			loadPreviewOnce();
+			$frame.off('load.lnfonce').one('load.lnfonce', function () {
+				updatePreview();
+			});
+			return;
+		}
 		$.post(cfg.ajaxUrl, collect())
 			.done(function (res) {
 				if (res && res.success && res.data && res.data.css) {
@@ -501,8 +510,30 @@
 	});
 
 	$(document).on('click', '.lnf-refresh', function () {
-		$frame[0].src = $frame[0].src;
+		$frame[0].src = $frame.attr('data-src') || $frame[0].src;
 	});
+
+	// Perf : l'aperçu (page entière wp-login) ne se charge qu'à l'affichage
+	// du panneau — le dashboard ne télécharge plus deux pages à l'ouverture.
+	function loadPreviewOnce() {
+		if ($frame.attr('src') && 'about:blank' !== $frame.attr('src')) {
+			return;
+		}
+		$frame.attr('src', $frame.attr('data-src') || '');
+	}
+	if ('IntersectionObserver' in window) {
+		var previewSeen = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				if (entry.isIntersecting) {
+					loadPreviewOnce();
+					previewSeen.disconnect();
+				}
+			});
+		}, { rootMargin: '200px' });
+		previewSeen.observe(document.getElementById('lnf-frame') || document.body);
+	} else {
+		loadPreviewOnce();
+	}
 
 	/* Aperçu plein écran */
 	function exitFullscreenPreview() {
@@ -727,6 +758,73 @@
 			.done(function (res) {
 				if (res && res.success) { window.location.reload(); }
 			});
+	});
+
+	/* Activer Pro depuis la page Pro (formulaire clé + pack + facturation) */
+	function activateFromProPage(plan, billing, key, $out, $btn) {
+		if (!key) {
+			$out.text('Veuillez saisir votre clé de licence.').addClass('is-err').removeClass('is-ok');
+			return;
+		}
+		$btn.prop('disabled', true);
+		$out.text('…').removeClass('is-err is-ok');
+		$.post(cfg.ajaxUrl, {
+			action: 'lnf_activate_license',
+			nonce: cfg.nonce,
+			license_key: key,
+			plan: plan,
+			billing: billing
+		})
+			.done(function (res) {
+				if (res && res.success) {
+					$out.text(res.data && res.data.message ? res.data.message : 'Pro activé.').addClass('is-ok').removeClass('is-err');
+					window.setTimeout(function () { window.location.reload(); }, 1500);
+				} else {
+					$out.text(res && res.data && res.data.message ? res.data.message : 'Erreur').addClass('is-err').removeClass('is-ok');
+					$btn.prop('disabled', false);
+				}
+			})
+			.fail(function () {
+				$out.text('Erreur réseau').addClass('is-err').removeClass('is-ok');
+				$btn.prop('disabled', false);
+			});
+	}
+
+	$(document).on('click', '.lnf-activate-license', function () {
+		activateFromProPage(
+			$('#lnf-license-pack').val() || 'site1',
+			$('#lnf-license-billing').val() || 'yearly',
+			$.trim($('#lnf-license-key').val()).toUpperCase(),
+			$('.lnf-license-status'),
+			$(this)
+		);
+	});
+	$(document).on('keydown', '#lnf-license-key', function (e) {
+		if (e.key === 'Enter') {
+			e.preventDefault();
+			$('.lnf-activate-license').trigger('click');
+		}
+	});
+
+	/* Licence développeur : activation en un clic (validation locale). */
+	$(document).on('click', '.lnf-dev-activate', function () {
+		var $btn = $(this);
+		$btn.prop('disabled', true);
+		$.post(cfg.ajaxUrl, {
+			action: 'lnf_activate_license',
+			nonce: cfg.nonce,
+			license_key: 'DEV-LOGINFENNEC',
+			plan: 'site1',
+			billing: 'lifetime'
+		})
+			.done(function (res) {
+				if (res && res.success) {
+					window.location.reload();
+				} else {
+					$btn.prop('disabled', false);
+				}
+			})
+			.fail(function () { $btn.prop('disabled', false); });
 	});
 
 	/* Vérifier la licence maintenant */

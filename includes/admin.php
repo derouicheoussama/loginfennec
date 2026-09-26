@@ -1066,7 +1066,7 @@ class Lnf_Admin {
 							</span>
 						</div>
 						<div class="lnf-frame-holder">
-							<iframe id="lnf-frame" src="<?php echo esc_url( wp_login_url() ); ?>" title="<?php esc_attr_e( 'Aperçu de la page de connexion', 'loginfennec' ); ?>" loading="lazy"></iframe>
+							<iframe id="lnf-frame" src="about:blank" data-src="<?php echo esc_url( wp_login_url() ); ?>" title="<?php esc_attr_e( 'Aperçu de la page de connexion', 'loginfennec' ); ?>"></iframe>
 						</div>
 						<p class="lnf-preview-note"><?php esc_html_e( 'Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement.', 'loginfennec' ); ?></p>
 					</aside>
@@ -2520,8 +2520,15 @@ class Lnf_Admin {
 					<div class="notice notice-warning"><p><strong><?php esc_html_e( 'Votre licence a expiré.', 'loginfennec' ); ?></strong> <?php esc_html_e( 'Renouvelez votre pack pour réactiver les fonctionnalités Pro.', 'loginfennec' ); ?></p></div>
 				<?php endif; ?>
 				<section class="lnf-about-card lnf-purchase-card">
-					<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'loginfennec' ); ?></h2>
-					<ol class="lnf-purchase-steps">
+				<h2><span class="dashicons dashicons-unlock"></span> <?php esc_html_e( 'Débloquer Pro sans quitter votre tableau de bord', 'loginfennec' ); ?></h2>
+				<?php if ( '' === lnf_license_api() && ! lnf_is_pro() ) : ?>
+					<div class="notice inline notice-info" style="margin:0 0 18px;padding:12px 16px;">
+						<p style="margin:0 0 8px;"><strong>🧪 <?php esc_html_e( 'Mode développeur', 'loginfennec' ); ?></strong> —
+							<?php esc_html_e( 'aucun serveur de licences n’est configuré : l’activation se fait localement, idéale pour tester l’état Pro.', 'loginfennec' ); ?></p>
+						<button type="button" class="button button-primary lnf-dev-activate">🔑 <?php esc_html_e( 'Activer la licence développeur (test)', 'loginfennec' ); ?></button>
+					</div>
+				<?php endif; ?>
+				<ol class="lnf-purchase-steps">
 						<li><?php esc_html_e( 'Choisissez votre pack ci-dessous (annuelle ou à vie) et achetez : le paiement s’ouvre ici même.', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Après l’achat, vous recevez votre clé de licence par e-mail.', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Collez la clé ci-dessous : Pro est activé instantanément.', 'loginfennec' ); ?></li>

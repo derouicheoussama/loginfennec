@@ -451,13 +451,15 @@ function lnf_login_head() {
 	if ( ! empty( $s['font_google'] ) ) {
 		$gf = str_replace( ' ', '+', $s['font_google'] );
 		$weights = ! empty( $s['font_google_weight'] ) ? ':wght@' . $s['font_google_weight'] : '';
+		$href    = 'https://fonts.googleapis.com/css2?family=' . rawurlencode( $gf ) . $weights . '&display=swap';
 		printf( '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n" );
 		printf( '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n" );
-		wp_enqueue_style(
-			'lnf-google-font',
-			'https://fonts.googleapis.com/css2?family=' . rawurlencode( $gf ) . $weights . '&display=swap',
-			array(),
-			null
+		// Chargement non bloquant : la page s'affiche immédiatement avec la
+		// police de secours, la police Google arrive en arrière-plan.
+		printf(
+			'<link rel="stylesheet" id="lnf-google-font" href="%1$s" media="print" onload="this.media=\'all\';">' . "\n" .
+			'<noscript><link rel="stylesheet" href="%1$s"></noscript>',
+			esc_url( $href )
 		);
 	}
 
