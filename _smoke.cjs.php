@@ -675,5 +675,21 @@ if ( '2fa' === $mode ) {
 	check( '2fa : module chargé', function_exists( 'lnf_totp_verify' ) );
 }
 
+// Signature HMAC des réponses du serveur de licences.
+if ( ! defined( 'LOGINFENNEC_LICENSE_SECRET' ) ) {
+	define( 'LOGINFENNEC_LICENSE_SECRET', 'secret-partage-test' );
+}
+$payload = array( 'success' => true, 'valid' => true, 'plan' => 'site1', 'expires' => 0 );
+$sig_ok  = hash_hmac( 'sha256', wp_json_encode( $payload ), 'secret-partage-test' );
+$signed  = $payload;
+$signed['signature'] = $sig_ok;
+check( 'licence : signature serveur valide', Lnf_License::signature_valid( $signed ) );
+$tampered        = $signed;
+$tampered['plan'] = 'site5';
+check( 'licence : réponse altérée → signature refusée', ! Lnf_License::signature_valid( $tampered ) );
+check( 'licence : sans signature → refusée (secret défini)', ! Lnf_License::signature_valid( $payload ) );
+$unsigned_ok = array( 'success' => true );
+check( 'licence : réponse non signée refusée (secret actif)', ! Lnf_License::signature_valid( $unsigned_ok ) );
+
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

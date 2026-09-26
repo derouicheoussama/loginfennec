@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,9 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.2.1 =
+* Security: license-server responses can be signed (HMAC SHA-256) — define LOGINFENNEC_LICENSE_SECRET on both sides and unsigned/tampered responses are ignored
 
 = 4.2.0 =
 * Fixed: the "Activer Pro" button on the Pro page had no click handler — activation from the license form now works (with Enter-key support and plan/billing from the selects)

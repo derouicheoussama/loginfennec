@@ -397,6 +397,9 @@ class Lnf_License {
 			wp_send_json_error( array( 'message' => __( 'Serveur de licences injoignable. Réessayez dans un instant.', 'loginfennec' ) ) );
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( ! self::signature_valid( $data ) ) {
+			wp_send_json_error( array( 'message' => __( 'Signature du serveur de licences invalide.', 'loginfennec' ) ) );
+		}
 		if ( empty( $data['valid'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Licence invalide ou expirée.', 'loginfennec' ) ) );
 		}
@@ -491,10 +494,34 @@ class Lnf_License {
 			return; // Serveur injoignable : on garde le statut actuel.
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( ! isset( $data['valid'] ) || ! self::signature_valid( $data ) ) {
+			return; // Réponse non signée/signée invalide : statut local conservé.
+		}
 		if ( isset( $data['valid'] ) && ! $data['valid'] ) {
 			$license['status'] = 'expired';
 			update_option( 'lnf_license', $license, false );
 		}
+	}
+
+	/**
+	 * Vérifie la signature HMAC des réponses du serveur de licences quand
+	 * LOGINFENNEC_LICENSE_SECRET est défini. Sans secret : toujours valide
+	 * (vérification désactivée).
+	 *
+	 * @param array $data Réponse décodée.
+	 * @return bool
+	 */
+	public static function signature_valid( $data ) {
+		$secret = defined( 'LOGINFENNEC_LICENSE_SECRET' ) ? trim( (string) constant( 'LOGINFENNEC_LICENSE_SECRET' ) ) : '';
+		if ( '' === $secret ) {
+			return true;
+		}
+		if ( ! is_array( $data ) || empty( $data['signature'] ) || ! is_string( $data['signature'] ) ) {
+			return false;
+		}
+		$sig = $data['signature'];
+		unset( $data['signature'] );
+		return hash_equals( hash_hmac( 'sha256', wp_json_encode( $data ), $secret ), $sig );
 	}
 }
 
