@@ -642,6 +642,12 @@ if ( 'updater' === $mode ) {
 	);
 	$t3 = Lnf_Update_Server::inject_update( $t3 );
 	check( 'updater : priorité wp.org (canal GitHub effacé)', '99.0-wporg' === $t3->response['loginfennec/loginfennec.php']->new_version );
+
+	// wp.org sert déjà NOTRE version (no_update) : le canal GitHub se tait —
+	// jamais d'offre GitHub d'une version que wp.org n'a pas encore.
+	$t4 = (object) array( 'checked' => time(), 'response' => array(), 'no_update' => array( 'loginfennec/loginfennec.php' => (object) array() ) );
+	$t4 = Lnf_Update_Server::inject_update( $t4 );
+	check( 'updater : wp.org à jour (no_update) → canal GitHub silencieux', empty( $t4->response ) );
 } else {
 	check( 'updater : module présent mais canal inactif par défaut', ! class_exists( 'Lnf_Update_Server' ) || '' === Lnf_Update_Server::server_url() );
 }

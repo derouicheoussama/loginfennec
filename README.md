@@ -18,6 +18,10 @@ Plugin WordPress : **personnalisez et sécurisez votre page de connexion** depui
 - Icônes sociales aux couleurs officielles des marques, message de bienvenue, copyright `{year}`/`{sitename}`, animations (respect prefers-reduced-motion), CSS + JS personnalisés
 - **20+ Google Fonts** ou 4 familles génériques, taille du texte, hauteur des champs
 
+### 👁️ Aperçu 100 % en temps réel
+- **Tout** le dashboard se reflète dans l'aperçu **sans enregistrer** : CSS (couleurs, tailles, styles, disposition) **et** HTML — message de bienvenue, copyright, placeholders et libellés des champs, textes des liens, icônes sociales (créées/masquées à la saisie des URLs), classes de disposition, police Google
+- Icônes sociales : **4 styles** (Remplie, Contour, Simple, Douce) × **3 formes** (cercle, arrondi, carré) + sélecteur visuel
+
 ### 📱 Connexion par SMS (OTP)
 - Numéro de téléphone + code à usage unique — **Twilio, Vonage ou webhook HTTP générique** (passerelles locales)
 - Codes hachés salés à usage unique, **compteur d'essais atomique** (anti brute-force parallèle), délai anti-DoS posé avant l'appel passerelle, plafond horaire par IP, anti-énumération
@@ -56,10 +60,16 @@ Chaque tag `v*` publié déclenche la release (zip + `update.json` + checksum SH
 
 | Canal | Public | Sécurité | Statut |
 |---|---|---|---|
-| **WordPress.org** | Tous | Signature native wp.org | Dès la publication (prioritaire : le canal GitHub **s'efface automatiquement**) |
+| **WordPress.org** | Tous | Signature native wp.org | Dès la publication (**prioritaire**) |
 | **GitHub Releases** | Clients directs | HTTPS + **SHA-256 vérifié avant installation** + clé de licence optionnelle | Instantané à chaque tag `v*` |
 
-Après publication wp.org, le dépôt GitHub peut passer **privé** sans aucune rupture : le canal GitHub devient silencieux (échec = pas d'offre) et wp.org prend le relais. Détails : [`docs/UPDATE-SERVER.md`](docs/UPDATE-SERVER.md).
+Règle de priorité appliquée **à chaque cycle de mise à jour** :
+
+1. wp.org propose une mise à jour → c'est elle qui est offerte (le canal GitHub s'efface)
+2. wp.org sert déjà notre version (`no_update`) → le canal GitHub **se tait** : jamais d'offre GitHub d'une version absente de wp.org
+3. wp.org ne connaît pas le plugin (avant publication, ou dépôt passé privé) → le canal GitHub prend le relais
+
+**Transition dépôt privé** : après publication wp.org, passez le dépôt GitHub en privé sans risque — les installs clientes basculent automatiquement sur wp.org (le canal GitHub répond 404 → silence 15 min, wp.org prime). Détails : [`docs/UPDATE-SERVER.md`](docs/UPDATE-SERVER.md).
 
 ## 🏗️ Architecture
 

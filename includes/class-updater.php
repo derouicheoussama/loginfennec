@@ -113,6 +113,13 @@ class Lnf_Update_Server {
 		if ( ! empty( $transient->response[ $basename ] ) ) {
 			return $transient;
 		}
+		// wp.org sert déjà NOTRE version (pas d'offre, mais l'extension est
+		// connue du dépôt officiel) : le canal secondaire se tait — la
+		// règle « wp.org d'abord » couvre aussi le cas à égalité, pour ne
+		// jamais offrir via GitHub une version que wp.org n'a pas encore.
+		if ( isset( $transient->no_update[ $basename ] ) ) {
+			return $transient;
+		}
 		$data = self::fetch();
 		if ( empty( $data ) || ! version_compare( LOGINFENNEC_VERSION, (string) $data['version'], '<' ) ) {
 			return $transient;
