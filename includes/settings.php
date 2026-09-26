@@ -107,6 +107,7 @@ function lnf_get_defaults() {
 		// Réseaux sociaux.
 		'social_enable'        => false,
 		'social_style'         => 'circle', // circle | rounded | square.
+		'social_variant'       => 'fill',   // fill | outline | plain | soft.
 		'social_size'          => 40,
 		'social_icon_color'    => '#ffffff',
 		'social_icon_bg'       => '#ffffff',
@@ -239,7 +240,7 @@ function lnf_get_option( $key ) {
  */
 function lnf_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'font_family', 'anim', 'layout', 'sms_provider' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'social_variant', 'font_family', 'anim', 'layout', 'sms_provider' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',
@@ -317,6 +318,7 @@ function lnf_sanitize_settings( $input, $base = null ) {
 			'bg_size'      => array( 'cover', 'contain', 'repeat' ),
 			'bg_position'  => array( 'center', 'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ),
 			'social_style' => array( 'circle', 'rounded', 'square' ),
+			'social_variant' => array( 'fill', 'outline', 'plain', 'soft' ),
 			'font_family'  => array( 'system', 'serif', 'rounded', 'mono' ),
 			'anim'         => array( 'none', 'fade', 'slide', 'zoom' ),
 			'layout'       => array( 'single', 'two-column' ),

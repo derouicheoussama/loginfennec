@@ -225,27 +225,92 @@ function lnf_build_login_css( $s ) {
 		} elseif ( 'square' === $s['social_style'] ) {
 			$radius = '6px';
 		}
+		$icon_rgba = lnf_hex_to_rgba( $s['social_icon_bg'], (int) $s['social_icon_bg_opacity'] );
+		$variant   = in_array( $s['social_variant'] ?? 'fill', array( 'fill', 'outline', 'plain', 'soft' ), true ) ? $s['social_variant'] : 'fill';
+
 		$css .= sprintf(
 			'.lnf-social{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 0;}',
 			(int) $s['social_size']
 		);
-		$css .= sprintf(
-			'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:%4$s;text-decoration:none;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;}',
-			(int) $s['social_size'],
-			$radius,
-			$s['social_icon_color'],
-			lnf_hex_to_rgba( $s['social_icon_bg'], (int) $s['social_icon_bg_opacity'] )
-		);
-		$css .= sprintf(
-			'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
-			max( 14, (int) round( (int) $s['social_size'] * 0.55 ) )
-		);
-		$css .= sprintf(
-			'.lnf-social a.lnf-icon:hover{transform:translateY(-2px);background:%1$s;box-shadow:0 8px 20px -6px %2$s;color:%3$s;}',
-			$s['social_icon_bg'],
-			lnf_hex_to_rgba( $s['social_icon_bg'], 60 ),
-			$s['social_icon_color']
-		);
+
+		// Style d'icône : remplie / contour / simple / douce — chaque variante
+		// reste compatible avec la forme (cercle, arrondi, carré).
+		switch ( $variant ) {
+			case 'outline':
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:transparent;border:2px solid %3$s;text-decoration:none;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;}',
+					(int) $s['social_size'],
+					$radius,
+					$s['social_icon_color']
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
+					max( 14, (int) round( (int) $s['social_size'] * 0.55 ) )
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon:hover{transform:translateY(-2px);background:%1$s;color:%2$s;box-shadow:0 8px 20px -6px %3$s;}',
+					lnf_hex_to_rgba( $s['social_icon_color'], 12 ),
+					$s['social_icon_color'],
+					lnf_hex_to_rgba( $s['social_icon_color'], 45 )
+				);
+				break;
+
+			case 'plain':
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:transparent;border:0;text-decoration:none;transition:transform .18s ease,color .18s ease;}',
+					(int) $s['social_size'],
+					$radius,
+					$s['social_icon_color']
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
+					max( 18, (int) round( (int) $s['social_size'] * 0.66 ) )
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon:hover{transform:translateY(-2px) scale(1.06);color:%1$s;}',
+					lnf_hex_to_rgba( $s['social_icon_color'], 78 )
+				);
+				break;
+
+			case 'soft':
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:%4$s;border:0;text-decoration:none;transition:transform .18s ease,background-color .18s ease;}',
+					(int) $s['social_size'],
+					$radius,
+					$s['social_icon_color'],
+					lnf_hex_to_rgba( $s['social_icon_color'], 14 )
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
+					max( 14, (int) round( (int) $s['social_size'] * 0.58 ) )
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon:hover{transform:translateY(-2px);background:%1$s;}',
+					lnf_hex_to_rgba( $s['social_icon_color'], 26 )
+				);
+				break;
+
+			case 'fill':
+			default:
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon{width:%1$dpx;height:%1$dpx;border-radius:%2$s;display:inline-flex;align-items:center;justify-content:center;color:%3$s;background:%4$s;text-decoration:none;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease;}',
+					(int) $s['social_size'],
+					$radius,
+					$s['social_icon_color'],
+					$icon_rgba
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon .dashicons{font-size:%1$dpx;width:%1$dpx;height:%1$dpx;line-height:1;}',
+					max( 14, (int) round( (int) $s['social_size'] * 0.55 ) )
+				);
+				$css .= sprintf(
+					'.lnf-social a.lnf-icon:hover{transform:translateY(-2px);background:%1$s;box-shadow:0 8px 20px -6px %2$s;color:%3$s;}',
+					$s['social_icon_bg'],
+					lnf_hex_to_rgba( $s['social_icon_bg'], 60 ),
+					$s['social_icon_color']
+				);
+				break;
+		}
 
 		// Couleurs officielles des marques (priorité absolue sur les couleurs génériques).
 		if ( ! empty( $s['social_brand'] ) ) {

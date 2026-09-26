@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.2.1
+Stable tag: 4.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,10 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.3.0 =
+* New: social icons appear live in the preview as you type URLs — no save needed (icons are created, hidden or updated in the preview in real time)
+* New: 4 icon styles — Filled, Outline, Plain and Soft — combined with the 3 shapes (circle, rounded, square), with a visual picker in the Social tab
 
 = 4.2.1 =
 * Security: license-server responses can be signed (HMAC SHA-256) — define LOGINFENNEC_LICENSE_SECRET on both sides and unsigned/tampered responses are ignored

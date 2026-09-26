@@ -2814,3 +2814,35 @@ h3.lnf-group-title.is-hidden {
 	margin-right: 2px;
 	vertical-align: text-bottom;
 }
+
+/* ---------- Sélecteur de style d'icône sociale ---------- */
+
+.lnf-social-variants {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.lnf-social-variant {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	border: 1px solid var(--lnf-line);
+	border-radius: 999px;
+	background: #fff;
+	padding: 5px 12px 5px 7px;
+	font-size: 12.5px;
+	cursor: pointer;
+}
+
+.lnf-social-variant .lnf-sv-dot {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.lnf-social-variant.is-active {
+	border-color: var(--lnf-accent);
+	box-shadow: 0 0 0 2px rgba(15, 90, 168, .18);
+}

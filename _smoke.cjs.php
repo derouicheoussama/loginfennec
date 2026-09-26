@@ -691,5 +691,16 @@ check( 'licence : sans signature → refusée (secret défini)', ! Lnf_License::
 $unsigned_ok = array( 'success' => true );
 check( 'licence : réponse non signée refusée (secret actif)', ! Lnf_License::signature_valid( $unsigned_ok ) );
 
+// Icônes sociales : variantes de style.
+$soc = lnf_sanitize_settings( array( 'social_variant' => 'outline' ), null );
+check( 'social : variante outline sauvegardable', 'outline' === $soc['social_variant'] );
+$soc_bad = lnf_sanitize_settings( array( 'social_variant' => 'pirate' ), null );
+check( 'social : variante inconnue → défaut (fill)', 'fill' === $soc_bad['social_variant'] );
+$soc_settings                                   = array_merge( lnf_get_defaults(), array( 'social_enable' => true, 'social_variant' => 'outline', 'social_icon_color' => '#e88018' ) );
+$soc_css                                        = lnf_build_login_css( $soc_settings );
+check( 'social : CSS variante outline émis', false !== strpos( (string) $soc_css, 'border:2px solid' ) );
+$soc_css_fill                                   = lnf_build_login_css( array_merge( $soc_settings, array( 'social_variant' => 'fill' ) ) );
+check( 'social : CSS variante fill émis', false !== strpos( (string) $soc_css_fill, 'background:' ) );
+
 echo "\n" . ( $fail ? "ÉCHEC : $fail test(s)" : 'TOUS LES TESTS PASSENT' ) . "\n";
 exit( $fail ? 1 : 0 );

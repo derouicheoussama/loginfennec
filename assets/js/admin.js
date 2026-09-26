@@ -212,6 +212,41 @@
 		var socialOn = checked('social_enable');
 		show('.lnf-social', !!socialOn);
 
+		// Icônes sociales en temps réel : chaque URL saisie crée/met à jour
+		// son icône dans l'aperçu, une URL vide la masque — sans enregistrer.
+		var SOCIAL_NETWORKS = {
+			facebook:  { icon: 'dashicons-facebook-alt', label: 'Facebook' },
+			twitter:   { icon: 'dashicons-twitter', label: 'X (Twitter)' },
+			instagram: { icon: 'dashicons-instagram', label: 'Instagram' },
+			linkedin:  { icon: 'dashicons-linkedin', label: 'LinkedIn' },
+			youtube:   { icon: 'dashicons-youtube', label: 'YouTube' },
+			email:     { icon: 'dashicons-email-alt', label: 'E-mail' }
+		};
+		var socialWrap = doc.querySelector('.lnf-social');
+		if (socialOn && socialWrap) {
+			Object.keys(SOCIAL_NETWORKS).forEach(function (key) {
+				var url = String(field('social_' + key).val() || '').trim();
+				var a = socialWrap.querySelector('.lnf-icon[data-network="' + key + '"]');
+				if (!url) {
+					if (a) { a.style.display = 'none'; }
+					return;
+				}
+				if (!a) {
+					a = doc.createElement('a');
+					a.className = 'lnf-icon';
+					a.setAttribute('data-network', key);
+					a.setAttribute('target', '_blank');
+					a.setAttribute('rel', 'noopener noreferrer');
+					a.innerHTML = '<span class="dashicons ' + SOCIAL_NETWORKS[key].icon + '"></span>';
+					socialWrap.appendChild(a);
+				}
+				a.style.display = '';
+				a.href = (key === 'email' && url.indexOf('mailto:') !== 0) ? 'mailto:' + url : url;
+				a.title = SOCIAL_NETWORKS[key].label;
+				a.setAttribute('aria-label', SOCIAL_NETWORKS[key].label);
+			});
+		}
+
 		var cp = doc.querySelector('.lnf-copyright');
 		if (cp) {
 			if (checked('copyright_enable')) {
@@ -852,6 +887,14 @@
 		var $btn = $(this);
 		$btn.text('✓');
 		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
+	});
+
+	/* Style d'icône sociale : sélecteur de variante (aperçu live via CSS) */
+	$(document).on('click', '.lnf-social-variant', function () {
+		$('.lnf-social-variant').removeClass('is-active');
+		$(this).addClass('is-active');
+		$form.find('[name="lnf[social_variant]"]').val($(this).data('variant'));
+		schedulePreview();
 	});
 
 	/* Test d'envoi SMS (onglet SMS) */

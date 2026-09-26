@@ -1525,6 +1525,28 @@ class Lnf_Admin {
 
 		self::field_toggle( $s, 'social_enable', __( 'Afficher les icônes sociales', 'loginfennec' ) );
 		self::field_toggle( $s, 'social_brand', __( 'Couleurs officielles des marques', 'loginfennec' ), __( 'Chaque icône reprend sa couleur officielle : Facebook bleu, X noir, dégradé Instagram, LinkedIn bleu, YouTube rouge.', 'loginfennec' ) );
+
+		echo '<div class="lnf-field" data-showif="' . esc_attr( wp_json_encode( array( 'social_enable' => 1 ) ) ) . '">';
+		echo '<span class="lnf-label">' . esc_html__( 'Style d’icône', 'loginfennec' ) . '</span>';
+		echo '<input type="hidden" name="lnf[social_variant]" value="' . esc_attr( $s['social_variant'] ?? 'fill' ) . '">';
+		echo '<div class="lnf-social-variants">';
+		$variants = array(
+			'fill'    => array( __( 'Remplie', 'loginfennec' ), 'background:' . $s['social_icon_bg'] . ';color:' . $s['social_icon_color'] . ';' ),
+			'outline' => array( __( 'Contour', 'loginfennec' ), 'border:2px solid ' . $s['social_icon_color'] . ';color:' . $s['social_icon_color'] . ';' ),
+			'plain'   => array( __( 'Simple', 'loginfennec' ), 'color:' . $s['social_icon_color'] . ';' ),
+			'soft'    => array( __( 'Douce', 'loginfennec' ), 'background:' . lnf_hex_to_rgba( $s['social_icon_color'], 14 ) . ';color:' . $s['social_icon_color'] . ';' ),
+		);
+		foreach ( $variants as $vkey => $vdata ) {
+			printf(
+				'<button type="button" class="lnf-social-variant%2$s" data-variant="%1$s"><span class="lnf-sv-dot" style="%3$s"></span>%4$s</button>',
+				esc_attr( $vkey ),
+				( ( $s['social_variant'] ?? 'fill' ) === $vkey ) ? ' is-active' : '',
+				esc_attr( $vdata[1] ),
+				esc_html( $vdata[0] )
+			);
+		}
+		echo '</div></div>';
+
 		self::field_select(
 			$s,
 			'social_style',
