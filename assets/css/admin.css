@@ -2846,3 +2846,112 @@ h3.lnf-group-title.is-hidden {
 	border-color: var(--lnf-accent);
 	box-shadow: 0 0 0 2px rgba(15, 90, 168, .18);
 }
+
+/* ---------- Barre d'enregistrement fixe (bas) ---------- */
+
+.lnf-savebar {
+	position: sticky;
+	bottom: 12px;
+	z-index: 50;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 14px;
+	margin-top: 18px;
+	padding: 10px 16px;
+	border-radius: 12px;
+	background: #ffffffee;
+	backdrop-filter: blur(6px);
+	border: 1px solid var(--lnf-line);
+	box-shadow: 0 10px 30px -14px rgba(28, 39, 51, .35);
+}
+
+.lnf-savebar-state {
+	margin-right: auto;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--lnf-accent);
+}
+
+.lnf-savebar-btn.is-dirty {
+	box-shadow: 0 0 0 3px rgba(15, 90, 168, .25);
+}
+
+.lnf-savebar-btn:disabled {
+	opacity: .6;
+	cursor: default;
+}
+
+/* ---------- Harmonisation des boutons WordPress dans le dashboard ---------- */
+
+.lnf-wrap .button,
+.lnf-wrap .button-secondary {
+	border-radius: 8px;
+	border-color: var(--lnf-line);
+	box-shadow: none;
+	vertical-align: middle;
+}
+
+.lnf-wrap .button:hover {
+	border-color: var(--lnf-accent);
+	color: var(--lnf-accent);
+}
+
+.lnf-wrap .button-primary {
+	background: var(--lnf-grad);
+	border: none;
+	color: #fff;
+	text-shadow: none;
+}
+
+.lnf-wrap .button-primary:hover,
+.lnf-wrap .button-primary:focus {
+	background: linear-gradient(120deg, #0a3a6e, #0f5aa8);
+	color: #fff;
+}
+
+.lnf-wrap .button:focus-visible {
+	outline: 2px solid var(--lnf-accent);
+	outline-offset: 1px;
+}
+
+/* ---------- Onglets scrollables sur écran étroit ---------- */
+
+@media (max-width: 782px) {
+	.lnf-tabs {
+		overflow-x: auto;
+		flex-wrap: nowrap;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: thin;
+	}
+
+	.lnf-tab {
+		white-space: nowrap;
+		flex: 0 0 auto;
+	}
+}
+
+/* ---------- Focus visible cohérent ---------- */
+
+.lnf-wrap .lnf-tab:focus-visible,
+.lnf-wrap .lnf-input:focus-visible {
+	outline: 2px solid var(--lnf-accent);
+	outline-offset: 1px;
+}
+
+.lnf-installer .button,
+.lnf-installer .button-secondary {
+	border-radius: 8px;
+	border-color: var(--lnf-line);
+	box-shadow: none;
+}
+
+.lnf-installer .button:hover {
+	border-color: var(--lnf-accent);
+	color: var(--lnf-accent);
+}
+
+.lnf-installer .button:focus-visible {
+	outline: 2px solid var(--lnf-accent);
+	outline-offset: 1px;
+}

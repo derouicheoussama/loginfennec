@@ -1169,6 +1169,51 @@
 		wizardShow(1);
 	}
 
+	/* ------------------------------------------------------------------
+	 * Suivi des modifications + barre d'enregistrement + Ctrl+S.
+	 * ---------------------------------------------------------------- */
+	var isDirty = false;
+
+	function markDirty() {
+		if (isDirty) {
+			return;
+		}
+		isDirty = true;
+		$('.lnf-savebar-state').text('● Modifications non enregistrées');
+		$('.lnf-savebar-btn, [form="lnf-form"].lnf-btn-primary').addClass('is-dirty');
+	}
+
+	function markClean() {
+		isDirty = false;
+		$('.lnf-savebar-state').text('');
+		$('.lnf-savebar-btn, [form="lnf-form"].lnf-btn-primary').removeClass('is-dirty');
+	}
+
+	$form.on('input change', 'input, select, textarea', function () {
+		markDirty();
+	});
+
+	// Ctrl+S / Cmd+S = enregistrer.
+	$(document).on('keydown', function (e) {
+		if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && $('#lnf-form').length) {
+			e.preventDefault();
+			$('#lnf-form').trigger('submit');
+		}
+	});
+
+	// Avertit avant de quitter avec des modifications non enregistrées.
+	$(window).on('beforeunload', function () {
+		if (isDirty) {
+			return 'Modifications non enregistrées.';
+		}
+	});
+
+	// États du bouton pendant la soumission (les deux boutons Enregistrer).
+	$(document).on('submit', '#lnf-form', function () {
+		$('.lnf-savebar-btn, [form="lnf-form"].lnf-btn-primary').prop('disabled', true);
+		$('.lnf-savebar-state').text('Enregistrement…');
+	});
+
 	/* Initialisation */
 	refreshShowIf();
 	refreshOutputs();

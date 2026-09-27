@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.4.0
+Stable tag: 4.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,12 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.5.0 =
+* New: sticky bottom save bar — always visible while scrolling long panels, with an "unsaved changes" indicator and a loading state while saving
+* New: Ctrl+S / Cmd+S saves; the browser warns before leaving with unsaved changes
+* Improved: WordPress-style buttons inside the dashboard and installer now match the brand design (consistent radius, gradient primary, focus rings); tabs scroll horizontally on narrow screens
+* Updated: the preview note no longer claims social icons and links appear only after saving (everything is live now)
 
 = 4.4.0 =
 * Improved: "Check for updates" now purges the secondary channel cache before checking (a brand-new release is picked up instantly) and reports which channel serves the update — WordPress.org or GitHub

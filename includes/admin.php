@@ -1085,8 +1085,15 @@ class Lnf_Admin {
 						<div class="lnf-frame-holder">
 							<iframe id="lnf-frame" src="about:blank" data-src="<?php echo esc_url( wp_login_url() ); ?>" title="<?php esc_attr_e( 'Aperçu de la page de connexion', 'loginfennec' ); ?>"></iframe>
 						</div>
-						<p class="lnf-preview-note"><?php esc_html_e( 'Les couleurs et effets sont appliqués en direct. Les liens, réseaux sociaux et copyright apparaissent après enregistrement.', 'loginfennec' ); ?></p>
+						<p class="lnf-preview-note"><?php esc_html_e( 'Tout est appliqué en temps réel ici. « Enregistrer » conserve vos choix pour la vraie page de connexion.', 'loginfennec' ); ?></p>
 					</aside>
+				</div>
+
+				<div class="lnf-savebar">
+					<span class="lnf-savebar-state" role="status" aria-live="polite"></span>
+					<button type="submit" form="lnf-form" class="lnf-btn lnf-btn-primary lnf-savebar-btn">
+						<span class="dashicons dashicons-saved" aria-hidden="true"></span> <?php esc_html_e( 'Enregistrer', 'loginfennec' ); ?>
+					</button>
 				</div>
 			</form>
 		</div>
