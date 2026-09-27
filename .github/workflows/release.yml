@@ -43,9 +43,10 @@ jobs:
             --exclude 'composer.lock' \
             --exclude 'PRODUCTION.md' \
             --exclude 'deploy.sh' \
+            --exclude 'PROMPT-VERIFICATION.md' \
+            --exclude 'SECURITY.md' \
             ./ build/loginfennec/
-          cd build
-          zip -r ../loginfennec.zip loginfennec
+          zip -r build/loginfennec.zip loginfennec
 
       - name: Vérifier la syntaxe PHP (stricte)
         run: |
