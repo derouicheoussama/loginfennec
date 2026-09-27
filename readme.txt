@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.6.1
+Stable tag: 4.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,9 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.6.2 =
+* Improved: when the host requires FTP credentials, automatic duplicate deletion no longer fails silently — a clear notice explains it and provides the native one-click deletion links (WordPress asks for the credentials once)
 
 = 4.6.1 =
 * New: automatic duplicate cleanup now also runs on every Plugins screen visit — an old zip uploaded after activation (installing an inactive old copy) is deleted on sight; active older copies are deactivated then deleted too

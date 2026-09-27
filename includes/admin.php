@@ -43,6 +43,7 @@ class Lnf_Admin {
 		add_action( 'wp_ajax_lnf_enable_recommended', array( __CLASS__, 'ajax_enable_recommended' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'notices' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'obsolete_copies_notice' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'cleanup_failed_notice' ) );
 		add_action( 'after_plugin_row', array( __CLASS__, 'obsolete_copy_row' ), 10, 2 );
 		add_filter( 'admin_footer_text', array( __CLASS__, 'footer_signature' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( LOGINFENNEC_FILE ), array( __CLASS__, 'plugin_action_links' ) );
@@ -611,6 +612,37 @@ class Lnf_Admin {
 		$meta[] = '<a href="' . esc_url( admin_url( 'admin.php?page=loginfennec-about' ) ) . '">' . esc_html__( 'À propos & don', 'loginfennec' ) . '</a>';
 		$meta[] = '<a href="https://wordpress.org/plugins/loginfennec/reviews/#new-post" target="_blank" rel="noopener noreferrer">★★★★★ ' . esc_html__( 'Noter le plugin', 'loginfennec' ) . '</a>';
 		return $meta;
+	}
+
+	/**
+	 * Échec de la suppression automatique (hébergeur exigeant des
+	 * identifiants FTP) : notice explicative avec les liens natifs
+	 * de suppression — WordPress demandera les identifiants lui-même.
+	 */
+	public static function cleanup_failed_notice() {
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen || 'plugins' !== $screen->id || ! current_user_can( 'delete_plugins' ) ) {
+			return;
+		}
+		$failed = get_transient( 'lnf_cleanup_failed' );
+		if ( ! is_array( $failed ) || empty( $failed['items'] ) ) {
+			return;
+		}
+		delete_transient( 'lnf_cleanup_failed' );
+		echo '<div class="notice notice-error"><p><strong>LoginFennec Pro :</strong> '
+			. esc_html__( 'la suppression automatique des copies obsolètes a échoué sur cet hébergeur.', 'loginfennec' )
+			. ' ' . esc_html( sprintf( /* translators: %s : détail technique. */ __( '(Détail : %s)', 'loginfennec' ), (string) $failed['error'] ) )
+			. '</p><ul style="list-style:disc;margin-left:18px">';
+		foreach ( $failed['items'] as $basename ) {
+			$url = wp_nonce_url(
+				self_admin_url( 'plugins.php?action=delete&plugin=' . rawurlencode( $basename ) ),
+				'delete-plugin_' . $basename
+			);
+			echo '<li>— <code>' . esc_html( dirname( $basename ) ) . '</code> : '
+				. '<a href="' . esc_url( $url ) . '">' . esc_html__( 'cliquez ici et confirmez la suppression', 'loginfennec' ) . '</a>'
+				. ' — ' . esc_html__( 'si un formulaire d’identifiants (FTP) s’affiche, remplissez-le une seule fois.', 'loginfennec' ) . '</li>';
+		}
+		echo '</ul></p></div>';
 	}
 
 	/**
