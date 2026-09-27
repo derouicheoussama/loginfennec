@@ -2955,3 +2955,53 @@ h3.lnf-group-title.is-hidden {
 	outline: 2px solid var(--lnf-accent);
 	outline-offset: 1px;
 }
+
+/* ---------- Design polish v4.5.1 ---------- */
+
+/* Cadre de l'aperçu : délimitation douce + fond pendant le chargement */
+.lnf-frame-holder {
+	border-radius: 12px;
+	overflow: hidden;
+	border: 1px solid var(--lnf-line);
+	background:
+		linear-gradient(45deg, #f5f7fb 25%, transparent 25%, transparent 75%, #f5f7fb 75%),
+		linear-gradient(45deg, #f5f7fb 25%, transparent 25%, transparent 75%, #f5f7fb 75%);
+	background-size: 22px 22px;
+	background-position: 0 0, 11px 11px;
+}
+
+.lnf-frame-holder iframe {
+	display: block;
+	border: 0;
+}
+
+/* Cartes : élévation au survol */
+.lnf-inst-feature,
+.lnf-about-card {
+	transition: box-shadow .18s ease, transform .18s ease;
+}
+
+.lnf-inst-feature:hover,
+.lnf-about-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 14px 34px -18px rgba(28, 39, 51, .35);
+}
+
+/* Logo du hero : ombre portée douce */
+.lnf-hero .lnf-hero-logo,
+.lnf-topbar .lnf-brand-logo {
+	filter: drop-shadow(0 4px 10px rgba(15, 90, 168, .22));
+}
+
+/* Onglet actif : liseré inférieur accent */
+.lnf-tab.is-active {
+	box-shadow: inset 0 -3px 0 var(--lnf-accent);
+}
+
+/* Pastille « nouveau » des boutons Enregistrer */
+.lnf-savebar-btn.is-dirty::after {
+	content: "●";
+	margin-left: 6px;
+	font-size: 11px;
+	vertical-align: 2px;
+}

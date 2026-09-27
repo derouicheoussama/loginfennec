@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.5.0
+Stable tag: 4.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,11 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.5.1 =
+* Improved: About page shows the configured update channel (WordPress.org primary + active secondary endpoint) at a glance
+* Improved: GitHub releases now embed the real tag message as the changelog shown in the update details modal
+* Design: preview frame styling, hover elevation on cards, hero logo shadow, active-tab underline accent
 
 = 4.5.0 =
 * New: sticky bottom save bar — always visible while scrolling long panels, with an "unsaved changes" indicator and a loading state while saving

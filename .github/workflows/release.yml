@@ -18,8 +18,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Récupérer le code
+      - name: Récupérer le code (historique complet pour le message du tag)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Construire le zip
         run: |
@@ -72,8 +74,11 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           SUM=$(sha256sum build/loginfennec.zip | cut -d' ' -f1)
-          jq -n --arg v "$VERSION" --arg s "$SUM" \
-            '{name:"LoginFennec Pro",version:$v,download_url:"https://github.com/derouicheoussama/loginfennec/releases/latest/download/loginfennec.zip",checksum:$s,requires:"5.2",requires_php:"7.2",tested:"7.1",url:"https://github.com/derouicheoussama/loginfennec",last_updated:(now|todate),sections:{changelog:("Voir la release "+$v+".")}}' \
+          # Changelog réel : le message du tag annoté (tronqué à 2000 car.).
+          CHANGELOG=$(git tag -l --format='%(contents)' "${GITHUB_REF_NAME}" 2>/dev/null | sed '/^-----BEGIN PGP SIGNATURE-----/,$d' | head -c 2000)
+          [ -z "$CHANGELOG" ] && CHANGELOG="Voir la release ${GITHUB_REF_NAME} sur GitHub."
+          jq -n --arg v "$VERSION" --arg s "$SUM" --arg cl "$CHANGELOG" \
+            '{name:"LoginFennec Pro",version:$v,download_url:"https://github.com/derouicheoussama/loginfennec/releases/latest/download/loginfennec.zip",checksum:$s,requires:"5.2",requires_php:"7.2",tested:"7.1",url:"https://github.com/derouicheoussama/loginfennec",last_updated:(now|todate),sections:{changelog:("<pre>"+$cl+"</pre>")}}' \
             > build/update.json
           sha256sum build/loginfennec.zip > build/loginfennec.zip.sha256
 

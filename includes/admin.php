@@ -2127,7 +2127,13 @@ class Lnf_Admin {
 
 				<section class="lnf-about-card">
 					<h2><span class="dashicons dashicons-cloud"></span> <?php esc_html_e( 'Mises à jour', 'loginfennec' ); ?></h2>
-					<p><?php esc_html_e( 'Les mises à jour sont servies par le répertoire officiel WordPress.org : l’extension apparaît dans Extensions → Mises à jour comme n’importe quel plugin natif. Rien à configurer.', 'loginfennec' ); ?></p>
+					<p><?php esc_html_e( 'Canal prioritaire : WordPress.org — l’extension apparaît dans Extensions → Mises à jour comme n’importe quel plugin natif, rien à configurer.', 'loginfennec' ); ?></p>
+					<?php if ( defined( 'LOGINFENNEC_UPDATE_SERVER' ) && constant( 'LOGINFENNEC_UPDATE_SERVER' ) ) : ?>
+						<p style="color:#00a32a;">✅ <?php esc_html_e( 'Canal secondaire actif (GitHub / serveur dédié) — priorité à WordPress.org dès que le dépôt officiel sert l’extension.', 'loginfennec' ); ?><br>
+							<code style="font-size:11.5px;word-break:break-all;"><?php echo esc_html( (string) constant( 'LOGINFENNEC_UPDATE_SERVER' ) ); ?></code></p>
+					<?php else : ?>
+						<p class="lnf-desc"><?php esc_html_e( 'Canal secondaire (GitHub) non configuré — ajoutez LOGINFENNEC_UPDATE_SERVER dans wp-config.php pour recevoir les mises à jour instantanées des releases.', 'loginfennec' ); ?></p>
+					<?php endif; ?>
 					<div class="lnf-about-actions">
 						<button type="button" class="lnf-btn lnf-btn-ghost lnf-check-updates"><span class="dashicons dashicons-update-alt"></span> <?php esc_html_e( 'Vérifier les mises à jour', 'loginfennec' ); ?></button>
 						<span class="lnf-update-status" aria-live="polite"></span>
