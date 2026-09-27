@@ -461,6 +461,37 @@ function lnf_form_theme_css( $s ) {
 				$s['input_color'],
 				$btn
 			);
+		case 'sharp':
+			return sprintf(
+				'%1$s{border:1px solid %2$s;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;}%3$s{border-radius:0;}%4$s{border-radius:0;}',
+				$sel,
+				lnf_hex_to_rgba( $s['input_border'], 60 ),
+				$in,
+				$btn
+			);
+		case 'soft':
+			return sprintf(
+				'%1$s{border:none;border-radius:26px;box-shadow:0 8px 30px -12px rgba(0,0,0,.25);}%3$s{border-radius:14px;}%4$s{border-radius:16px;width:100%%;}',
+				$sel,
+				$s['form_bg'],
+				$in,
+				$btn
+			);
+		case 'glassdark':
+			return sprintf(
+				'%1$s{background:rgba(15,19,30,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);}%3$s{background:rgba(255,255,255,.12);color:#ffffff;border-color:rgba(255,255,255,.22);}%3$s::placeholder{color:rgba(255,255,255,.55);}%4$s{width:100%%;}',
+				$sel,
+				$s['form_bg'],
+				$in,
+				$btn
+			);
+		case 'duo':
+			return sprintf(
+				'%1$s{border:3px double %2$s;border-radius:10px;box-shadow:none;}%3$s{border-radius:4px;}',
+				$sel,
+				$s['button_bg'],
+				$in
+			);
 		case 'glass':
 		default:
 			return '';

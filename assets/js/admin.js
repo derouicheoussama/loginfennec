@@ -124,13 +124,79 @@
 		royal: {
 			bg_type: 'gradient', bg_color1: '#141e30', bg_color2: '#243b55',
 			bg_gradient_angle: 150, bg_image: '', bg_blur: 0,
-			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
-			form_bg: '#ffffff', form_opacity: 10, form_blur: 18, form_radius: 16,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 10,
+			form_bg: '#ffffff', form_opacity: 14, form_blur: 16, form_radius: 16,
 			form_shadow: 1, form_width: 340, form_padding: 36,
-			text_color: '#ffffff', label_color: '#cbd5e1',
-			input_bg: '#ffffff', input_color: '#1e293b', input_border: '#cbd5e1',
-			button_bg: '#f59e0b', button_hover: '#d97706', button_radius: 10,
-			link_color: '#e2e8f0'
+			text_color: '#ffffff', label_color: '#d9e4f5',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#c9a227', button_hover: '#a3851c', button_radius: 10,
+			link_color: '#cfe0f5'
+		},
+		coffee: {
+			bg_type: 'gradient', bg_color1: '#3e2723', bg_color2: '#795548',
+			bg_gradient_angle: 135, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 8,
+			form_bg: '#ffffff', form_opacity: 18, form_blur: 10, form_radius: 16,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#efe5dc',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#6d4c41', button_hover: '#4e342e', button_radius: 10,
+			link_color: '#f5c26b'
+		},
+		mint: {
+			bg_type: 'gradient', bg_color1: '#0ba360', bg_color2: '#3cba92',
+			bg_gradient_angle: 135, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 5,
+			form_bg: '#ffffff', form_opacity: 20, form_blur: 14, form_radius: 18,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#eafff5',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#046a38', button_hover: '#03532b', button_radius: 10,
+			link_color: '#ffffff'
+		},
+		berry: {
+			bg_type: 'gradient', bg_color1: '#c31432', bg_color2: '#8e0e3f',
+			bg_gradient_angle: 120, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 8,
+			form_bg: '#ffffff', form_opacity: 20, form_blur: 14, form_radius: 18,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#ffe3ec',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#a50f3c', button_hover: '#7c0a2e', button_radius: 10,
+			link_color: '#ffd6e4'
+		},
+		gold: {
+			bg_type: 'gradient', bg_color1: '#8e7028', bg_color2: '#d4b94e',
+			bg_gradient_angle: 135, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#ffffff', form_opacity: 88, form_blur: 0, form_radius: 16,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#3d2f0f', label_color: '#6b5a24',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#d9c98f',
+			button_bg: '#8a6d1f', button_hover: '#6e5616', button_radius: 10,
+			link_color: '#6e5616'
+		},
+		midnight: {
+			bg_type: 'gradient', bg_color1: '#0f2027', bg_color2: '#2c5364',
+			bg_gradient_angle: 160, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 8,
+			form_bg: '#ffffff', form_opacity: 16, form_blur: 16, form_radius: 18,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#cfe8f5',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#2c5364', button_hover: '#1b3a47', button_radius: 10,
+			link_color: '#9fd8ef'
+		},
+		coral: {
+			bg_type: 'gradient', bg_color1: '#ff9966', bg_color2: '#ff5e62',
+			bg_gradient_angle: 120, bg_image: '', bg_blur: 0,
+			bg_overlay_color: '#000000', bg_overlay_opacity: 0,
+			form_bg: '#ffffff', form_opacity: 24, form_blur: 12, form_radius: 20,
+			form_shadow: 1, form_width: 340, form_padding: 36,
+			text_color: '#ffffff', label_color: '#fff0e8',
+			input_bg: '#ffffff', input_color: '#2c3338', input_border: '#ffffff',
+			button_bg: '#e8555a', button_hover: '#c74045', button_radius: 12,
+			link_color: '#ffffff'
 		}
 	};
 

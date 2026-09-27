@@ -1340,16 +1340,22 @@ class Lnf_Admin {
 		self::panel_open( 'styles', __( 'Styles modernes', 'loginfennec' ), __( 'Appliquez un style et un thème d’interface en un clic, puis affinez-les dans les onglets suivants.', 'loginfennec' ) );
 
 		$presets = array(
-			'glass'   => array( __( 'Effet verre', 'loginfennec' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
-			'minimal' => array( __( 'Minimal', 'loginfennec' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
-			'dark'    => array( __( 'Sombre', 'loginfennec' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
-			'sunset'  => array( __( 'Coucher de soleil', 'loginfennec' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
-			'ocean'   => array( __( 'Océan', 'loginfennec' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
-			'forest'  => array( __( 'Forêt', 'loginfennec' ), 'linear-gradient(135deg,#059669,#065f46)' ),
-			'neon'    => array( __( 'Néon', 'loginfennec' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
-			'sakura'  => array( __( 'Sakura', 'loginfennec' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
-			'mono'    => array( __( 'Monochrome', 'loginfennec' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
-			'royal'   => array( __( 'Royal', 'loginfennec' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
+			'glass'    => array( __( 'Effet verre', 'loginfennec' ), 'linear-gradient(135deg,#667eea,#764ba2)' ),
+			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'linear-gradient(135deg,#f5f6f8,#dfe3ea)' ),
+			'dark'     => array( __( 'Sombre', 'loginfennec' ), 'linear-gradient(160deg,#0f172a,#334155)' ),
+			'sunset'   => array( __( 'Coucher de soleil', 'loginfennec' ), 'linear-gradient(120deg,#f97316,#ec4899)' ),
+			'ocean'    => array( __( 'Océan', 'loginfennec' ), 'linear-gradient(135deg,#0ea5e9,#2563eb)' ),
+			'forest'   => array( __( 'Forêt', 'loginfennec' ), 'linear-gradient(135deg,#059669,#065f46)' ),
+			'neon'     => array( __( 'Néon', 'loginfennec' ), 'linear-gradient(135deg,#0f0c29,#302b63)' ),
+			'sakura'   => array( __( 'Sakura', 'loginfennec' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
+			'mono'     => array( __( 'Monochrome', 'loginfennec' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
+			'royal'    => array( __( 'Royal', 'loginfennec' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
+			'coffee'   => array( __( 'Café', 'loginfennec' ), 'linear-gradient(135deg,#3e2723,#795548)' ),
+			'mint'     => array( __( 'Menthe', 'loginfennec' ), 'linear-gradient(135deg,#0ba360,#3cba92)' ),
+			'berry'    => array( __( 'Fruits rouges', 'loginfennec' ), 'linear-gradient(120deg,#c31432,#8e0e3f)' ),
+			'gold'     => array( __( 'Or', 'loginfennec' ), 'linear-gradient(135deg,#8e7028,#d4b94e)' ),
+			'midnight' => array( __( 'Minuit', 'loginfennec' ), 'linear-gradient(160deg,#0f2027,#2c5364)' ),
+			'coral'    => array( __( 'Corail', 'loginfennec' ), 'linear-gradient(120deg,#ff9966,#ff5e62)' ),
 		);
 
 		echo '<input type="hidden" name="lnf[preset]" value="' . esc_attr( $s['preset'] ) . '">';
@@ -1377,6 +1383,10 @@ class Lnf_Admin {
 			'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
 			'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #0f5aa8;border-radius:8px;' ),
 			'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #0f5aa8;border-radius:0;' ),
+			'sharp'    => array( __( 'Droit', 'loginfennec' ), 'background:#fff;border:1px solid #9aa3ad;border-radius:0;' ),
+			'soft'     => array( __( 'Doux', 'loginfennec' ), 'background:#fff;border-radius:22px;box-shadow:0 8px 24px -10px rgba(0,0,0,.35);' ),
+			'glassdark'=> array( __( 'Verre fumé', 'loginfennec' ), 'background:rgba(15,19,30,.72);border:1px solid rgba(255,255,255,.18);border-radius:10px;' ),
+			'duo'      => array( __( 'Double', 'loginfennec' ), 'background:#fff;border:3px double #e88018;border-radius:10px;' ),
 		);
 		foreach ( $themes as $key => $theme ) {
 			printf(
@@ -2045,7 +2055,7 @@ class Lnf_Admin {
 						<li><?php esc_html_e( 'Logo personnalisé + lien du logo', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Arrière-plan : couleur, dégradé ou image', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Contrôles de flou et d’opacité', 'loginfennec' ); ?></li>
-						<li><?php esc_html_e( '10 styles modernes (effet verre, sombre…)', 'loginfennec' ); ?></li>
+						<li><?php esc_html_e( '16 styles modernes (effet verre, néon, corail…)', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Liens : personnalisation ou masquage', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Icônes de réseaux sociaux', 'loginfennec' ); ?></li>
 						<li><?php esc_html_e( 'Mention de copyright', 'loginfennec' ); ?></li>
@@ -2326,7 +2336,7 @@ class Lnf_Admin {
 					<p class="lnf-inst-desc"><?php esc_html_e( 'Un aperçu de tout ce que couvre LoginFennec Pro.', 'loginfennec' ); ?></p>
 					<div class="lnf-inst-grid">
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-format-image"></span><h3><?php esc_html_e( 'Logo & arrière-plan', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Logo image ou texte, image de fond avec flou, luminosité et voile coloré réglables.', 'loginfennec' ); ?></p></div>
-						<div class="lnf-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '10 styles & 7 thèmes', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, néon, sakura… combinés à 7 designs de formulaire.', 'loginfennec' ); ?></p></div>
+						<div class="lnf-inst-feature"><span class="dashicons dashicons-art"></span><h3><?php esc_html_e( '16 styles & 11 thèmes', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Effet verre, sombre, néon, corail… combinés à 11 designs de formulaire.', 'loginfennec' ); ?></p></div>
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-shield-alt"></span><h3><?php esc_html_e( 'Anti force brute', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Honeypot anti-robots, blocage IP + identifiant et liste blanche de confiance.', 'loginfennec' ); ?></p></div>
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-share"></span><h3><?php esc_html_e( 'Social & copyright', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Icônes aux couleurs officielles des marques et mention de copyright.', 'loginfennec' ); ?></p></div>
 						<div class="lnf-inst-feature"><span class="dashicons dashicons-desktop"></span><h3><?php esc_html_e( 'Aperçu en direct', 'loginfennec' ); ?></h3><p><?php esc_html_e( 'Bureau, tablette et mobile — chaque changement se voit instantanément.', 'loginfennec' ); ?></p></div>
@@ -2353,6 +2363,12 @@ class Lnf_Admin {
 							'sakura'  => array( __( 'Sakura', 'loginfennec' ), 'linear-gradient(120deg,#ee9ca7,#ffdde1)' ),
 							'mono'    => array( __( 'Monochrome', 'loginfennec' ), 'linear-gradient(160deg,#9ca3af,#374151)' ),
 							'royal'   => array( __( 'Royal', 'loginfennec' ), 'linear-gradient(150deg,#141e30,#243b55)' ),
+							'coffee'   => array( __( 'Café', 'loginfennec' ), 'linear-gradient(135deg,#3e2723,#795548)' ),
+							'mint'     => array( __( 'Menthe', 'loginfennec' ), 'linear-gradient(135deg,#0ba360,#3cba92)' ),
+							'berry'    => array( __( 'Fruits rouges', 'loginfennec' ), 'linear-gradient(120deg,#c31432,#8e0e3f)' ),
+							'gold'     => array( __( 'Or', 'loginfennec' ), 'linear-gradient(135deg,#8e7028,#d4b94e)' ),
+							'midnight' => array( __( 'Minuit', 'loginfennec' ), 'linear-gradient(160deg,#0f2027,#2c5364)' ),
+							'coral'    => array( __( 'Corail', 'loginfennec' ), 'linear-gradient(120deg,#ff9966,#ff5e62)' ),
 						);
 						foreach ( $presets as $key => $preset ) {
 							printf(
@@ -2378,6 +2394,10 @@ class Lnf_Admin {
 							'elevated' => array( __( 'Surélevé', 'loginfennec' ), 'background:#fff;border-radius:12px;box-shadow:0 12px 20px -8px rgba(0,0,0,.5);' ),
 							'accent'   => array( __( 'Accent', 'loginfennec' ), 'background:#fff;border-top:6px solid #0f5aa8;border-radius:8px;' ),
 							'minimal'  => array( __( 'Minimal', 'loginfennec' ), 'background:transparent;border-bottom:5px solid #0f5aa8;border-radius:0;' ),
+							'sharp'    => array( __( 'Droit', 'loginfennec' ), 'background:#fff;border:1px solid #9aa3ad;border-radius:0;' ),
+							'soft'     => array( __( 'Doux', 'loginfennec' ), 'background:#fff;border-radius:22px;box-shadow:0 8px 24px -10px rgba(0,0,0,.35);' ),
+							'glassdark'=> array( __( 'Verre fumé', 'loginfennec' ), 'background:rgba(15,19,30,.72);border:1px solid rgba(255,255,255,.18);border-radius:10px;' ),
+							'duo'      => array( __( 'Double', 'loginfennec' ), 'background:#fff;border:3px double #e88018;border-radius:10px;' ),
 						);
 						foreach ( $themes as $key => $theme ) {
 							printf(

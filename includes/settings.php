@@ -312,8 +312,8 @@ function lnf_sanitize_settings( $input, $base = null ) {
 			continue;
 		}
 		$allowed = array(
-			'preset'       => array( 'glass', 'minimal', 'dark', 'sunset', 'ocean', 'forest', 'neon', 'sakura', 'mono', 'royal', 'custom' ),
-			'form_theme'   => array( 'glass', 'classic', 'outline', 'pill', 'elevated', 'accent', 'minimal' ),
+			'preset'       => array( 'glass', 'minimal', 'dark', 'sunset', 'ocean', 'forest', 'neon', 'sakura', 'mono', 'royal', 'coffee', 'mint', 'berry', 'gold', 'midnight', 'coral', 'custom' ),
+			'form_theme'   => array( 'glass', 'classic', 'outline', 'pill', 'elevated', 'accent', 'minimal', 'sharp', 'soft', 'glassdark', 'duo' ),
 			'bg_type'      => array( 'color', 'gradient', 'image' ),
 			'bg_size'      => array( 'cover', 'contain', 'repeat' ),
 			'bg_position'  => array( 'center', 'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ),

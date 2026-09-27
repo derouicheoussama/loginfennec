@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.5.1
+Stable tag: 4.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ LoginFennec Pro redesigns your WordPress login page AND protects it, from one el
 
 <strong>✨ In one look</strong>
 
-* 10 one-click styles (Glass, Dark, Neon, Sakura…) + 7 independent form designs
+* 16 one-click styles (Glass, Dark, Neon, Coral, Mint…) + 11 independent form designs
 * Live preview — desktop, tablet and mobile, updates as you type
 * Login by SMS one-time code (Twilio, Vonage or your own gateway)
 * Brute-force lockout with escalating duration, honeypot, country restriction (GEO)
@@ -144,6 +144,10 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.6.0 =
+* New: 6 additional styles — Café, Menthe, Fruits rouges, Or, Minuit and Corail (16 total), each one click with complete color palettes
+* New: 4 additional form designs — Sharp (right angles), Soft (large radius + gentle shadow), Smoked glass (dark translucent blur) and Double (double border taking the button color) — 11 total
 
 = 4.5.1 =
 * Improved: About page shows the configured update channel (WordPress.org primary + active secondary endpoint) at a glance
