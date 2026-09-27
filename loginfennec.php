@@ -15,7 +15,7 @@
  * Plugin Name:       LoginFennec Pro – Personnalisation page login et Security
  * Plugin URI:        https://github.com/derouicheoussama/loginfennec
  * Description:       Personnalisation page login et Security : logo, arrière-plan (flou, opacité, dégradés), 10 styles et 7 thèmes d'interface, liens, icônes sociales aux couleurs officielles, copyright, CSS/JS personnalisé — et bloquez les tentatives de mot de passe avec honeypot, journal de sécurité et score. Interface moderne avec aperçu en direct.
- * Version:           4.6.0
+ * Version:           4.6.1
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Tested up to:      7.1
@@ -130,24 +130,19 @@ if ( function_exists( 'lnf_settings' ) || function_exists( 'inls_settings' ) || 
 }
 
 /**
- * À l'activation de NOTRE copie : supprime les copies obsolètes INACTIVES
- * (dossiers en double laissés par un vieux zip re-téléversé). Jamais une
- * copie plus récente que nous, jamais une copie active (le garde
- * anti-conflit ci-dessus la gère).
+ * Supprime les copies obsolètes de LoginFennec : inactives ET actives.
+ * Jamais une copie plus récente que nous, jamais nous-mêmes.
  *
- * @param string $plugin Basename de l'extension activée.
+ * @return void
  */
-function lnf_cleanup_duplicates( $plugin ) {
-	if ( plugin_basename( __FILE__ ) !== $plugin ) {
-		return;
-	}
+function lnf_cleanup_duplicates_run() {
 	if ( ! current_user_can( 'delete_plugins' ) || ! function_exists( 'delete_plugins' ) ) {
 		return;
 	}
-	if ( ! function_exists( 'get_plugins' ) ) {
+	if ( ! function_exists( 'get_plugins' ) || ! function_exists( 'is_plugin_active' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
-	$self = plugin_basename( __FILE__ );
+	$self   = plugin_basename( __FILE__ );
 	$active = (array) get_option( 'active_plugins', array() );
 	$stale  = array();
 	foreach ( get_plugins() as $basename => $data ) {
@@ -160,8 +155,9 @@ function lnf_cleanup_duplicates( $plugin ) {
 		if ( isset( $data['Version'] ) && version_compare( LOGINFENNEC_VERSION, (string) $data['Version'], '<' ) ) {
 			continue; // Copie plus récente que nous : elle reste.
 		}
-		if ( in_array( $basename, $active, true ) ) {
-			continue; // Active : le garde anti-conflit s'en occupe.
+		if ( in_array( $basename, $active, true ) && is_plugin_active( $basename ) ) {
+			// Active : désactive d'abord, puis supprime.
+			deactivate_plugins( $basename, true );
 		}
 		$stale[] = $basename;
 	}
@@ -169,9 +165,34 @@ function lnf_cleanup_duplicates( $plugin ) {
 		delete_plugins( $stale );
 	}
 }
+
+/**
+ * À l'activation de NOTRE copie.
+ *
+ * @param string $plugin Basename de l'extension activée.
+ */
+function lnf_cleanup_duplicates( $plugin ) {
+	if ( plugin_basename( __FILE__ ) !== $plugin ) {
+		return;
+	}
+	lnf_cleanup_duplicates_run();
+}
 add_action( 'activated_plugin', 'lnf_cleanup_duplicates' );
 
-define( 'LOGINFENNEC_VERSION', '4.6.0' );
+/**
+ * À chaque visite de la page Extensions : couvre le cas « vieux zip
+ * téléversé APRÈS l'activation » — la copie s'installe inactive et
+ * aucun autre hook ne se déclenche. Balayage léger, uniquement ici.
+ */
+function lnf_cleanup_duplicates_on_plugins_screen() {
+	if ( ! isset( $GLOBALS['pagenow'] ) || 'plugins.php' !== $GLOBALS['pagenow'] ) {
+		return;
+	}
+	lnf_cleanup_duplicates_run();
+}
+add_action( 'admin_init', 'lnf_cleanup_duplicates_on_plugins_screen' );
+
+define( 'LOGINFENNEC_VERSION', '4.6.1' );
 define( 'LOGINFENNEC_FILE', __FILE__ );
 define( 'LOGINFENNEC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGINFENNEC_URL', plugin_dir_url( __FILE__ ) );
