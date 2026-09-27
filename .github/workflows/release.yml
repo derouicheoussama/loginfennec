@@ -46,7 +46,7 @@ jobs:
             --exclude 'PROMPT-VERIFICATION.md' \
             --exclude 'SECURITY.md' \
             ./ build/loginfennec/
-          zip -r build/loginfennec.zip loginfennec
+          (cd build && zip -r loginfennec.zip loginfennec)
 
       - name: Vérifier la syntaxe PHP (stricte)
         run: |
