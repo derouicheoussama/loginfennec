@@ -5,7 +5,7 @@ Tags: login, login page, security, brute force, sms
 Requires at least: 5.2
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 4.6.2
+Stable tag: 4.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,12 @@ Yes. Define LOGINFENNEC_CHECKOUT_URL in wp-config.php with your payment link and
 8. The Pro page: detailed free vs Pro comparison and integrated purchase wizard.
 
 == Changelog ==
+
+= 4.7.0 =
+* New: Twilio full integration — two modes: "Verify" (recommended: Twilio generates, sends and validates the codes itself — nothing stored on your site) and "SMS" (site-managed codes via the Messages API)
+* New: Twilio Messaging Service SID support (MG…) — takes priority over the raw sender when set
+* Improved: Twilio error codes translated into clear user messages (invalid number, unverified trial number, too many attempts…)
+* New: SMS test button adapts to the mode (starts a real Twilio verification in Verify mode)
 
 = 4.6.2 =
 * Improved: when the host requires FTP credentials, automatic duplicate deletion no longer fails silently — a clear notice explains it and provides the native one-click deletion links (WordPress asks for the credentials once)

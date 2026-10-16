@@ -52,13 +52,119 @@ function lnf_sms_gateway_ready() {
 	$s = lnf_settings();
 	switch ( $s['sms_provider'] ) {
 		case 'twilio':
-			return '' !== $s['sms_twilio_sid'] && '' !== $s['sms_twilio_token'] && '' !== $s['sms_from'];
+			if ( '' === $s['sms_twilio_sid'] || '' === $s['sms_twilio_token'] ) {
+				return false;
+			}
+			if ( 'verify' === ( $s['sms_twilio_mode'] ?? 'verify' ) ) {
+				return '' !== $s['sms_twilio_verify_sid'];
+			}
+			return '' !== $s['sms_from'] || '' !== $s['sms_twilio_messaging_sid'];
 		case 'vonage':
 			return '' !== $s['sms_vonage_key'] && '' !== $s['sms_vonage_secret'] && '' !== $s['sms_from'];
 		case 'webhook':
 			return '' !== $s['sms_webhook_url'];
 	}
 	return false;
+}
+
+/**
+ * Mode Twilio actif : 'verify' (codes gérés par Twilio) ou 'messages'.
+ *
+ * @return string
+ */
+function lnf_sms_twilio_mode() {
+	$s = lnf_settings();
+	return ( 'twilio' === $s['sms_provider'] && 'messages' === ( $s['sms_twilio_mode'] ?? 'verify' ) ) ? 'messages' : 'verify';
+}
+
+/**
+ * Traduit une erreur Twilio en message utilisateur compréhensible.
+ *
+ * @param array $data Réponse Twilio décodée (code/message).
+ * @return WP_Error
+ */
+function lnf_sms_twilio_error( $data ) {
+	$code    = isset( $data['code'] ) ? (int) $data['code'] : 0;
+	$message = isset( $data['message'] ) ? (string) $data['message'] : __( 'Erreur Twilio.', 'loginfennec' );
+	$map     = array(
+		21211  => __( 'Numéro de téléphone invalide.', 'loginfennec' ),
+		21612  => __( 'Impossible de joindre ce numéro (format ou opérateur).', 'loginfennec' ),
+		21614  => __( 'Ce numéro ne peut pas recevoir de SMS.', 'loginfennec' ),
+		21608  => __( 'Numéro non vérifié sur votre compte Twilio (mode trial).', 'loginfennec' ),
+		60200  => __( 'Code invalide.', 'loginfennec' ),
+		60202  => __( 'Trop de tentatives : demandez un nouveau code.', 'loginfennec' ),
+		60203  => __( 'Code en attente de vérification : réessayez.', 'loginfennec' ),
+		60212  => __( 'Trop de vérifications : réessayez dans quelques minutes.', 'loginfennec' ),
+		20429  => __( 'Trop de tentatives : réessayez plus tard.', 'loginfennec' ),
+	);
+	$friendly = isset( $map[ $code ] ) ? $map[ $code ] : $message;
+	return new WP_Error( 'lnf_sms_twilio', $friendly );
+}
+
+/**
+ * Twilio Verify : démarre une vérification (Twilio génère et envoie le code).
+ *
+ * @param string $phone Numéro normalisé.
+ * @return true|WP_Error
+ */
+function lnf_twilio_verify_start( $phone ) {
+	$s        = lnf_settings();
+	$response = wp_remote_post(
+		'https://verify.twilio.com/v2/Services/' . rawurlencode( $s['sms_twilio_verify_sid'] ) . '/Verifications',
+		array(
+			'timeout' => 10,
+			'headers' => array(
+				'Authorization' => 'Basic ' . base64_encode( $s['sms_twilio_sid'] . ':' . $s['sms_twilio_token'] ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- auth basique exigée par Twilio.
+				'Content-Type'  => 'application/x-www-form-urlencoded',
+			),
+			'body'    => array(
+				'To'      => '+' . $phone,
+				'Channel' => 'sms',
+			),
+		)
+	);
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+	$code = (int) wp_remote_retrieve_response_code( $response );
+	if ( $code < 200 || $code >= 300 || empty( $data['status'] ) || 'pending' !== $data['status'] ) {
+		return lnf_sms_twilio_error( is_array( $data ) ? $data : array() );
+	}
+	return true;
+}
+
+/**
+ * Twilio Verify : vérifie le code saisi côté Twilio.
+ *
+ * @param string $phone Numéro normalisé.
+ * @param string $code  Code saisi.
+ * @return true|WP_Error
+ */
+function lnf_twilio_verify_check( $phone, $code ) {
+	$s        = lnf_settings();
+	$response = wp_remote_post(
+		'https://verify.twilio.com/v2/Services/' . rawurlencode( $s['sms_twilio_verify_sid'] ) . '/Verifications/Check',
+		array(
+			'timeout' => 10,
+			'headers' => array(
+				'Authorization' => 'Basic ' . base64_encode( $s['sms_twilio_sid'] . ':' . $s['sms_twilio_token'] ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- auth basique exigée par Twilio.
+				'Content-Type'  => 'application/x-www-form-urlencoded',
+			),
+			'body'    => array(
+				'To'         => '+' . $phone,
+				'Code'       => preg_replace( '/\D/', '', (string) $code ),
+			),
+		)
+	);
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+	if ( ! empty( $data['valid'] ) ) {
+		return true;
+	}
+	return lnf_sms_twilio_error( is_array( $data ) ? $data : array() );
 }
 
 /* ---------------------------------------------------------------------
@@ -290,6 +396,16 @@ function lnf_sms_dispatch( $phone, $message ) {
 
 	switch ( $s['sms_provider'] ) {
 		case 'twilio':
+			$body = array(
+				'To'   => '+' . $phone,
+				'Body' => $message,
+			);
+			// Service de messagerie (MG…) prioritaire sur l'expéditeur brut.
+			if ( '' !== (string) ( $s['sms_twilio_messaging_sid'] ?? '' ) ) {
+				$body['MessagingServiceSid'] = $s['sms_twilio_messaging_sid'];
+			} else {
+				$body['From'] = $s['sms_from'];
+			}
 			$response = wp_remote_post(
 				'https://api.twilio.com/2010-04-01/Accounts/' . rawurlencode( $s['sms_twilio_sid'] ) . '/Messages.json',
 				array(
@@ -298,11 +414,7 @@ function lnf_sms_dispatch( $phone, $message ) {
 						'Authorization' => 'Basic ' . base64_encode( $s['sms_twilio_sid'] . ':' . $s['sms_twilio_token'] ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- authentification HTTP basique exigée par l'API Twilio.
 						'Content-Type'  => 'application/x-www-form-urlencoded',
 					),
-					'body'    => array(
-						'From' => $s['sms_from'],
-						'To'   => '+' . $phone,
-						'Body' => $message,
-					),
+					'body'    => $body,
 				)
 			);
 			break;
@@ -506,6 +618,25 @@ function lnf_sms_ajax_send() {
 	// permettre à des requêtes anonymes d'occuper les workers PHP en boucle.
 	// En cas d'échec de la passerelle, le délai est retiré (retry possible).
 	lnf_sms_rate_hit( $phone );
+	// Mode Twilio Verify : Twilio génère, envoie ET vérifie le code —
+	// rien n'est stocké côté site. Les autres modes passent par l'OTP local.
+	if ( 'verify' === lnf_sms_twilio_mode() ) {
+		$user = lnf_sms_find_user( $phone );
+		if ( ! $user ) {
+			usleep( wp_rand( 200000, 450000 ) );
+			wp_send_json_success( $generic );
+		}
+		$started = lnf_twilio_verify_start( $phone );
+		if ( is_wp_error( $started ) ) {
+			delete_transient( 'lnf_sms_wait_' . md5( $phone ) );
+			wp_send_json_error( array( array( 'message' => $started->get_error_message() ) ) );
+		}
+		if ( method_exists( 'Lnf_Login_Security', 'log_event' ) ) {
+			Lnf_Login_Security::log_event( 'sms', 'Verify → ' . substr( $phone, 0, strlen( $phone ) - 4 ) . '****' );
+		}
+		wp_send_json_success( $generic );
+	}
+
 	$user = lnf_sms_find_user( $phone );
 	if ( ! $user ) {
 		usleep( wp_rand( 200000, 450000 ) );
@@ -550,7 +681,26 @@ function lnf_sms_ajax_verify() {
 		wp_send_json_error( array( array( 'message' => __( 'Connexion par SMS désactivée.', 'loginfennec' ) ) ) );
 	}
 	$phone = lnf_sms_normalize_phone( isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '', lnf_get_option( 'sms_country' ) );
-	$code  = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+	$code = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+
+	// Mode Twilio Verify : la vérification est faite par Twilio.
+	if ( 'verify' === lnf_sms_twilio_mode() ) {
+		$checked = lnf_twilio_verify_check( $phone, $code );
+		if ( is_wp_error( $checked ) ) {
+			wp_send_json_error( array( array( 'message' => $checked->get_error_message() ) ) );
+		}
+		$result = lnf_sms_find_user( $phone );
+		if ( ! $result ) {
+			wp_send_json_error( array( array( 'message' => __( 'Aucun compte associé à ce numéro.', 'loginfennec' ) ) ) );
+		}
+		$redirect = isset( $_POST['redirect_to'] ) ? wp_unslash( $_POST['redirect_to'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validé ci-dessous par wp_validate_redirect().
+		wp_send_json_success(
+			array(
+				'redirect' => lnf_sms_login_user( $result, $redirect ),
+			)
+		);
+	}
+
 	$result = lnf_sms_otp_verify( $phone, $code );
 	if ( is_wp_error( $result ) ) {
 		wp_send_json_error( array( array( 'message' => $result->get_error_message() ) ) );
@@ -579,6 +729,15 @@ function lnf_sms_ajax_test() {
 	$phone = lnf_sms_normalize_phone( isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '', lnf_get_option( 'sms_country' ) );
 	if ( '' === $phone ) {
 		wp_send_json_error( array( array( 'message' => __( 'Numéro invalide.', 'loginfennec' ) ) ) );
+	}
+	// Mode Verify : le test démarre une vraie vérification Twilio — le code
+	// reçu du test DOIT être validé (pas de SMS de test gratuit en Verify).
+	if ( 'verify' === lnf_sms_twilio_mode() ) {
+		$started = lnf_twilio_verify_start( $phone );
+		if ( is_wp_error( $started ) ) {
+			wp_send_json_error( array( array( 'message' => $started->get_error_message() ) ) );
+		}
+		wp_send_json_success( array( array( 'message' => __( 'Vérification Twilio démarrée : le code reçu confirme la configuration (il ne connecte personne).', 'loginfennec' ) ) ) );
 	}
 	$sent = lnf_sms_dispatch( $phone, __( 'LoginFennec Pro : envoi de test réussi. Votre passerelle SMS fonctionne.', 'loginfennec' ) );
 	if ( is_wp_error( $sent ) ) {

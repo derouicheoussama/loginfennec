@@ -158,8 +158,11 @@ function lnf_get_defaults() {
 		// Connexion par SMS.
 		'sms_enabled'      => false,
 		'sms_provider'     => 'twilio',
+		'sms_twilio_mode'  => 'verify', // verify (recommandé, codes gérés par Twilio) | messages (codes gérés par le site).
 		'sms_twilio_sid'   => '',
 		'sms_twilio_token' => '',
+		'sms_twilio_verify_sid' => '', // Service Verify (VA…) — mode verify.
+		'sms_twilio_messaging_sid' => '', // Service de messagerie (MG…) — mode messages, remplace sms_from.
 		'sms_vonage_key'   => '',
 		'sms_vonage_secret' => '',
 		'sms_webhook_url'  => '',
@@ -240,7 +243,7 @@ function lnf_get_option( $key ) {
  */
 function lnf_field_spec() {
 	return array(
-		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'social_variant', 'font_family', 'anim', 'layout', 'sms_provider' ),
+		'key'    => array( 'preset', 'form_theme', 'bg_type', 'bg_size', 'bg_position', 'social_style', 'social_variant', 'font_family', 'anim', 'layout', 'sms_provider', 'sms_twilio_mode' ),
 		'bool'   => array(
 			'logo_hide', 'form_shadow', 'hide_lost_password', 'hide_back_to',
 			'hide_register', 'social_enable', 'social_brand', 'copyright_enable',

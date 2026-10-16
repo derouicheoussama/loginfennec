@@ -1872,8 +1872,28 @@ class Lnf_Admin {
 			array( 'sms_enabled' => 1 )
 		);
 		self::field_text( $s, 'sms_from', __( 'Expéditeur', 'loginfennec' ), 'text', 'LoginFennec', __( 'Nom d’expéditeur validé par l’opérateur ou numéro d’envoi (Twilio et Vonage).', 'loginfennec' ), array( 'sms_enabled' => 1 ) );
+
+		echo '<div class="lnf-field" data-showif="' . esc_attr( wp_json_encode( array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) ) ) . '">';
+		echo '<span class="lnf-label">' . esc_html__( 'Mode Twilio', 'loginfennec' ) . '</span>';
+		echo '<input type="hidden" name="lnf[sms_twilio_mode]" value="' . esc_attr( $s['sms_twilio_mode'] ?? 'verify' ) . '">';
+		echo '<div class="lnf-social-variants">';
+		foreach ( array(
+			'verify'   => __( 'Verify — recommandé (codes gérés par Twilio)', 'loginfennec' ),
+			'messages' => __( 'SMS — codes gérés par le site', 'loginfennec' ),
+		) as $mkey => $mlabel ) {
+			printf(
+				'<button type="button" class="lnf-social-variant lnf-tw-mode%2$s" data-mode="%1$s">%3$s</button>',
+				esc_attr( $mkey ),
+				( ( $s['sms_twilio_mode'] ?? 'verify' ) === $mkey ) ? ' is-active' : '',
+				esc_html( $mlabel )
+			);
+		}
+		echo '</div></div>';
+
 		self::field_text( $s, 'sms_twilio_sid', __( 'Twilio — Account SID', 'loginfennec' ), 'text', 'AC…', '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
 		self::field_secret( $s, 'sms_twilio_token', __( 'Twilio — Auth Token', 'loginfennec' ), '', array( 'sms_enabled' => 1, 'sms_provider' => 'twilio' ) );
+		self::field_text( $s, 'sms_twilio_verify_sid', __( 'Twilio — Service Verify SID', 'loginfennec' ), 'text', 'VA…', __( 'Console Twilio → Verify → Services. Requis en mode Verify.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'twilio', 'sms_twilio_mode' => 'verify' ) );
+		self::field_text( $s, 'sms_twilio_messaging_sid', __( 'Twilio — Service de messagerie SID', 'loginfennec' ), 'text', 'MG…', __( 'Optionnel (mode SMS) : remplace l’expéditeur ci-dessus si renseigné.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'twilio', 'sms_twilio_mode' => 'messages' ) );
 		self::field_text( $s, 'sms_vonage_key', __( 'Vonage — API Key', 'loginfennec' ), 'text', '', '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
 		self::field_secret( $s, 'sms_vonage_secret', __( 'Vonage — API Secret', 'loginfennec' ), '', array( 'sms_enabled' => 1, 'sms_provider' => 'vonage' ) );
 		self::field_text( $s, 'sms_webhook_url', __( 'Webhook — URL d’envoi', 'loginfennec' ), 'url', 'https://sms.exemple.dz/api/send', __( 'Reçoit un POST JSON {to, from, message}.', 'loginfennec' ), array( 'sms_enabled' => 1, 'sms_provider' => 'webhook' ) );

@@ -1077,6 +1077,14 @@
 		window.setTimeout(function () { $btn.text('Copier'); }, 1500);
 	});
 
+	/* Mode Twilio : Verify ou SMS */
+	$(document).on('click', '.lnf-tw-mode', function () {
+		$('.lnf-tw-mode').removeClass('is-active');
+		$(this).addClass('is-active');
+		$form.find('[name="lnf[sms_twilio_mode]"]').val($(this).data('mode'));
+		refreshShowIf();
+	});
+
 	/* Style d'icône sociale : sélecteur de variante (aperçu live via CSS) */
 	$(document).on('click', '.lnf-social-variant', function () {
 		$('.lnf-social-variant').removeClass('is-active');
